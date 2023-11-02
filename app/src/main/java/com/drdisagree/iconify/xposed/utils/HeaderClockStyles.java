@@ -163,8 +163,8 @@ public class HeaderClockStyles {
 
                     final TextClock dayDate2 = new TextClock(mContext);
                     dayDate2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    dayDate2.setFormat12Hour("EMMMM d'日' EEEE");
-                    dayDate2.setFormat24Hour("EMMMM d'日' EEEE");
+                    dayDate2.setFormat12Hour("MMMM d'日' EEEE");
+                    dayDate2.setFormat24Hour("MMMM d'日' EEEE");
                     dayDate2.setTextColor(textColor);
                     dayDate2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18 * textScaling);
                     dayDate2.setTypeface(typeface, Typeface.BOLD);
