@@ -42,7 +42,7 @@
     <string name="activity_title_switch">切り替えスイッチ</string>
     <string name="activity_desc_switch">切り替えスイッチを変えたいか</string>
     <string name="activity_title_toast_frame">通知メッセージ</string>
-    <string name="activity_desc_toast_frame">通知メッセージを</string>
+    <string name="activity_desc_toast_frame">通知メッセージを変えたいか</string>
     <string name="activity_title_icon_shape">アイコンの形</string>
     <string name="activity_desc_icon_shape">アイコンの形を変えたいか</string>
     <string name="iconify_updated_title">Iconifyのアプデきたよ</string>
