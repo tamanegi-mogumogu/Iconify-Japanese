@@ -54,9 +54,9 @@
     <!-- Tweaks -->
     <string name="activity_title_color_engine">カラーエンジン</string>
     <string name="activity_desc_color_engine">色をコントロールする</string>
-    <string name="activity_title_ui_roundness">UIの丸み</string>
+    <string name="activity_title_ui_roundness">QSタイルの丸み</string>
     <string name="activity_desc_ui_roundness">境目の角の丸さを変える</string>
-    <string name="activity_title_qs_row_column">行と列</string>
+    <string name="activity_title_qs_row_column">QSタイルの行と列</string>
     <string name="activity_desc_qs_row_column">QSのタイルの行と列を変更する --deepl</string>
     <string name="activity_title_qs_icon_label">アイコンとラベル</string>
     <string name="activity_desc_qs_icon_label">アイコンとラベルの設定</string>
@@ -209,7 +209,7 @@
     <string name="icon_mask_style_rice_rohie_meow">悪魔</string>
     <!-- Color Engine -->
     <string name="activity_title_basic_colors">基本色</string>
-    <string name="activity_desc_basic_colors">主要色とサブ色を変える</string>
+    <string name="activity_desc_basic_colors">メインカラーとサブカラーを変える</string>
     <string name="activity_title_monet_engine">もめんとえんじん（？）</string>
     <string name="activity_desc_monet_engine">システムの色を上書きする</string>
     <string name="section_title_stock_colors">システムの色を使う？</string>
@@ -228,42 +228,42 @@
     <string name="disable_monet_title">システムの色を消す</string>
     <string name="disable_monet_desc">カスタムカラーの保持に役立つ\nシステムUIの再起動が必要</string>
     <!-- Basic Colors -->
-    <string name="primary_color">主要色</string>
-    <string name="primary_color_desc">主要色を選ぶ</string>
+    <string name="primary_color">メインカラー</string>
+    <string name="primary_color_desc">メインカラーを選ぶ</string>
     <string name="secondary_color">サブカラー</string>
     <string name="secondary_color_desc">サブカラーを選ぶ</string>
     <!-- Monet Engine -->
-    <string name="accurate_shades_title">Accurate Shades</string>
-    <string name="accurate_shades_desc">Disable this to get exact chosen colors</string>
-    <string name="monet_style_title">Monet Style</string>
-    <string name="monet_neutral">Neutral</string>
-    <string name="monet_monochrome">Monochrome</string>
-    <string name="monet_tonalspot">Tonal Spot</string>
-    <string name="monet_vibrant">Vibrant</string>
-    <string name="monet_rainbow">Rainbow</string>
-    <string name="monet_expressive">Expressive</string>
-    <string name="monet_fidelity">Fidelity</string>
-    <string name="monet_fruitsalad">Fruit Salad</string>
-    <string name="monet_content">Content</string>
-    <string name="monet_primary_accent_saturation_title">Primary Accent Saturation</string>
-    <string name="monet_secondary_accent_saturation_title">Secondary Accent Saturation</string>
-    <string name="monet_background_saturation_title">Background Saturation</string>
-    <string name="monet_background_lightness_title">Background Lightness</string>
+    <string name="accurate_shades_title">正確なシェード（？）</string>
+    <string name="accurate_shades_desc">選んだ色にするにはこれをオフって</string>
+    <string name="monet_style_title">スタイル</string>
+    <string name="monet_neutral">ニュートラル</string>
+    <string name="monet_monochrome">モノクロ</string>
+    <string name="monet_tonalspot">同系色</string>
+    <string name="monet_vibrant">明るい</string>
+    <string name="monet_rainbow">虹色</string>
+    <string name="monet_expressive">上品</string>
+    <string name="monet_fidelity">忠実</string>
+    <string name="monet_fruitsalad">フルーツサラダ（？）</string>
+    <string name="monet_content">内容（？）</string>
+    <string name="monet_primary_accent_saturation_title">メインカラーの彩度</string>
+    <string name="monet_secondary_accent_saturation_title">サブカラーの彩度</string>
+    <string name="monet_background_saturation_title">背景色の彩度</string>
+    <string name="monet_background_lightness_title">背景色の明るさ</string>
     <!-- UI Roundness -->
-    <string name="corner_radius_title">Corner Radius</string>
-    <string name="qstile_btn1_title">Internet</string>
-    <string name="qstile_btn1_desc">RIP in Peace</string>
-    <string name="qstile_btn2_title">Airplane</string>
+    <string name="corner_radius_title">角の丸み</string>
+    <string name="qstile_btn1_title">インターネット</string>
+    <string name="qstile_btn1_desc">安らかに眠れ</string>
+    <string name="qstile_btn2_title">機内モード</string>
     <string name="qstile_btn2_desc">Off</string>
-    <string name="qstile_btn3_title">Location</string>
+    <string name="qstile_btn3_title">位置情報</string>
     <string name="qstile_btn3_desc">Off</string>
     <string name="qstile_btn4_title">Bluetooth</string>
     <string name="qstile_btn4_desc">On</string>
     <!-- Row and Column -->
-    <string name="qs_row_column_warn_desc">Certain combinations may not be compatible with certain ROMs. In such instances, simply experiment with alternative combinations until you find the one that best suits your needs.</string>
-    <string name="quick_qspanel_row_title">Quick QS Panel Row</string>
-    <string name="qspanel_row_title">QS Panel Row</string>
-    <string name="qspanel_column_title">QS Panel Column</string>
+    <string name="qs_row_column_warn_desc">組み合わせによっては、特定のROMと互換性がない場合があります。そのような場合は、あなたのニーズに最も適した組み合わせが見つかるまで、別の組み合わせを試してみてください。</string>
+    <string name="quick_qspanel_row_title">クイックQSパネルの縦の列の数</string>
+    <string name="qspanel_row_title">QSパネルの縦の列の数</string>
+    <string name="qspanel_column_title">QSパネルの横の列の数</string>
     <!-- Icon and Label -->
     <string name="section_title_size_and_position">Size and Position</string>
     <string name="hide_label_title">Hide Label</string>
