@@ -85,7 +85,7 @@ public class LockscreenClockStyles {
                 case 1:
                     final TextView date1 = new TextView(mContext);
                     date1.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    date1.setText(regionFormattedDate("EEEE, MMMM d", "EEEE d MMMM"));
+                    date1.setText(regionFormattedDate("MMMM d'日' EEEE", "MMMM d'日' EEEE"));
                     date1.setTextColor(accentPrimaryVariable);
                     date1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20 * textScaling);
                     date1.setTypeface(typeface, Typeface.BOLD);
@@ -156,7 +156,7 @@ public class LockscreenClockStyles {
 
                     final TextView month2 = new TextView(mContext);
                     month2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    month2.setText(regionFormattedDate("MMMM d", "d MMMM"));
+                    month2.setText(regionFormattedDate("MMMM d'日'", "MMMM d'日'"));
                     month2.setTextColor(textColor);
                     month2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20 * textScaling);
                     month2.setTypeface(typeface);
@@ -181,7 +181,7 @@ public class LockscreenClockStyles {
                 case 3:
                     final TextView date3 = new TextView(mContext);
                     date3.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    date3.setText(regionFormattedDate("EEE, MMM dd", "EEE dd MMM"));
+                    date3.setText(regionFormattedDate("MMMM d'日' EEEE", "MMMM d'日' EEEE"));
                     date3.setTextColor(accentPrimaryVariable);
                     date3.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24 * textScaling);
                     date3.setTypeface(typeface, Typeface.BOLD);
@@ -229,7 +229,7 @@ public class LockscreenClockStyles {
 
                     final TextView day4 = new TextView(mContext);
                     day4.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    day4.setText(regionFormattedDate("EEE, MMM dd", "EEE dd MMM"));
+                    day4.setText(regionFormattedDate("MMMM d'日' EEEE", "MMMM d'日' EEEE"));
                     day4.setTextColor(textColorDark);
                     day4.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28 * textScaling);
                     day4.setTypeface(typeface, Typeface.BOLD);
@@ -296,7 +296,7 @@ public class LockscreenClockStyles {
 
                     final TextView date5 = new TextView(mContext);
                     date5.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    date5.setText(formatTime("dd"));
+                    date5.setText(formatTime("d'日'"));
                     date5.setTextColor(textColor);
                     date5.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28 * textScaling);
                     date5.setTypeface(typeface, Typeface.BOLD);
@@ -518,7 +518,7 @@ public class LockscreenClockStyles {
 
                     final TextView date7 = new TextView(mContext);
                     date7.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    date7.setText(regionFormattedDate("EEEE, MMM dd", "EEEE dd MMM"));
+                    date7.setText(regionFormattedDate("MMMM d'日' EEEE", "MMMM d'日' EEEE"));
                     date7.setTextColor(textColor);
                     date7.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20 * textScaling);
                     date7.setTypeface(typeface, Typeface.NORMAL);
@@ -566,7 +566,7 @@ public class LockscreenClockStyles {
 
                     final TextView date8 = new TextView(mContext);
                     date8.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    date8.setText(regionFormattedDate("MMMM dd", "dd MMMM"));
+                    date8.setText(regionFormattedDate("MMMM d'日'", "MMMM d'日'"));
                     date8.setTextColor(textColor);
                     date8.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20 * textScaling);
                     date8.setTypeface(typeface, Typeface.NORMAL);
