@@ -49,5 +49,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: "Iconify-Japanese v${{ env.VERSION_NAME }}"
-          path: app/build/outputs/apk/debug/*.apk
+          path: app/build/outputs/apk/release/*.apk
           if-no-files-found: error
