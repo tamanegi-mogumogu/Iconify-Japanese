@@ -602,7 +602,7 @@ public class LockscreenClockStyles {
 
                     return container8;
                 case 9:
-                    final TextView date3 = new TextView(mContext);
+                    final TextView date9 = new TextView(mContext);
                     date9.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                     date9.setText(regionFormattedDate("MMMM d'日' EEEE", "MMMM d'日' EEEE"));
                     date9.setTextColor(accentPrimaryVariable);
