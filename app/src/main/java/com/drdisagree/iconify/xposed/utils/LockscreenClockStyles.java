@@ -601,6 +601,50 @@ public class LockscreenClockStyles {
                     container8.addView(tempContainer8);
 
                     return container8;
+                case 9:
+                    final TextView date3 = new TextView(mContext);
+                    date9.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    date9.setText(regionFormattedDate("MMMM d'日' EEEE", "MMMM d'日' EEEE"));
+                    date9.setTextColor(accentPrimaryVariable);
+                    date9.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24 * textScaling);
+                    date9.setTypeface(typeface, Typeface.BOLD);
+                    date9.setIncludeFontPadding(false);
+
+                    final TextView clockHour9 = new TextView(mContext);
+                    clockHour9.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    clockHour9.setText(formatTime(mContext, "HH", "hh"));
+                    clockHour9.setTextColor(accentPrimaryVariable);
+                    clockHour9.setTextSize(TypedValue.COMPLEX_UNIT_SP, 160 * textScaling);
+                    clockHour9.setTypeface(typeface, Typeface.BOLD);
+                    clockHour9.setIncludeFontPadding(false);
+                    ViewGroup.MarginLayoutParams clockHourParams9 = new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT);
+                    setMargins(clockHourParams9, mContext, 0, -22 + lineHeight, 0, 0);
+                    clockHour9.setLayoutParams(clockHourParams9);
+
+                    final TextView clockMinute9 = new TextView(mContext);
+                    clockMinute9.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    clockMinute9.setText(formatTime("mm"));
+                    clockMinute9.setTextColor(accentPrimaryVariable);
+                    clockMinute9.setTextSize(TypedValue.COMPLEX_UNIT_SP, 160 * textScaling);
+                    clockMinute9.setTypeface(typeface, Typeface.BOLD);
+                    clockMinute9.setIncludeFontPadding(false);
+                    ViewGroup.MarginLayoutParams clockMinuteParams9 = new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT);
+                    setMargins(clockMinuteParams9, mContext, 0, -58 + lineHeight, 0, 0);
+                    clockMinute9.setLayoutParams(clockMinuteParams9);
+
+                    final LinearLayout clockContainer9 = new LinearLayout(mContext);
+                    LinearLayout.LayoutParams layoutParams9 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    layoutParams9.gravity = Gravity.CENTER_HORIZONTAL;
+                    setMargins(layoutParams9, mContext, 0, topMargin, 0, bottomMargin);
+                    clockContainer9.setLayoutParams(layoutParams9);
+                    clockContainer9.setGravity(Gravity.CENTER_HORIZONTAL);
+                    clockContainer9.setOrientation(LinearLayout.VERTICAL);
+
+                    clockContainer9.addView(date9);
+                    clockContainer9.addView(clockHour9);
+                    clockContainer9.addView(clockMinute9);
+
+                    return clockContainer9;
             }
         }
         return null;
