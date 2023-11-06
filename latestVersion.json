@@ -1,8 +1,8 @@
 {
-  "versionName": "6.5.1",
+  "versionName": "6.5.1-translated_by_tqmane",
   "versionCode": 15,
-  "apkUrl": "https://github.com/Mahmud0808/Iconify/releases/download/v6.5.1/Iconify.v6.5.1.apk",
+  "apkUrl": "https://github.com/tamanegi-mogumogu/Iconify-Japanese/releases/download/v6.5.1-jp/Iconify.v6.5.1-translated_by_tqmane.apk",
   "changelog": [
-    "### Iconify v6.5.1 has arrived! It has the following new changes:\n\n## Feature Changes:\n- __Xposed Menu:__\n    - Fix Xposed Menu not accessible in LSPosed beta (7010+)\n    - Small fixes related to depth wallpaper\n    - Update prebuilt overlays targeting android 14\n    - Add 15 more battery styles\n    - Add custom battery colors and margins\n    - Add custom battery charging icon. Thanks to [SuperiorExtended](https://github.com/SuperiorExtended/android_frameworks_base/commit/ec4d8e9f0d80353eb859c5994fd1d5252b6ecfc3)\n    - Fix battery icon color in landscape mode\n    - Improve battery styles to work on more roms\n    - Fix battery styles crashing on android 14\n\n## App Changes:\n- Add Min SDK and Target SDK in overlay manifest\n- Add signature scheme v2 for overlays\n- Add Polish language. Thanks to @SK00RUPA\n- Update Chinese and Turkish translation\n- And many more improvements...\n\nAlso included in this version are bug fixes and other improvements."
+    "### Iconify translated to Japanese; 一部日本語にしました!"
   ]
 }

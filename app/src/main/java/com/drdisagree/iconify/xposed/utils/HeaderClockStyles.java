@@ -103,8 +103,8 @@ public class HeaderClockStyles {
 
                     final TextClock clockDate1 = new TextClock(mContext);
                     clockDate1.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    clockDate1.setFormat12Hour("dd MMMM");
-                    clockDate1.setFormat24Hour("dd MMMM");
+                    clockDate1.setFormat12Hour("MMMM d'日'");
+                    clockDate1.setFormat24Hour("MMMM d'日'");
                     clockDate1.setTextColor(textColor);
                     clockDate1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14 * textScaling);
                     clockDate1.setTypeface(typeface, Typeface.BOLD);
@@ -163,8 +163,8 @@ public class HeaderClockStyles {
 
                     final TextClock dayDate2 = new TextClock(mContext);
                     dayDate2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    dayDate2.setFormat12Hour("EEEE, MMM dd");
-                    dayDate2.setFormat24Hour("EEEE, MMM dd");
+                    dayDate2.setFormat12Hour("MMMM d'日' EEEE");
+                    dayDate2.setFormat24Hour("MMMM d'日' EEEE");
                     dayDate2.setTextColor(textColor);
                     dayDate2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18 * textScaling);
                     dayDate2.setTypeface(typeface, Typeface.BOLD);
@@ -211,8 +211,8 @@ public class HeaderClockStyles {
 
                     final TextClock dayDate3 = new TextClock(mContext);
                     dayDate3.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    dayDate3.setFormat12Hour("EEE, MMM dd");
-                    dayDate3.setFormat24Hour("EEE, MMM dd");
+                    dayDate3.setFormat12Hour("MMMM d'日' EEEE");
+                    dayDate3.setFormat24Hour("MMMM d'日' EEEE");
                     dayDate3.setTextColor(textColor);
                     dayDate3.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18 * textScaling);
                     dayDate3.setTypeface(typeface, Typeface.BOLD);
@@ -220,8 +220,8 @@ public class HeaderClockStyles {
 
                     final TextClock dayDateOverlay3 = new TextClock(mContext);
                     dayDateOverlay3.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    dayDateOverlay3.setFormat12Hour("EEE, MMM dd");
-                    dayDateOverlay3.setFormat24Hour("EEE, MMM dd");
+                    dayDateOverlay3.setFormat12Hour("MMMM d'日' EEEE");
+                    dayDateOverlay3.setFormat24Hour("MMMM d'日' EEEE");
                     dayDateOverlay3.setTextColor(accentSecondary);
                     dayDateOverlay3.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18 * textScaling);
                     dayDateOverlay3.setTypeface(typeface, Typeface.BOLD);
@@ -263,8 +263,8 @@ public class HeaderClockStyles {
 
                     final TextClock clockDate4 = new TextClock(mContext);
                     clockDate4.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    clockDate4.setFormat12Hour("dd MMMM");
-                    clockDate4.setFormat24Hour("dd MMMM");
+                    clockDate4.setFormat12Hour("MMMM d'日'");
+                    clockDate4.setFormat24Hour("MMMM d'日'");
                     clockDate4.setTextColor(textColor);
                     clockDate4.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16 * textScaling);
                     clockDate4.setTypeface(typeface, Typeface.BOLD);
@@ -314,8 +314,8 @@ public class HeaderClockStyles {
 
                     final TextClock date5 = new TextClock(mContext);
                     date5.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    date5.setFormat12Hour("EEE, MMM dd");
-                    date5.setFormat24Hour("EEE, MMM dd");
+                    date5.setFormat12Hour("MMMM d'日' EEEE");
+                    date5.setFormat24Hour("MMMM d'日' EEEE");
                     date5.setTextColor(textColor);
                     date5.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14 * textScaling);
                     date5.setTypeface(typeface, Typeface.BOLD);
@@ -471,8 +471,8 @@ public class HeaderClockStyles {
 
                     final TextClock dayDate8 = new TextClock(mContext);
                     dayDate8.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    dayDate8.setFormat12Hour("EEE d MMM");
-                    dayDate8.setFormat24Hour("EEE d MMM");
+                    dayDate8.setFormat12Hour("MMMM d'日' EEEE");
+                    dayDate8.setFormat24Hour("MMMM d'日' EEEE");
                     dayDate8.setLetterSpacing(0.2f);
                     dayDate8.setAllCaps(true);
                     dayDate8.setTextColor(textColor);

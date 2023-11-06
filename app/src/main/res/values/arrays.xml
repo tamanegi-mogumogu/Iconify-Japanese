@@ -18,20 +18,22 @@
         <item>Spanish</item>
         <item>Turkish</item>
         <item>Vietnamese</item>
+        <item>Japanese</item>
     </string-array>
     <string-array name="locale_code" translatable="false">
-        <item>ar-SA</item>
-        <item>en-US</item>
-        <item>zh-CN</item>
-        <item>fr-FR</item>
-        <item>in-ID</item>
-        <item>fa-IR</item>
-        <item>pl-PL</item>
-        <item>pt-PT</item>
-        <item>ru-RU</item>
-        <item>es-ES</item>
-        <item>tr-TR</item>
-        <item>vi-VN</item>
+        <item>ar</item>
+        <item>en</item>
+        <item>zh</item>
+        <item>fr</item>
+        <item>in</item>
+        <item>fa</item>
+        <item>pl</item>
+        <item>pt</item>
+        <item>ru</item>
+        <item>es</item>
+        <item>tr</item>
+        <item>vi</item>
+        <item>ja</item>
     </string-array>
     <string-array name="app_icon">
         <item>@string/settings_app_icon_default</item>
