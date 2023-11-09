@@ -32,7 +32,7 @@ jobs:
           versionName: "${{ env.VERSION_NAME }}"
 
       - name: Write sign info
-        if: github.repository == 'tamanegi-mogumogu/Iconify-Japanese'
+        if: github.repository == 'tqmane/Iconify-Japanese'
         run: |
           if [ ! -z "${{ secrets.KEYSTORE }}" ]; then
             echo storePassword='${{ secrets.KEYSTORE_PASSWORD }}' >> keystore.properties
