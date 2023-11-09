@@ -121,7 +121,7 @@
     <string name="settings_disable_everything_desc">Disable all Iconify overlays, colors, and miscellaneous changes.</string>
     <string name="settings_section_title_about">About</string>
     <string name="settings_github_repository_title">Github Repository</string>
-    <string name="settings_github_repository_desc" translatable="false">tamanegi-mogumogu/Iconify-Japanese</string>
+    <string name="settings_github_repository_desc" translatable="false">tqmane/Iconify-Japanese</string>
     <string name="settings_telegram_group_title">Telegram Group</string>
     <string name="settings_telegram_group_desc" translatable="false">\@IconifyDiscussion</string>
     <string name="settings_credits_title">Credits</string>
@@ -451,6 +451,8 @@
     <string name="section_title_blur">Blur</string>
     <string name="window_level_blur_title">Window Level Blur</string>
     <string name="window_level_blur_desc">Requires reboot to work</string>
+    <string name="aggressive_blur_title">Aggressive Blur Enabler</string>
+    <string name="aggressive_blur_desc">Might bootloop in some roms</string>
     <string name="blur_intensity_title">Blur Intensity</string>
 
     <!-- Themes -->
@@ -470,8 +472,8 @@
     <string name="power_menu_transparency_title">Power Menu Transparency</string>
     <string name="power_menu_transparency_desc">Power menu transparency for Fluid QS\nDo not use custom notification style</string>
     <string name="section_title_others">Others</string>
-    <string name="fix_notification_color_title">Fix Notification Color (A14)</string>
-    <string name="fix_notification_color_desc">Fix color of notification for A14 devices</string>
+    <string name="fix_notification_color_title">Fix Notification Color</string>
+    <string name="fix_notification_color_desc">Fix custom notification style on android 14</string>
 
     <!-- Quick Settings -->
     <string name="section_title_qs_tile">QS Tile</string>
