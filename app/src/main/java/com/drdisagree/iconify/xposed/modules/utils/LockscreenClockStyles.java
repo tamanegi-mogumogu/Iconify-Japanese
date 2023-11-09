@@ -163,9 +163,9 @@ public class LockscreenClockStyles {
                     wholeContainer2.setLayoutParams(layoutparams2);
                     wholeContainer2.setGravity(Gravity.START);
                     wholeContainer2.setOrientation(LinearLayout.VERTICAL);
-                    wholeContainer2.addView(day2);
-                    wholeContainer2.addView(clockContainer2);
                     wholeContainer2.addView(month2);
+                    wholeContainer2.addView(clockContainer2);
+                    wholeContainer2.addView(day2);
                     return wholeContainer2;
                 }
                 case 3 -> {
@@ -302,9 +302,9 @@ public class LockscreenClockStyles {
                     right5.setOrientation(LinearLayout.VERTICAL);
                     setPaddings(right5, mContext, 16, 16, 16, 16);
                     right5.setGravity(Gravity.CENTER);
-                    right5.addView(day5);
-                    right5.addView(date5);
                     right5.addView(month5);
+                    right5.addView(date5);
+                    right5.addView(day5);
                     final LinearLayout tempContainer5 = new LinearLayout(mContext);
                     LinearLayout.LayoutParams tempLayoutParams5 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     tempLayoutParams5.gravity = Gravity.CENTER_HORIZONTAL;
@@ -534,9 +534,9 @@ public class LockscreenClockStyles {
                     mDrawable8.setCornerRadius(dp2px(mContext, 24));
                     mDrawable8.setAlpha(50);
                     tempContainer8.setBackground(mDrawable8);
-                    tempContainer8.addView(day8);
-                    tempContainer8.addView(clock8);
                     tempContainer8.addView(date8);
+                    tempContainer8.addView(clock8);
+                    tempContainer8.addView(day8);
                     final LinearLayout container8 = new LinearLayout(mContext);
                     LinearLayout.LayoutParams layoutParams8 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     layoutParams8.gravity = Gravity.CENTER;

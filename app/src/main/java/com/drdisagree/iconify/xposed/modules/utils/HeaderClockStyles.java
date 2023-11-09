@@ -109,8 +109,8 @@ public class HeaderClockStyles {
                     dateContainer1.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
                     dateContainer1.setOrientation(LinearLayout.VERTICAL);
                     setMargins(dateContainer1, mContext, 0, 8, 0, 8);
-                    dateContainer1.addView(clockDay1);
                     dateContainer1.addView(clockDate1);
+                    dateContainer1.addView(clockDay1);
                     final LinearLayout clockContainer1 = new LinearLayout(mContext);
                     clockContainer1.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                     clockContainer1.setGravity(Gravity.CENTER_VERTICAL);
@@ -250,8 +250,8 @@ public class HeaderClockStyles {
                     dateContainer4.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
                     dateContainer4.setOrientation(LinearLayout.VERTICAL);
                     setMargins(dateContainer4, mContext, 8, 0, 8, 0);
-                    dateContainer4.addView(clockDay4);
                     dateContainer4.addView(clockDate4);
+                    dateContainer4.addView(clockDay4);
                     final LinearLayout clockContainer4 = new LinearLayout(mContext);
                     clockContainer4.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                     clockContainer4.setGravity(Gravity.CENTER_VERTICAL);
