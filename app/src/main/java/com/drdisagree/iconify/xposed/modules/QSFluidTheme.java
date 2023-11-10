@@ -41,10 +41,13 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.drdisagree.iconify.R;
 import com.drdisagree.iconify.xposed.ModPack;
+import com.drdisagree.iconify.xposed.modules.utils.Helpers;
 import com.drdisagree.iconify.xposed.modules.utils.RoundedCornerProgressDrawable;
 import com.drdisagree.iconify.xposed.modules.utils.SettingsLibUtils;
 import com.drdisagree.iconify.xposed.modules.utils.ViewHelper;
 import com.drdisagree.iconify.xposed.utils.SystemUtil;
+
+import java.util.Objects;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -83,10 +86,17 @@ public class QSFluidTheme extends ModPack {
         if (Xprefs == null) return;
 
         fluidQsThemeEnabled = Xprefs.getBoolean(FLUID_QSPANEL, false);
-        fluidNotifEnabled = Xprefs.getBoolean(FLUID_NOTIF_TRANSPARENCY, false);
-        fluidPowerMenuEnabled = Xprefs.getBoolean(FLUID_POWERMENU_TRANSPARENCY, false);
+        fluidNotifEnabled = fluidQsThemeEnabled && Xprefs.getBoolean(FLUID_NOTIF_TRANSPARENCY, false);
+        fluidPowerMenuEnabled = fluidQsThemeEnabled && Xprefs.getBoolean(FLUID_POWERMENU_TRANSPARENCY, false);
 
         initResources();
+
+        if (Key.length > 0 && (Objects.equals(Key[0], FLUID_QSPANEL) ||
+                Objects.equals(Key[0], FLUID_NOTIF_TRANSPARENCY) ||
+                Objects.equals(Key[0], FLUID_POWERMENU_TRANSPARENCY)
+        )) {
+            Helpers.forceReloadUI(mContext);
+        }
     }
 
     @Override
@@ -131,7 +141,8 @@ public class QSFluidTheme extends ModPack {
         hookAllConstructors(QSTileViewImplClass, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) {
-                colorInactiveAlpha[0] = changeAlpha(SettingsLibUtils.getColorAttrDefaultColor(mContext, mContext.getResources().getIdentifier("offStateColor", "attr", mContext.getPackageName())), INACTIVE_ALPHA);
+                colorInactive[0] = SettingsLibUtils.getColorAttrDefaultColor(mContext, mContext.getResources().getIdentifier("offStateColor", "attr", mContext.getPackageName()));
+                colorInactiveAlpha[0] = changeAlpha(colorInactive[0], INACTIVE_ALPHA);
             }
         });
 
@@ -144,15 +155,16 @@ public class QSFluidTheme extends ModPack {
                     if ((int) param.args[0] == STATE_ACTIVE) {
                         param.setResult(changeAlpha(colorActive[0], ACTIVE_ALPHA));
                     } else {
-                        Integer colorInactive = (Integer) param.getResult();
+                        Integer inactiveColor = (Integer) param.getResult();
 
-                        if (colorInactive != null) {
-                            colorInactiveAlpha[0] = changeAlpha(colorInactive, INACTIVE_ALPHA);
+                        if (inactiveColor != null) {
+                            colorInactive[0] = inactiveColor;
+                            colorInactiveAlpha[0] = changeAlpha(inactiveColor, INACTIVE_ALPHA);
 
                             if ((int) param.args[0] == STATE_INACTIVE) {
-                                param.setResult(changeAlpha(colorInactive, INACTIVE_ALPHA));
+                                param.setResult(changeAlpha(inactiveColor, INACTIVE_ALPHA));
                             } else if ((int) param.args[0] == STATE_UNAVAILABLE) {
-                                param.setResult(changeAlpha(colorInactive, UNAVAILABLE_ALPHA));
+                                param.setResult(changeAlpha(inactiveColor, UNAVAILABLE_ALPHA));
                             }
                         }
                     }
@@ -259,6 +271,25 @@ public class QSFluidTheme extends ModPack {
             @Override
             protected void afterHookedMethod(MethodHookParam param) {
                 mSlider = (SeekBar) getObjectField(param.thisObject, "mSlider");
+
+                try {
+                    if (mSlider != null && fluidQsThemeEnabled) {
+                        mSlider.setProgressDrawable(createBrightnessDrawable(mContext));
+
+                        LayerDrawable progress = (LayerDrawable) mSlider.getProgressDrawable();
+                        DrawableWrapper progressSlider = (DrawableWrapper) progress.findDrawableByLayerId(android.R.id.progress);
+
+                        try {
+                            LayerDrawable actualProgressSlider = (LayerDrawable) progressSlider.getDrawable();
+                            Drawable mBrightnessIcon = actualProgressSlider.findDrawableByLayerId(mContext.getResources().getIdentifier("slider_icon", "id", mContext.getPackageName()));
+                            mBrightnessIcon.setTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+                            mBrightnessIcon.setAlpha(0);
+                        } catch (Throwable ignored) {
+                        }
+                    }
+                } catch (Throwable throwable) {
+                    log(TAG + throwable);
+                }
             }
         });
 

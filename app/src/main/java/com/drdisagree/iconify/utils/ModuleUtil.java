@@ -54,15 +54,14 @@ public class ModuleUtil {
         // Clean temporary directory
         Shell.cmd("mkdir -p " + Resources.TEMP_DIR).exec();
         Shell.cmd("mkdir -p " + Resources.TEMP_MODULE_DIR).exec();
-        Shell.cmd("printf 'id=Iconify\nname=Iconify\nversion=" + BuildConfig.VERSION_NAME + "\nversionCode=" + BuildConfig.VERSION_CODE + "\nauthor=@DrDisagree\ndescription=Systemless module for Iconify. " + Objects.requireNonNull(Iconify.getAppContext()).getResources().getString(R.string.app_moto) + ".\n' > " + Resources.TEMP_MODULE_DIR + "/module.prop").exec();
-        Shell.cmd("mkdir -p " + Resources.TEMP_MODULE_DIR + "/common").exec();
+        Shell.cmd("printf 'id=Iconify\nname=Iconify\nversion=" + BuildConfig.VERSION_NAME + "\nversionCode=" + BuildConfig.VERSION_CODE + "\nauthor=@DrDisagree\ndescription=Systemless module for Iconify. " + Iconify.getAppContext().getResources().getString(R.string.app_moto) + ".\n' > " + Resources.TEMP_MODULE_DIR + "/module.prop").exec();
         Shell.cmd("printf 'MODDIR=${0%%/*}\n\n' > " + Resources.TEMP_MODULE_DIR + "/post-fs-data.sh").exec();
         if (!Onboarding.skippedInstallation) {
             Shell.cmd("printf 'MODDIR=${0%%/*}\n\nwhile [ \"$(getprop sys.boot_completed | tr -d \"\\r\")\" != \"1\" ]\ndo\n sleep 1\ndone\nsleep 5\n\nsh $MODDIR/post-exec.sh\n\nuntil [ -d /storage/emulated/0/Android ]; do\n  sleep 1\ndone\nsleep 3\n\n" + (Prefs.getBoolean(RESTART_SYSUI_AFTER_BOOT, false) ? "killall " + SYSTEMUI_PACKAGE + "\n" : "") + "sleep 6\n\nqspbd=$(cmd overlay list |  grep -E \"^.x..IconifyComponentQSPBD.overlay\" | sed -E \"s/^.x..//\")\ndm=$(cmd overlay list |  grep -E \"^.x..IconifyComponentDM.overlay\" | sed -E \"s/^.x..//\")\nif ([ ! -z \"$qspbd\" ] && [ -z \"$dm\" ])\nthen\n cmd overlay disable --user current IconifyComponentQSPBD.overlay\n cmd overlay enable --user current IconifyComponentQSPBD.overlay\n cmd overlay set-priority IconifyComponentQSPBD.overlay highest\nfi\n\nqspba=$(cmd overlay list |  grep -E \"^.x..IconifyComponentQSPBA.overlay\" | sed -E \"s/^.x..//\")\ndm=$(cmd overlay list |  grep -E \"^.x..IconifyComponentDM.overlay\" | sed -E \"s/^.x..//\")\nif ([ ! -z \"$qspba\" ] && [ -z \"$dm\" ])\nthen\n cmd overlay disable --user current IconifyComponentQSPBA.overlay\n cmd overlay enable --user current IconifyComponentQSPBA.overlay\n cmd overlay set-priority IconifyComponentQSPBA.overlay highest\nfi\n\n' > " + Resources.TEMP_MODULE_DIR + "/service.sh").exec();
         } else {
             Shell.cmd("printf 'MODDIR=${0%%/*}\n\nwhile [ \"$(getprop sys.boot_completed | tr -d \"\\r\")\" != \"1\" ]\ndo\n sleep 1\ndone\nsleep 5\n\nsh $MODDIR/post-exec.sh\n\n' > " + Resources.TEMP_MODULE_DIR + "/service.sh").exec();
         }
-        Shell.cmd("touch " + Resources.TEMP_MODULE_DIR + "/common/system.prop").exec();
+        Shell.cmd("touch " + Resources.TEMP_MODULE_DIR + "/system.prop").exec();
         Shell.cmd("touch " + Resources.TEMP_MODULE_DIR + "/auto_mount").exec();
         Shell.cmd("mkdir -p " + Resources.TEMP_MODULE_DIR + "/system").exec();
         Shell.cmd("mkdir -p " + Resources.TEMP_MODULE_DIR + "/system/product").exec();
@@ -79,7 +78,7 @@ public class ModuleUtil {
         boolean primaryColorEnabled = false;
         boolean secondaryColorEnabled = false;
 
-        SharedPreferences prefs = Objects.requireNonNull(Iconify.getAppContext()).getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+        SharedPreferences prefs = Iconify.getAppContext().getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
         Map<String, ?> map = prefs.getAll();
         for (Map.Entry<String, ?> item : map.entrySet()) {
             if (item.getValue() instanceof Boolean && ((Boolean) item.getValue()) && item.getKey().startsWith("fabricated")) {
