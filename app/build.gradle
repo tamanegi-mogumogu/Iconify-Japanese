@@ -13,7 +13,7 @@ android {
         minSdk 31
         targetSdk 34
         versionCode 15
-        versionName "6.5.1"
+        versionName "6.5.1-translated_by_tqmane"
         setProperty("archivesBaseName", "Iconify v" + versionName)
         buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
 

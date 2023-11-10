@@ -32,6 +32,7 @@
         <item>es-ES</item>
         <item>tr-TR</item>
         <item>vi-VN</item>
+        <item>ja-JP</item>
     </string-array>
     <string-array name="app_icon">
         <item>@string/settings_app_icon_default</item>
