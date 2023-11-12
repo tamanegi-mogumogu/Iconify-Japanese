@@ -7,6 +7,7 @@ import com.drdisagree.iconify.config.Prefs;
 public class Preferences {
 
     // Xposed mods
+    public static final String FORCE_RELOAD_OVERLAY_STATE = "xposed_force_reload_overlay_state";
     public static final String QS_TRANSPARENCY_SWITCH = "xposed_qstransparency";
     public static final String NOTIF_TRANSPARENCY_SWITCH = "xposed_notiftransparency";
     public static final String QSALPHA_LEVEL = "xposed_qsalpha";
@@ -63,6 +64,7 @@ public class Preferences {
     public static final String CUSTOM_BATTERY_HEIGHT = "xposed_custombatteryheight";
     public static final String HIDE_DATA_DISABLED_ICON = "xposed_hideDataDisabledIcon";
     public static final String DEPTH_WALLPAPER_SWITCH = "xposed_depthwallpaper";
+    public static final String DEPTH_WALLPAPER_FADE_ANIMATION = "xposed_depthwallpaperfadeanimation";
     public static final String DEPTH_WALLPAPER_CHANGED = "xposed_depthwallpaperchanged";
     public static final String UNZOOM_DEPTH_WALLPAPER = "xposed_unzoomdepthwallpaper";
     public static final String CUSTOM_BATTERY_LAYOUT_REVERSE = "xposed_custombatterylayoutreverse";
@@ -136,6 +138,9 @@ public class Preferences {
     public static final int BATTERY_STYLE_LANDSCAPE_BATTERYM = 32;
     public static final int BATTERY_STYLE_LANDSCAPE_BATTERYN = 33;
     public static final int BATTERY_STYLE_LANDSCAPE_BATTERYO = 34;
+
+    // Xposed force reload overlay
+    public static final String FORCE_RELOAD_PACKAGE_NAME = "com.android.internal.display.cutout.emulation.corner";
 
     // Preference keys
     public static final String STR_NULL = "null";

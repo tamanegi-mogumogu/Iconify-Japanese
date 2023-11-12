@@ -1,6 +1,7 @@
 package com.drdisagree.iconify.xposed.modules;
 
 import static com.drdisagree.iconify.common.Const.SYSTEMUI_PACKAGE;
+import static com.drdisagree.iconify.common.Preferences.DEPTH_WALLPAPER_FADE_ANIMATION;
 import static com.drdisagree.iconify.common.Preferences.DEPTH_WALLPAPER_SWITCH;
 import static com.drdisagree.iconify.common.Preferences.ICONIFY_DEPTH_WALLPAPER_TAG;
 import static com.drdisagree.iconify.common.Preferences.ICONIFY_LOCKSCREEN_CLOCK_TAG;
@@ -77,7 +78,8 @@ public class LockscreenClock extends ModPack implements IXposedHookLoadPackage {
                 Objects.equals(Key[0], LSCLOCK_FONT_LINEHEIGHT) ||
                 Objects.equals(Key[0], LSCLOCK_FONT_SWITCH) ||
                 Objects.equals(Key[0], LSCLOCK_TEXT_WHITE) ||
-                Objects.equals(Key[0], LSCLOCK_FONT_TEXT_SCALING))) {
+                Objects.equals(Key[0], LSCLOCK_FONT_TEXT_SCALING) ||
+                Objects.equals(Key[0], DEPTH_WALLPAPER_FADE_ANIMATION))) {
             updateClockView();
 
             if (Objects.equals(Key[0], LSCLOCK_SWITCH) ||
