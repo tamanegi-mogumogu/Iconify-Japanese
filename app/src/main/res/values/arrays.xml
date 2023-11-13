@@ -11,6 +11,7 @@
         <item>Chinese (Simplified)</item>
         <item>French</item>
         <item>Indonesian</item>
+        <item>Italian</item>
         <item>Persian</item>
         <item>Polish</item>
         <item>Portuguese</item>
@@ -25,6 +26,7 @@
         <item>zh-CN</item>
         <item>fr-FR</item>
         <item>in-ID</item>
+        <item>it-IT</item>
         <item>fa-IR</item>
         <item>pl-PL</item>
         <item>pt-PT</item>
@@ -97,5 +99,10 @@
         <item>@string/update_schedule2</item>
         <item>@string/update_schedule3</item>
         <item>@string/update_schedule4</item>
+    </string-array>
+    <string-array name="xposed_mod_apply_method">
+        <item>@string/settings_auto_restart_systemui</item>
+        <item>@string/settings_auto_force_reload_ui</item>
+        <item>@string/settings_manual_restart_systemui</item>
     </string-array>
 </resources>

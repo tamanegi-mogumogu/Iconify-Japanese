@@ -18,9 +18,12 @@ package com.drdisagree.iconify.xposed.modules.utils;
  */
 
 import static com.drdisagree.iconify.common.Const.SWITCH_ANIMATION_DELAY;
+import static com.drdisagree.iconify.common.Const.SYSTEMUI_PACKAGE;
 import static com.drdisagree.iconify.common.Preferences.FORCE_RELOAD_OVERLAY_STATE;
 import static com.drdisagree.iconify.common.Preferences.FORCE_RELOAD_PACKAGE_NAME;
-import static com.drdisagree.iconify.common.Preferences.RESTART_SYSUI_BEHAVIOR;
+import static com.drdisagree.iconify.common.Preferences.LAST_RESTART_SYSTEMUI_TIME;
+import static com.drdisagree.iconify.common.Preferences.RESTART_CLICK_DELAY_TIME;
+import static com.drdisagree.iconify.common.Preferences.RESTART_SYSUI_BEHAVIOR_EXT;
 import static com.drdisagree.iconify.config.XPrefs.Xprefs;
 import static com.drdisagree.iconify.xposed.HookRes.modRes;
 import static de.robv.android.xposed.XposedBridge.hookAllConstructors;
@@ -52,32 +55,66 @@ import com.topjohnwu.superuser.Shell;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Calendar;
 
 import de.robv.android.xposed.XC_MethodHook;
 
 @SuppressWarnings({"unused", "DiscouragedApi"})
 public class Helpers {
 
-    public static void forceReloadUI(Context context) {
-        boolean forceReload = false;
-        boolean state = false;
+    public static void forceReloadSystemUI(Context context) {
+        int selectedBehavior = 0;
 
         try {
-            forceReload = Xprefs.getBoolean(RESTART_SYSUI_BEHAVIOR, true);
+            selectedBehavior = Xprefs.getInt(RESTART_SYSUI_BEHAVIOR_EXT, 0);
         } catch (Throwable ignored) {
-            forceReload = RPrefs.getBoolean(RESTART_SYSUI_BEHAVIOR, true);
+            selectedBehavior = RPrefs.getInt(RESTART_SYSUI_BEHAVIOR_EXT, 0);
         }
 
-        try {
-            state = Xprefs.getBoolean(FORCE_RELOAD_OVERLAY_STATE, false);
-        } catch (Throwable ignored) {
-            state = RPrefs.getBoolean(FORCE_RELOAD_OVERLAY_STATE, false);
-        }
+        if (selectedBehavior == 0) {
+            long lastRestartSystemUITime = 0;
+            long currentTime = Calendar.getInstance().getTime().getTime();
 
-        if (forceReload) {
+            try {
+                lastRestartSystemUITime = Xprefs.getLong(LAST_RESTART_SYSTEMUI_TIME, 0);
+            } catch (Throwable ignored) {
+                lastRestartSystemUITime = RPrefs.getLong(LAST_RESTART_SYSTEMUI_TIME, 0);
+            }
+
+            if (currentTime - lastRestartSystemUITime >= RESTART_CLICK_DELAY_TIME) {
+                try {
+                    Xprefs.edit().putLong(LAST_RESTART_SYSTEMUI_TIME, currentTime).apply();
+                } catch (Throwable ignored) {
+                    RPrefs.putLong(LAST_RESTART_SYSTEMUI_TIME, currentTime);
+                }
+
+                Shell.cmd("killall " + SYSTEMUI_PACKAGE).submit();
+            } else {
+                try {
+                    Toast.makeText(context, modRes.getString(R.string.toast_try_again_later), Toast.LENGTH_SHORT).show();
+                } catch (Throwable ignored) {
+                    Toast.makeText(Iconify.getAppContext(), Iconify.getAppContext().getResources().getString(R.string.toast_try_again_later), Toast.LENGTH_SHORT).show();
+                }
+            }
+        } else if (selectedBehavior == 1) {
+            boolean state = false;
+
+            try {
+                state = Xprefs.getBoolean(FORCE_RELOAD_OVERLAY_STATE, false);
+            } catch (Throwable ignored) {
+                state = RPrefs.getBoolean(FORCE_RELOAD_OVERLAY_STATE, false);
+            }
+
             boolean finalState = state;
             String pkgName = FORCE_RELOAD_PACKAGE_NAME;
-            new Handler(Looper.getMainLooper()).postDelayed(() -> Shell.cmd("cmd overlay " + (finalState ? "disable" : "enable") + " --user current " + pkgName + "; cmd overlay " + (finalState ? "enable" : "disable") + " --user current " + pkgName).submit(), SWITCH_ANIMATION_DELAY);
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                Shell.cmd("cmd overlay " + (finalState ? "disable" : "enable") + " --user current " + pkgName).submit();
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException ignored) {
+                }
+                Shell.cmd("cmd overlay " + (finalState ? "enable" : "disable") + " --user current " + pkgName).submit();
+            }, SWITCH_ANIMATION_DELAY);
         } else {
             try {
                 Toast.makeText(context, modRes.getString(R.string.settings_systemui_restart_required), Toast.LENGTH_SHORT).show();

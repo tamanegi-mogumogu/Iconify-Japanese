@@ -1,7 +1,7 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/Mahmud0808/Iconify/beta/.github/resources/banner.png" width="100%" alt="Banner">
   
-  # v6.5.1 is out!
+  # v6.6.0 is out!
 </div>
 <p align="center">
   <a href="https://github.com/Mahmud0808/Iconify/releases"><img src="https://img.shields.io/github/downloads/Mahmud0808/Iconify/total?color=%233DDC84&logo=android&logoColor=%23fff&style=for-the-badge" alt="Downloads"></a>
@@ -134,6 +134,7 @@ You can help translate Iconify [on Crowdin](https://crowdin.com/project/iconify)
 - Arabic [@MRX7014](https://github.com/mrx7014), [@Mohamed Bahaa](https://github.com/muhammadbahaa2001)
 - French [@MXC48](https://github.com/MXC48)
 - Indonesian [@KaeruShi](https://github.com/KaeruShi)
+- Italian [@Danilo Belmonte](https://crowdin.com/profile/steve.burnside)
 - Persian [@Faceless1999](https://github.com/Faceless1999)
 - Polish [@SK00RUPA](https://github.com/SK00RUPA)
 - Portuguese [@ElTifo](https://github.com/ElTifo)
