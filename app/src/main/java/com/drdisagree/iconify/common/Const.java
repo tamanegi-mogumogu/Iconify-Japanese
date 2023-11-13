@@ -22,16 +22,16 @@ public class Const {
     );
 
     // Github repo
-    public static final String GITHUB_REPO = "https://github.com/Mahmud0808/Iconify";
+    public static final String GITHUB_REPO = "https://github.com/tqmane/Iconify-Japanese";
 
     // Telegram group
     public static final String TELEGRAM_GROUP = "https://t.me/IconifyDiscussion";
 
     // Parse new update
-    public static final String LATEST_VERSION = "https://raw.githubusercontent.com/Mahmud0808/Iconify/stable/latestVersion.json";
+    public static final String LATEST_VERSION = "https://raw.githubusercontent.com/tqmane/Iconify-Japanese/stable/latestVersion.json";
 
     // Parse changelogs
-    public static final String CHANGELOG_URL = "https://api.github.com/repos/Mahmud0808/Iconify/releases/tags/v";
+    public static final String CHANGELOG_URL = "https://api.github.com/repos/tqmane/Iconify-Japanese/releases/tags/v";
 
     // Fragment variables
     public static final int TRANSITION_DELAY = 120;
