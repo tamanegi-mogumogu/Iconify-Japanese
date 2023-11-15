@@ -586,7 +586,7 @@
     <string name="foreground_image_desc">デプス壁紙の前景画像</string>
     <string name="background_image_title">背景画像</string>
     <string name="background_image_desc">デプス壁紙の背景画像</string>
-    <string name="depth_wallpaper_alert_msg">この機能は現在ベータ版です。バグが予想されます。\n\n<b>既知のバグ:</b>\n• 常時表示が正常に動作しません。表示の問題を避けるためにAODを無効にしてください。\n• ロックスクリーンをタップすると壁紙がジャンプ
+    <string name="depth_wallpaper_alert_msg">この機能は現在ベータ版です。バグが予想されます。\n\n<b>既知のバグ:</b>\n• 常時表示が正常に動作しません。表示の問題を避けるためにAODを無効にしてください。\n• ロックスクリーンをタップすると壁紙がジャンプします。</string>
     <!-- Background Chip -->
     <string name="section_title_status_bar">ステータスバー</string>
     <string name="sb_clock_background_chip_title">ステータスバー時計チップ</string>
@@ -619,8 +619,8 @@
     <string name="fixed_status_icons_desc">ステータスアイコンを固定位置に設定します\n一部のROMで不具合が
     <!-- Changelog -->
     <string name="activity_title_changelog">変更履歴</string>
-    <string name="no_internet_connection">サーバーに接続できませんでした！\nインターネット接続に問題があるか、サーバーが現在利用できない可能性があります。後でもう一度お試しください。</string>
-    <string name="changelog_not_found">変更履歴が見つかりませんでした！\nインターネット接続に問題があるか、サーバーが現在利用できない可能性があります。後でもう一度お試しください。</string>
+    <string name="no_internet_connection">サーバーに接続できませんでした!\nインターネット接続に問題があるか、サーバーが現在利用できない可能性があります。後でもう一度お試しください。</string>
+    <string name="changelog_not_found">変更履歴が見つかりませんでした!\nインターネット接続に問題があるか、サーバーが現在利用できない可能性があります。後でもう一度お試しください。</string>
     <string name="individual_changelog_not_found">何か問題が発生しました。\nこの変更履歴はサーバー上で利用できない可能性があります。</string>
     <!-- App Updates -->
     <string name="checking_for_update">更新を確認中</string>
