@@ -616,7 +616,7 @@
     <string name="hide_ls_statusbar_title">ロックスクリーンのステータスバーを非表示</string>
     <string name="hide_ls_statusbar_desc">ロックスクリーン上のステータスバーを非表示にします</string>
     <string name="fixed_status_icons_title">固定ステータスアイコン</string>
-    <string name="fixed_status_icons_desc">ステータスアイコンを固定位置に設定します\n一部のROMで不具合が
+    <string name="fixed_status_icons_desc">ステータスアイコンを固定位置に設定します\n一部のROMでは不具合が発生する可能性があります</string>
     <!-- Changelog -->
     <string name="activity_title_changelog">変更履歴</string>
     <string name="no_internet_connection">サーバーに接続できませんでした!\nインターネット接続に問題があるか、サーバーが現在利用できない可能性があります。後でもう一度お試しください。</string>
