@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_moto">退屈なAndroid UIをカスタマイズ</string>
+    <string name="app_moto">退屈なAndroid UIをカスタマイズしよう</string>
     <!-- Onboarding -->
     <string name="init_module_installation">セットアップを初期化</string>
     <string name="step">ステップ</string>
     <string name="module_installation_step1">モジュールシェルを作成</string>
     <string name="module_installation_step2">必要なファイルを抽出</string>
-    <string name="module_installation_step3">オーバーレイAPKを作成</string>
-    <string name="module_installation_step4">オーバーレイAPKを整列</string>
-    <string name="module_installation_step5">オーバーレイAPKに署名</string>
-    <string name="module_installation_step6">ディレクトリのクリーニング</string>
-    <string name="onboarding_title_1">ストックUIに飽きましたか？</string>
-    <string name="onboarding_desc_1">すべてを自分の好みにカスタマイズしましょう。</string>
-    <string name="onboarding_title_2">私のデバイスは対応していますか？</string>
+    <string name="module_installation_step3">オーバーレイAPKを作成中</string>
+    <string name="module_installation_step4">オーバーレイAPKを整列中</string>
+    <string name="module_installation_step5">オーバーレイAPKに署名中</string>
+    <string name="module_installation_step6">ディレクトリの清掃中</string>
+    <string name="onboarding_title_1">ストックUIに飽きたか？</string>
+    <string name="onboarding_desc_1">すべてを自分の好みにカスタマイズしよう。</string>
+    <string name="onboarding_title_2">このデバイスは対応しているのかな？</string>
     <string name="onboarding_desc_2">IconifyはすべてのPixelとAOSPベースのROMをサポートしています。</string>
     <string name="onboarding_title_3">今すぐ始めましょうか？</string>
     <string name="onboarding_desc_3">Iconifyが内部作業を開始する時間です。</string>
-    <string name="need_storage_perm_title">ストレージ許可が必要</string>
+    <string name="need_storage_perm_title">ストレージ許可が必要です。</string>
     <string name="need_storage_perm_desc">必要なファイルを作成するためにストレージ許可が必要です。</string>
-    <string name="magisk_not_found_title">Magiskが見つかりません</string>
-    <string name="magisk_not_found_desc">Magiskを使用してデバイスをルート化してください！</string>
-    <string name="root_not_found_title">ルートが利用できません</string>
-    <string name="root_not_found_desc">デバイスがルート化されていないようです！</string>
-    <string name="need_reboot_title">デバイスの再起動が必要</string>
+    <string name="magisk_not_found_title">Magiskが見つかりません。</string>
+    <string name="magisk_not_found_desc">Magiskを使用してデバイスをRoot化してください！</string>
+    <string name="root_not_found_title">Rootが利用できません。</string>
+    <string name="root_not_found_desc">デバイスがRoot化されていないようです！</string>
+    <string name="need_reboot_title">デバイスの再起動が必要。</string>
     <string name="need_reboot_desc">すべてのファイルを配置するためにデバイスを再起動します。</string>
-    <string name="installation_failed_title">予期しないエラーが発生しました</string>
+    <string name="installation_failed_title">予期しないエラーが発生しました。</string>
     <string name="installation_failed_desc">ログはドキュメントフォルダに保存されました。</string>
     <string name="logs">ログ</string>
     <!-- Home -->
@@ -62,8 +62,8 @@
     <string name="activity_desc_qs_icon_label">アイコンとラベルのオプションを変更</string>
     <string name="activity_title_qs_tile_size">QSタイルサイズ</string>
     <string name="activity_desc_qs_tile_size">QSパネルタイルの高さを変更</string>
-    <string name="activity_title_qs_panel_margin">QSパネルマージン</string>
-    <string name="activity_desc_qs_panel_margin">クイック設定マージンを変更</string>
+    <string name="activity_title_qs_panel_margin">QSパネルの余白</string>
+    <string name="activity_desc_qs_panel_margin">QSパネルの余白を変更</string>
     <string name="activity_title_statusbar">ステータスバー</string>
     <string name="activity_desc_statusbar">ステータスバーインターフェースを変更</string>
     <string name="activity_title_navigation_bar">ナビゲーションバー</string>
@@ -143,7 +143,7 @@
     <string name="iconpack_victor_desc">エッジの効いたアイコンパック</string>
     <!-- Colored Battery -->
     <string name="enable_colored_battery_title">カラーバッテリーを有効にする</string>
-    <string name="enable_colored_battery_desc">バッテリーアイコンにカスタム色を使用する</string>
+    <string name="enable_colored_battery_desc">バッテリーアイコンにカスタムの色を使用する</string>
     <string name="battery_background_color_title">背景色</string>
     <string name="battery_background_color_desc">バッテリー充填コンテナの色</string>
     <string name="battery_filled_color_title">塗りつぶし色</string>
@@ -290,8 +290,8 @@
     <string name="qs_tile_non_expanded_height">非展開時の高さ</string>
     <string name="qs_tile_expanded_height">展開時の高さ</string>
     <!-- QS Panel Margin -->
-    <string name="qqs_panel_top_margin_title">QQSパネル上部のマージン</string>
-    <string name="qs_panel_top_margin_title">QSパネル上部のマージン</string>
+    <string name="qqs_panel_top_margin_title">QSパネル上部の余白</string>
+    <string name="qs_panel_top_margin_title">QSパネル上部の余白</string>
     <!-- Statusbar -->
     <string name="section_title_spacing">スペーシング</string>
     <string name="sb_left_padding">左のパディング</string>
@@ -447,19 +447,19 @@
     <string name="vertical_qs_tile_desc">QSアイコンの下にラベルを表示する</string>
     <string name="hide_qs_tile_label_title">QSタイルのラベルを非表示にする</string>
     <string name="hide_qs_tile_label_desc">垂直タイルのみ使用してください</string>
-    <string name="section_title_qs_margin">QSマージン</string>
+    <string name="section_title_qs_margin">QSの余白</string>
     <!-- バッテリースタイル -->
     <string name="battery_style_title">バッテリースタイル</string>
     <string name="battery_width_title">バッテリー幅</string>
     <string name="battery_height_title">バッテリー高さ</string>
-    <string name="battery_margin_title">バッテリーマージン</string>
+    <string name="battery_margin_title">バッテリーの余白</string>
     <string name="hide_battery_title">バッテリーを非表示にする</string>
     <string name="hide_battery_desc">充電アイコンとパーセンテージのみ表示する</string>
     <string name="custom_charging_icon_title">カスタム充電アイコン</string>
     <string name="custom_charging_icon_desc">充電アイコンをカスタムアイコンに変更する</string>
     <string name="charging_icon_style_title">充電アイコンスタイル</string>
-    <string name="charging_icon_margin_left_title">充電アイコンの左マージン</string>
-    <string name="charging_icon_margin_right_title">充電アイコンの右マージン</string>
+    <string name="charging_icon_margin_left_title">充電アイコンの左側の余白</string>
+    <string name="charging_icon_margin_right_title">充電アイコンの右側の余白</string>
     <string name="charging_icon_size_title">充電アイコンのサイズ</string>
     <string name="perimeter_alpha_title">パーセンテージアルファ</string>
     <string name="perimeter_alpha_desc">バッテリーパーセンテージを半透明にする</string>
@@ -481,10 +481,10 @@
     <string name="powersave_indicator_color_desc">省電力モードのインジケーターの色を変更する</string>
     <string name="custom_dimensions_title">カスタムディメンション</string>
     <string name="custom_dimensions_desc">バッテリーアイコンのカスタムディメンションを設定する</string>
-    <string name="battery_margin_left_title">バッテリーマージン左</string>
-    <string name="battery_margin_right_title">バッテリーマージン右</string>
-    <string name="battery_margin_top_title">バッテリーマージン上</string>
-    <string name="battery_margin_bottom_title">バッテリーマージン下</string>
+    <string name="battery_margin_left_title">バッテリーの左側の余白</string>
+    <string name="battery_margin_right_title">バッテリーの右側の余白</string>
+    <string name="battery_margin_top_title">バッテリーの上側の</string>
+    <string name="battery_margin_bottom_title">バッテリーの下側の余白</string>
     <string name="reverse_layout_title">レイアウトを反転</string>
     <string name="reverse_layout_desc">パーセンテージを反対側に表示する</string>
     <string name="rotate_layout_title">レイアウトを回転</string>
@@ -551,8 +551,8 @@
     <string name="header_clock_color_picker_title">時計の色を選択</string>
     <string name="header_clock_color_picker_desc">ヘッダー時計のテキストの色を設定します</string>
     <string name="header_clock_font_text_scaling_title">テキストのスケーリング</string>
-    <string name="header_clock_side_margin_title">時計の横マージン</string>
-    <string name="header_clock_top_margin_title">時計の上マージン</string>
+    <string name="header_clock_side_margin_title">時計の横側の余白</string>
+    <string name="header_clock_top_margin_title">時計の上側の余白</string>
     <string name="header_clock_white_text_title">白いテキスト</string>
     <string name="header_clock_white_text_desc">テキストの色を強制的に白にします</string>
     <string name="header_clock_center_clock_title">中央時計</string>
@@ -573,8 +573,8 @@
     <string name="lsclock_color_picker_desc">ロックスクリーン時計のテキストの色を設定します</string>
     <string name="lockscreen_font_text_scaling_title">テキストのスケーリング</string>
     <string name="lockscreen_font_line_height_title">行の高さ</string>
-    <string name="lockscreen_clock_top_margin_title">上マージン</string>
-    <string name="lockscreen_clock_bottom_margin_title">下マージン</string>
+    <string name="lockscreen_clock_top_margin_title">上側の余白</string>
+    <string name="lockscreen_clock_bottom_margin_title">下側の余白</string>
     <string name="lockscreen_clock_white_text_title">白いテキスト</string>
     <string name="lockscreen_clock_white_text_desc">すべての色を白に強制します</string>
     <!-- Depth Wallpaper -->
@@ -602,8 +602,8 @@
     <string name="status_icons_chip_title">ステータスアイコンチップ</string>
     <string name="status_icons_chip_desc">ステータスアイコンの背後にチップを表示します</string>
     <string name="status_icons_chip_style_title">チップスタイル</string>
-    <string name="fixed_status_icons_top_margin">上マージン</string>
-    <string name="fixed_status_icons_side_margin">横マージン</string>
+    <string name="fixed_status_icons_top_margin">上側の余白</string>
+    <string name="fixed_status_icons_side_margin">横側の余白</string>
     <!-- Xposed Others -->
     <string name="qs_header">QSヘッダー</string>
     <string name="hide_carrier_group_title">キャリアグループを非表示</string>
@@ -825,8 +825,8 @@
     <string name="qs_clock_chip_style_desc">SystemUIの再起動が必要です\n幅を修正するためにロックしてアンロックしてください</string>
     <string name="qs_date_chip_title">QS日付チップ</string>
     <string name="qs_date_chip_desc">QS日付の背後に表示されるチップ</string>
-    <string name="custom_qs_margin_title">カスタムQSマージン</string>
-    <string name="custom_qs_margin_desc">QSパネルのためのカスタムマージンを有効にする</string>
+    <string name="custom_qs_margin_title">QSの余白をカスタマイズ</string>
+    <string name="custom_qs_margin_desc">QSパネルのための余白をカスタマイズする</string>
     <string name="force_enable_blur_title">強制的にぼかしを有効にする</string>
     <string name="force_enable_blur_desc">サポートされていないROMに対してぼかしを強制的に有効にする</string>
     <string name="choose_header_image">ヘッダー画像を選択</string>
