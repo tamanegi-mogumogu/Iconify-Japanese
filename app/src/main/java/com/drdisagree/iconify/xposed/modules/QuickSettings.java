@@ -46,9 +46,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.drdisagree.iconify.xposed.ModPack;
-import com.drdisagree.iconify.xposed.modules.utils.Helpers;
-
-import java.util.Objects;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -62,7 +59,7 @@ public class QuickSettings extends ModPack {
     private static Float QsTileSecondaryTextSize = null;
     private static boolean qqsTopMarginEnabled = false;
     private static boolean qsTopMarginEnabled = false;
-    private boolean fixNotificationColor = false;
+    private boolean fixNotificationColor = true;
     private int qqsTopMargin = 100;
     private int qsTopMargin = 100;
     private Object mParam = null;
@@ -84,16 +81,8 @@ public class QuickSettings extends ModPack {
         qqsTopMargin = Xprefs.getInt(QQS_TOPMARGIN, 100);
         qsTopMargin = Xprefs.getInt(QS_TOPMARGIN, 100);
 
-        fixNotificationColor = Xprefs.getBoolean(FIX_NOTIFICATION_COLOR, false);
-
-        if (Key.length > 0 && (Objects.equals(Key[0], VERTICAL_QSTILE_SWITCH) ||
-                Objects.equals(Key[0], HIDE_QSLABEL_SWITCH) ||
-                Objects.equals(Key[0], QQS_TOPMARGIN) ||
-                Objects.equals(Key[0], QS_TOPMARGIN) ||
-                Objects.equals(Key[0], FIX_NOTIFICATION_COLOR))
-        ) {
-            Helpers.forceReloadSystemUI(mContext);
-        }
+        fixNotificationColor = Build.VERSION.SDK_INT >= 34 &&
+                Xprefs.getBoolean(FIX_NOTIFICATION_COLOR, true);
     }
 
     @Override
@@ -241,29 +230,46 @@ public class QuickSettings extends ModPack {
             Class<?> NotificationBackgroundViewClass = findClass(SYSTEMUI_PACKAGE + ".statusbar.notification.row.NotificationBackgroundView", loadPackageParam.classLoader);
             Class<?> FooterViewClass = findClass(SYSTEMUI_PACKAGE + ".statusbar.notification.row.FooterView", loadPackageParam.classLoader);
 
-            hookAllMethods(ActivatableNotificationViewClass, "setBackgroundTintColor", new XC_MethodHook() {
+            XC_MethodHook removeNotificationTint = new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) {
                     if (!fixNotificationColor) return;
 
-                    int color = (int) param.args[0];
                     View notificationBackgroundView = (View) getObjectField(param.thisObject, "mBackgroundNormal");
 
-                    setObjectField(param.thisObject, "mCurrentBackgroundTint", color);
+                    try {
+                        setObjectField(param.thisObject, "mCurrentBackgroundTint", (int) param.args[0]);
+                    } catch (Throwable ignored) {
+                    }
+
                     callMethod(getObjectField(notificationBackgroundView, "mBackground"), "clearColorFilter");
                     setObjectField(notificationBackgroundView, "mTintColor", 0);
                     notificationBackgroundView.invalidate();
                 }
-            });
+            };
 
-            hookAllMethods(NotificationBackgroundViewClass, "setCustomBackground$1", new XC_MethodHook() {
+            hookAllMethods(ActivatableNotificationViewClass, "setBackgroundTintColor", removeNotificationTint);
+            hookAllMethods(ActivatableNotificationViewClass, "updateBackgroundColors", removeNotificationTint);
+            hookAllMethods(ActivatableNotificationViewClass, "updateBackgroundTint", removeNotificationTint);
+
+            XC_MethodHook replaceTintColor = new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) {
                     if (!fixNotificationColor) return;
 
                     setObjectField(param.thisObject, "mTintColor", 0);
                 }
-            });
+            };
+
+            try {
+                hookAllMethods(NotificationBackgroundViewClass, "setCustomBackground$1", replaceTintColor);
+            } catch (Throwable ignored) {
+            }
+
+            try {
+                hookAllMethods(NotificationBackgroundViewClass, "setCustomBackground", replaceTintColor);
+            } catch (Throwable ignored) {
+            }
 
             hookAllMethods(FooterViewClass, "updateColors", new XC_MethodHook() {
                 @Override
