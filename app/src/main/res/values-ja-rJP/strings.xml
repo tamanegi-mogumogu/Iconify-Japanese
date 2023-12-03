@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_moto">退屈なAndroid UIをカスタマイズしよう</string>
     <!-- Onboarding -->
     <string name="init_module_installation">セットアップを初期化</string>
@@ -411,37 +411,39 @@
     <string name="activity_title_xposed_others">その他</string>
     <string name="activity_desc_xposed_others">その他のXposedの調整</string>
     <!-- Transparency & Blur -->
-    <string name="section_title_transparency">透明度</string>
-    <string name="transparent_qs_panel_title">透明なQSパネル</string>
-    <string name="transparent_qs_panel_desc">QSパネルの背景を透明にする</string>
-    <string name="transparency_alpha_title">透明度アルファ</string>
-    <string name="transparent_notif_shade_title">透明な通知シェードのみ</string>
-    <string name="transparent_notif_shade_desc">通知シェードのみを透明にする</string>
-    <string name="section_title_blur">ぼかし</string>
-    <string name="window_level_blur_title">ウィンドウレベルのぼかし</string>
-    <string name="window_level_blur_desc">再起動が必要です</string>
-    <string name="aggressive_blur_title">アグレッシブなぼかし有効化</string>
-    <string name="aggressive_blur_desc">一部のROMでブートループの可能性があります</string>
-    <string name="blur_intensity_title">ぼかしの強度</string>
-    <!-- テーマ -->
-    <string name="section_title_for_pixel_roms">Pixel ROM向け</string>
-    <string name="light_theme_title">ライトテーマ</string>
-    <string name="light_theme_desc">ライトモードのライトQSテーマ\nカスタムQSシェイプを使用する必要があります</string>
-    <string name="dual_tone_title">デュアルトーン</string>
-    <string name="dual_tone_desc">ヘッダーに異なる色を使用する</string>
-    <string name="section_title_for_custom_roms">カスタムROM向け</string>
-    <string name="black_theme_title">Pixelブラックテーマ</string>
-    <string name="black_theme_desc">ライトモードのブラックQSテーマ\nPixel QSシェイプを使用する必要があります\nテキストの色を修正するためにダークテーマに切り替えてください</string>
-    <string name="section_title_translucent_theme">透明テーマ</string>
-    <string name="fluid_qs_theme_title">Fluid QSテーマ</string>
-    <string name="fluid_qs_theme_desc">2色の透明なQSテーマ\n色を修正するためにテーマを切り替えてください\nカスタムシェイプは使用しないでください</string>
-    <string name="notification_transparency_title">通知の透明度</string>
-    <string name="notification_transparency_desc">Fluid QS用の通知の透明度\nカスタム通知スタイルは使用しないでください</string>
-    <string name="power_menu_transparency_title">パワーメニューの透明度</string>
-    <string name="power_menu_transparency_desc">Fluid QS用のパワーメニューの透明度\nカスタム通知スタイルは使用しないでください</string>
-    <string name="section_title_others">その他</string>
-    <string name="fix_notification_color_title">通知の色修正</string>
-    <string name="fix_notification_color_desc">Android 14でのカスタム通知スタイルの修正</string>
+    <string name="section_title_transparency">Transparency</string>
+    <string name="transparent_qs_panel_title">Transparent QS Panel</string>
+    <string name="transparent_qs_panel_desc">Make QS panel background transparent</string>
+    <string name="transparency_alpha_title">Transparency Alpha</string>
+    <string name="transparent_notif_shade_title">Transparent Notif Shade Only</string>
+    <string name="transparent_notif_shade_desc">Make only notification shade transparent</string>
+    <string name="keep_lockscreen_shade_title">Dim Lockscreen Wallpaper</string>
+    <string name="keep_lockscreen_shade_desc">Suitable for light-colored wallpapers</string>
+    <string name="section_title_blur">Blur</string>
+    <string name="window_level_blur_title">Window Level Blur</string>
+    <string name="window_level_blur_desc">Requires reboot to work</string>
+    <string name="aggressive_blur_title">Aggressive Blur Enabler</string>
+    <string name="aggressive_blur_desc">Might bootloop in some roms</string>
+    <string name="blur_intensity_title">Blur Intensity</string>
+    <!-- Themes -->
+    <string name="section_title_for_pixel_roms">For Pixel Roms</string>
+    <string name="light_theme_title">Light Theme</string>
+    <string name="light_theme_desc">Light QS theme in light mode\nMust use custom QS Shape</string>
+    <string name="dual_tone_title">Dual Tone</string>
+    <string name="dual_tone_desc">Use different color for header</string>
+    <string name="section_title_for_custom_roms">For Custom Roms</string>
+    <string name="black_theme_title">Pixel Black Theme</string>
+    <string name="black_theme_desc">Black QS theme in light mode\nMust use Pixel QS Shape\nSwitch dark theme to fix text color</string>
+    <string name="section_title_translucent_theme">Translucent Theme</string>
+    <string name="fluid_qs_theme_title">Fluid QS Theme</string>
+    <string name="fluid_qs_theme_desc">Two tone translucent QS theme\nSwitch theme to fix color\nDo not use custom shapes</string>
+    <string name="notification_transparency_title">Notification Transparency</string>
+    <string name="notification_transparency_desc">Notification transparency for Fluid QS\nDo not use custom notification style</string>
+    <string name="power_menu_transparency_title">Power Menu Transparency</string>
+    <string name="power_menu_transparency_desc">Power menu transparency for Fluid QS\nDo not use custom notification style</string>
+    <string name="section_title_others">Others</string>
+    <string name="fix_notification_color_title">Fix Notification Color</string>
+    <string name="fix_notification_color_desc">Fix custom notification style on android 14</string>
     <!-- Quick Settings -->
     <string name="section_title_qs_tile">QSタイル</string>
     <string name="vertical_qs_tile_title">垂直QSタイル</string>
