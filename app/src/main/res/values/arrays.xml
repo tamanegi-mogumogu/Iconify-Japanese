@@ -10,6 +10,7 @@
         <item>English</item>
         <item>Chinese (Simplified)</item>
         <item>French</item>
+        <item>Japanese</item>
         <item>Indonesian</item>
         <item>Italian</item>
         <item>Persian</item>
@@ -25,6 +26,7 @@
         <item>en-US</item>
         <item>zh-CN</item>
         <item>fr-FR</item>
+        <item>ja-JP</item>
         <item>in-ID</item>
         <item>it-IT</item>
         <item>fa-IR</item>
@@ -34,7 +36,6 @@
         <item>es-ES</item>
         <item>tr-TR</item>
         <item>vi-VN</item>
-        <item>ja-JP</item>
     </string-array>
     <string-array name="app_icon">
         <item>@string/settings_app_icon_default</item>
