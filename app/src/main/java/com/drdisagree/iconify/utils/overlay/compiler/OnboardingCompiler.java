@@ -2,6 +2,8 @@ package com.drdisagree.iconify.utils.overlay.compiler;
 
 import static com.drdisagree.iconify.common.Dynamic.AAPT;
 import static com.drdisagree.iconify.common.Dynamic.ZIPALIGN;
+import static com.drdisagree.iconify.common.Resources.FRAMEWORK_DIR;
+import static com.drdisagree.iconify.common.Resources.FRAMEWORK_DIR_ALT;
 import static com.drdisagree.iconify.utils.apksigner.CryptoUtils.readCertificate;
 import static com.drdisagree.iconify.utils.apksigner.CryptoUtils.readPrivateKey;
 import static com.drdisagree.iconify.utils.helper.Logger.writeLog;
@@ -11,10 +13,13 @@ import android.util.Log;
 
 import com.drdisagree.iconify.Iconify;
 import com.drdisagree.iconify.common.Resources;
+import com.drdisagree.iconify.utils.FileUtil;
 import com.drdisagree.iconify.utils.apksigner.SignAPK;
 import com.drdisagree.iconify.utils.overlay.manager.QsResourceManager;
 import com.topjohnwu.superuser.Shell;
 
+import java.io.File;
+import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.util.Objects;
@@ -48,7 +53,7 @@ public class OnboardingCompiler {
     public static boolean runAapt(String source, String name) {
         Shell.Result result = null;
         int attempt = 3;
-        String command = aapt + " p -f -M " + source + "/AndroidManifest.xml -I /system/framework/framework-res.apk -S " + source + "/res -F " + Resources.UNSIGNED_UNALIGNED_DIR + '/' + name + "-unsigned-unaligned.apk --include-meta-data --auto-add-overlay";
+        String command = aapt + " p -f -M " + source + "/AndroidManifest.xml -I " + FRAMEWORK_DIR + " -S " + source + "/res -F " + Resources.UNSIGNED_UNALIGNED_DIR + '/' + name + "-unsigned-unaligned.apk --include-meta-data --auto-add-overlay";
 
         if (isQsTileOrTextOverlay(name) && isQsTileOrTextOldResource) {
             QsResourceManager.replaceResourcesIfRequired(source, name);
@@ -57,10 +62,28 @@ public class OnboardingCompiler {
         while (attempt-- != 0) {
             result = Shell.cmd(command).exec();
 
+            if (OverlayCompiler.listContains(result.getOut(), "No resource identifier found for attribute")) {
+                if (!new File(FRAMEWORK_DIR_ALT).exists()) {
+                    try {
+                        Log.w(TAG + " - AAPT", "Framework not valid, copying framework...");
+                        FileUtil.copyAssets("Framework");
+                    } catch (IOException e) {
+                        Log.e(TAG + " - AAPT", "Failed to copy framework\n" + e);
+                        writeLog(TAG + " - AAPT", "Failed to copy framework", e);
+                    }
+                }
+
+                result = Shell.cmd(command.replace(FRAMEWORK_DIR, FRAMEWORK_DIR_ALT)).exec();
+            }
+
             if (!isQsTileOrTextOldResource &&
                     isQsTileOrTextOverlay(name) &&
                     !result.isSuccess() &&
-                    result.getOut().contains("Error: No resource found that matches the given name")) {
+                    OverlayCompiler.listContains(
+                            result.getOut(),
+                            "No resource found that matches the given name"
+                    )
+            ) {
                 Log.w(TAG + " - AAPT", "Resources missing, trying to replace resources with old resources...");
                 isQsTileOrTextOldResource = true;
                 QsResourceManager.replaceResourcesIfRequired(source, name);

@@ -707,6 +707,7 @@
     <string name="ar_translation">Arabic translation.</string>
     <string name="fa_translation">Persian translation.</string>
     <string name="fr_translation">French translation.</string>
+    <string name="ja_translation">Japanese translation.</string>
     <string name="id_translation">Indonesian translation.</string>
     <string name="it_translation">Italian translation.</string>
     <string name="pt_translation">Portuguese translation.</string>
@@ -715,6 +716,7 @@
     <string name="vi_translation">Vietnamese translation.</string>
     <string name="es_translation">Spanish translation.</string>
     <string name="zh_cn_translation">Simplified Chinese translation.</string>
+    <string name="zh_tw_translation">Traditional Chinese translation.</string>
     <string name="pl_translation">Polish translation.</string>
 
     <!-- Experimental -->

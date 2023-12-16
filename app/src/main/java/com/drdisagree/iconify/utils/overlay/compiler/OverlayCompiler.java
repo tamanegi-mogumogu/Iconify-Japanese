@@ -2,6 +2,8 @@ package com.drdisagree.iconify.utils.overlay.compiler;
 
 import static com.drdisagree.iconify.common.Dynamic.AAPT;
 import static com.drdisagree.iconify.common.Dynamic.ZIPALIGN;
+import static com.drdisagree.iconify.common.Resources.FRAMEWORK_DIR;
+import static com.drdisagree.iconify.common.Resources.FRAMEWORK_DIR_ALT;
 import static com.drdisagree.iconify.utils.apksigner.CryptoUtils.readCertificate;
 import static com.drdisagree.iconify.utils.apksigner.CryptoUtils.readPrivateKey;
 import static com.drdisagree.iconify.utils.helper.Logger.writeLog;
@@ -11,9 +13,12 @@ import android.util.Log;
 import com.drdisagree.iconify.Iconify;
 import com.drdisagree.iconify.common.Resources;
 import com.drdisagree.iconify.utils.AppUtil;
+import com.drdisagree.iconify.utils.FileUtil;
 import com.drdisagree.iconify.utils.apksigner.SignAPK;
 import com.topjohnwu.superuser.Shell;
 
+import java.io.File;
+import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -55,14 +60,29 @@ public class OverlayCompiler {
                 Resources.COMPANION_COMPILED_DIR :
                 Resources.UNSIGNED_UNALIGNED_DIR;
 
-        StringBuilder aaptCommand = new StringBuilder(aapt + " p -f -M " + source + "/AndroidManifest.xml -S " + source + "/res -F " + outputDir + '/' + name + " -I /system/framework/framework-res.apk --include-meta-data --auto-add-overlay");
+        StringBuilder aaptCommand = new StringBuilder(aapt + " p -f -M " + source + "/AndroidManifest.xml -S " + source + "/res -F " + outputDir + '/' + name + " -I " + FRAMEWORK_DIR + " --include-meta-data --auto-add-overlay");
 
         String[] splitLocations = AppUtil.getSplitLocations(targetPackage);
         for (String targetApk : splitLocations) {
             aaptCommand.append(" -I ").append(targetApk);
         }
 
-        Shell.Result result = Shell.cmd(String.valueOf(aaptCommand)).exec();
+        String command = String.valueOf(aaptCommand);
+        Shell.Result result = Shell.cmd(command).exec();
+
+        if (listContains(result.getOut(), "No resource identifier found for attribute")) {
+            if (!new File(FRAMEWORK_DIR_ALT).exists()) {
+                try {
+                    Log.w(TAG + " - AAPT", "Framework not valid, copying framework...");
+                    FileUtil.copyAssets("Framework");
+                } catch (IOException e) {
+                    Log.e(TAG + " - AAPT", "Failed to copy framework\n" + e);
+                    writeLog(TAG + " - AAPT", "Failed to copy framework", e);
+                }
+            }
+
+            result = Shell.cmd(command.replace(FRAMEWORK_DIR, FRAMEWORK_DIR_ALT)).exec();
+        }
 
         if (result.isSuccess()) Log.i(TAG + " - AAPT", "Successfully built APK for " + name);
         else {
@@ -106,6 +126,16 @@ public class OverlayCompiler {
             writeLog(TAG + " - APKSigner", "Failed to sign " + fileName, e);
             return true;
         }
+        return false;
+    }
+
+    public static boolean listContains(List<String> list, String target) {
+        for (String item : list) {
+            if (item.toLowerCase().contains(target.toLowerCase())) {
+                return true;
+            }
+        }
+
         return false;
     }
 }
