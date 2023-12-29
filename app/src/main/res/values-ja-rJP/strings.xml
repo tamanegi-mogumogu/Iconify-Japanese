@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_moto">退屈なAndroid UIをカスタマイズしよう</string>
-    <!-- Onboarding -->
-    <string name="init_module_installation">セットアップを初期化</string>
+<resources>
+    <string name="app_moto">退屈なAndroid UIをカスタマイズ</string>
+    <!-- オンボーディング -->
+    <string name="init_module_installation">セットアップの初期化</string>
     <string name="step">ステップ</string>
-    <string name="module_installation_step1">モジュールシェルを作成</string>
-    <string name="module_installation_step2">必要なファイルを抽出</string>
-    <string name="module_installation_step3">オーバーレイAPKを作成中</string>
-    <string name="module_installation_step4">オーバーレイAPKを整列中</string>
-    <string name="module_installation_step5">オーバーレイAPKに署名中</string>
-    <string name="module_installation_step6">ディレクトリの清掃中</string>
-    <string name="onboarding_title_1">ストックUIに飽きたか？</string>
-    <string name="onboarding_desc_1">すべてを自分の好みにカスタマイズしよう。</string>
-    <string name="onboarding_title_2">このデバイスは対応しているのかな？</string>
-    <string name="onboarding_desc_2">IconifyはすべてのPixelとAOSPベースのROMをサポートしています。</string>
-    <string name="onboarding_title_3">今すぐ始めましょうか？</string>
-    <string name="onboarding_desc_3">Iconifyが内部作業を開始する時間です。</string>
-    <string name="need_storage_perm_title">ストレージ許可が必要です。</string>
-    <string name="need_storage_perm_desc">必要なファイルを作成するためにストレージ許可が必要です。</string>
-    <string name="magisk_not_found_title">Magiskが見つかりません。</string>
-    <string name="magisk_not_found_desc">Magiskを使用してデバイスをRoot化してください！</string>
-    <string name="root_not_found_title">Rootが利用できません。</string>
-    <string name="root_not_found_desc">デバイスがRoot化されていないようです！</string>
-    <string name="need_reboot_title">デバイスの再起動が必要。</string>
-    <string name="need_reboot_desc">すべてのファイルを配置するためにデバイスを再起動します。</string>
-    <string name="installation_failed_title">予期しないエラーが発生しました。</string>
+    <string name="module_installation_step1">モジュールシェルの作成</string>
+    <string name="module_installation_step2">必要なファイルの抽出</string>
+    <string name="module_installation_step3">オーバーレイAPKの作成</string>
+    <string name="module_installation_step4">オーバーレイAPKの整列</string>
+    <string name="module_installation_step5">オーバーレイAPKの署名</string>
+    <string name="module_installation_step6">ディレクトリのクリーニング</string>
+    <string name="onboarding_title_1">在庫UIに飽きた？</string>
+    <string name="onboarding_subtitle_1">すべてを自分の好みにカスタマイズしましょう。</string>
+    <string name="onboarding_desc_1">在庫のUIの単調さを捨て、すべてのテクノロジーの詳細を自分のスタイルと好みに合わせて個人化します。</string>
+    <string name="onboarding_title_2">私のデバイスはサポートされていますか？</string>
+    <string name="onboarding_subtitle_2">IconifyはすべてのPixelおよびAOSP ROMをサポートしています。</string>
+    <string name="onboarding_desc_2">すべてのPixelおよびAOSPベースのROMと互換性があり、Androidデバイスの幅広いサポートを確保します。</string>
+    <string name="onboarding_title_3">今から始めましょうか？</string>
+    <string name="onboarding_subtitle_3">iconifyが内部作業を行う時間です。</string>
+    <string name="onboarding_desc_3">内部タスクの開始、重要な作業の開始をマークします。準備はできていますか？</string>
+    <string name="need_storage_perm_title">ストレージ許可が必要です</string>
+    <string name="need_storage_perm_desc">必要なファイルをビルドするためにストレージ許可が必要です。</string>
+    <string name="compatible_root_not_found_title">適合するルートメソッドが見つかりませんでした</string>
+    <string name="compatible_root_not_found_desc">デバイスをルート化するにはMagiskまたはKernelSUを使用してください。</string>
+    <string name="root_not_found_title">ルートがアクセスできません</string>
+    <string name="root_not_found_desc">お使いのデバイスはルート化されていないようです！</string>
+    <string name="need_reboot_title">デバイスの再起動が必要です</string>
+    <string name="need_reboot_desc">すべてのファイルを配置するためにデバイスを再起動してください。</string>
+    <string name="installation_failed_title">おっと、それは予期しなかった</string>
     <string name="installation_failed_desc">ログはドキュメントフォルダに保存されました。</string>
     <string name="logs">ログ</string>
     <!-- Home -->
