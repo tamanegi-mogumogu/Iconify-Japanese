@@ -85,6 +85,7 @@ public class Credits extends BaseFragment {
         translators_list.add(new InfoModel(requireContext(), "KaeruShi", Iconify.getAppContextLocale().getResources().getString(R.string.id_translation), "https://github.com/KaeruShi", R.drawable.ic_user));
         translators_list.add(new InfoModel(requireContext(), "Danilo Belmonte", Iconify.getAppContextLocale().getResources().getString(R.string.it_translation), "https://crowdin.com/profile/steve.burnside", R.drawable.ic_user));
         translators_list.add(new InfoModel(requireContext(), "Faceless1999", Iconify.getAppContextLocale().getResources().getString(R.string.fa_translation), "https://github.com/Faceless1999", R.drawable.ic_user));
+        translators_list.add(new InfoModel(requireContext(), "igor", Iconify.getAppContextLocale().getResources().getString(R.string.pt_br_translation), "https://github.com/igormiguell", R.drawable.ic_user));
         translators_list.add(new InfoModel(requireContext(), "ElTifo", Iconify.getAppContextLocale().getResources().getString(R.string.pt_translation), "https://github.com/ElTifo", R.drawable.ic_user));
         translators_list.add(new InfoModel(requireContext(), "Blays", Iconify.getAppContextLocale().getResources().getString(R.string.ru_translation), "https://github.com/B1ays", R.drawable.ic_user));
         translators_list.add(new InfoModel(requireContext(), "Cccc_", Iconify.getAppContextLocale().getResources().getString(R.string.zh_cn_translation), "https://github.com/Cccc-owo", R.drawable.ic_user));
@@ -94,7 +95,7 @@ public class Credits extends BaseFragment {
         translators_list.add(new InfoModel(requireContext(), "Emre", Iconify.getAppContextLocale().getResources().getString(R.string.tr_translation), "https://crowdin.com/profile/khapnols", R.drawable.ic_user));
         translators_list.add(new InfoModel(requireContext(), "WINZORT", Iconify.getAppContextLocale().getResources().getString(R.string.tr_translation), "https://crowdin.com/profile/linuxthegoat", R.drawable.ic_user));
         translators_list.add(new InfoModel(requireContext(), "Đức Trọng", Iconify.getAppContextLocale().getResources().getString(R.string.vi_translation), "https://t.me/viettel1211", R.drawable.ic_user));
-        translators_list.add(new InfoModel(requireContext(), "Jakub Skorłutowski", Iconify.getAppContextLocale().getResources().getString(R.string.pl_translation), "https://github.com/SK00RUPA", R.drawable.ic_user));
+        translators_list.add(new InfoModel(requireContext(), "SK00RUPA", Iconify.getAppContextLocale().getResources().getString(R.string.pl_translation), "https://github.com/SK00RUPA", R.drawable.ic_user));
 
         return new InfoAdapter(requireContext(), translators_list);
     }
