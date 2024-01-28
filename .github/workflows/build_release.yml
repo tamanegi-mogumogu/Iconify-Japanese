@@ -6,13 +6,35 @@ on:
   workflow_dispatch:
 
 jobs:
+  synchronize-with-crowdin:
+    name: Upload strings to Crowdin
+    if: github.repository_owner == 'tqmane'
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Upload Strings
+        uses: crowdin/github-action@v1
+        with:
+          upload_translations: false
+          upload_sources: true
+          download_translations: false
+          localization_branch_name: beta-localization
+          create_pull_request: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
   build:
     name: Build Release APK
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: set up JDK 18
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '18'
           distribution: 'temurin'
@@ -29,7 +51,7 @@ jobs:
         with:
           gradlePath: app/build.gradle
           versionCode: ${{github.run_number}}
-          versionName: "${{ env.VERSION_NAME }}"
+          versionName: "${{ env.VERSION_NAME }} Dev (#${{github.run_number}})"
 
       - name: Write sign info
         if: github.repository == 'tqmane/Iconify-Japanese'
@@ -46,7 +68,7 @@ jobs:
         run: ./gradlew assembleRelease
 
       - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: "Iconify-Japanese v${{ env.VERSION_NAME }}"
           path: app/build/outputs/apk/release/*.apk
