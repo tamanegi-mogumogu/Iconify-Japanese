@@ -2,6 +2,8 @@ package com.drdisagree.iconify.ui.fragments;
 
 import static com.drdisagree.iconify.common.Const.SWITCH_ANIMATION_DELAY;
 import static com.drdisagree.iconify.common.Preferences.HIDE_QSLABEL_SWITCH;
+import static com.drdisagree.iconify.common.Preferences.HIDE_QS_FOOTER_BUTTONS;
+import static com.drdisagree.iconify.common.Preferences.HIDE_QS_SILENT_TEXT;
 import static com.drdisagree.iconify.common.Preferences.QQS_TOPMARGIN;
 import static com.drdisagree.iconify.common.Preferences.QS_TOPMARGIN;
 import static com.drdisagree.iconify.common.Preferences.VERTICAL_QSTILE_SWITCH;
@@ -68,6 +70,7 @@ public class XposedQuickSettings extends BaseFragment {
         });
         binding.qqsTopMargin.setResetClickListener(v -> {
             RPrefs.clearPref(QQS_TOPMARGIN);
+            new Handler(Looper.getMainLooper()).postDelayed(SystemUtil::handleSystemUIRestart, SWITCH_ANIMATION_DELAY);
             return true;
         });
 
@@ -86,8 +89,17 @@ public class XposedQuickSettings extends BaseFragment {
         });
         binding.qsTopMargin.setResetClickListener(v -> {
             RPrefs.clearPref(QS_TOPMARGIN);
+            new Handler(Looper.getMainLooper()).postDelayed(SystemUtil::handleSystemUIRestart, SWITCH_ANIMATION_DELAY);
             return true;
         });
+
+        // Hide silent text
+        binding.hideSilentText.setSwitchChecked(RPrefs.getBoolean(HIDE_QS_SILENT_TEXT, false));
+        binding.hideSilentText.setSwitchChangeListener((buttonView, isChecked) -> RPrefs.putBoolean(HIDE_QS_SILENT_TEXT, isChecked));
+
+        // Hide footer buttons
+        binding.hideFooterButtons.setSwitchChecked(RPrefs.getBoolean(HIDE_QS_FOOTER_BUTTONS, false));
+        binding.hideFooterButtons.setSwitchChangeListener((buttonView, isChecked) -> RPrefs.putBoolean(HIDE_QS_FOOTER_BUTTONS, isChecked));
 
         return view;
     }
