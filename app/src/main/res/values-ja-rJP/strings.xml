@@ -22,7 +22,7 @@
     <string name="need_storage_perm_title">ストレージ権限が必要です</string>
     <string name="need_storage_perm_desc">必要なファイルをビルドするために、ストレージ権限が必要です。</string>
     <string name="compatible_root_not_found_title">互換性のあるルート化方法が見つかりませんでした。</string>
-    <string name="compatible_root_not_found_desc">Magisk または KernelSU を使用してデバイスをルート化してください。</string>
+    <string name="compatible_root_not_found_desc">続行するためには、人気のあるルート解決策を使用してください。</string>
     <string name="root_not_found_title">ルートにアクセスできません</string>
     <string name="root_not_found_desc">お使いのデバイスはルート化されていないようです！</string>
     <string name="need_reboot_title">デバイスの再起動が必要です</string>
@@ -182,7 +182,7 @@
     <string name="settings_iconpack_bubble_v2">マルチカラーアウトライン アイコンパック</string>
     <!-- Pixel Variant -->
     <string name="activity_title_pixel_variant">Pixel バリアント</string>
-    <string name="activity_desc_pixel_variant">黒クイック設定パネル用</string>
+    <string name="activity_desc_pixel_variant">For roms with black QS panel</string>
     <!-- Brightness Bar -->
     <string name="brightness_bar_styles">明るさ調節バーのスタイル</string>
     <!-- QS Panel Tiles -->
@@ -289,6 +289,8 @@
     <string name="label_follow_system_v2_desc">タイトルシステム、サブタイトルアクセント</string>
     <string name="label_fix_text_color_title">文字色を修正</string>
     <string name="label_fix_text_color_desc">機能しない場合のみ使用</string>
+    <string name="label_follow_accent_title">Follow Accent</string>
+    <string name="label_follow_accent_desc">Title accent, subtitle accent</string>
     <!-- QS Tile Size -->
     <string name="section_title_portrait">縦画面</string>
     <string name="section_title_landscape">横画面</string>
@@ -345,11 +347,11 @@
     <string name="vp_track_thick">太め</string>
     <string name="vp_track_none">なし</string>
     <string name="vp_thin_background_title">背景の色合い</string>
-    <string name="vp_thin_background_desc">Make track of volume slider thin</string>
-    <string name="vp_thick_background_title">Thick Background</string>
-    <string name="vp_thick_background_desc">Make track of volume slider thick</string>
-    <string name="vp_no_background_title">No Background</string>
-    <string name="vp_no_background_desc">Remove track of volume slider</string>
+    <string name="vp_thin_background_desc">音量スライダーの線を細くします</string>
+    <string name="vp_thick_background_title">太い背景</string>
+    <string name="vp_thick_background_desc">音量スライダーの線を太くします</string>
+    <string name="vp_no_background_title">背景なし</string>
+    <string name="vp_no_background_desc">音量スライダーの線を削除します</string>
     <string name="section_title_custom_magisk_module">カスタム Magisk モジュール</string>
     <string name="volume_style">音量のスタイル</string>
     <string name="volume_module_desc">このスタイルのフラッシュ可能な Magisk モジュールを作成します</string>
@@ -362,19 +364,19 @@
     <string name="btn_create_module">モジュールを作成</string>
     <string name="toast_module_created">モジュールの作成に成功しました</string>
     <string name="read_carefully">よく読んでください！</string>
-    <string name="volume_module_installation_guide">このオプションは内部ストレージのダウンロードフォルダの中に Magisk モジュールを作成します。IconifyCompanion.zip という名前のモジュールを Magisk でフラッシュしてください。新しいモジュールをインストールしたら再起動する前に必ず (もしインストールされていたら) 以前の Iconify コンパニオン モジュールをアンインストールしてください。\n\n<b>ノート:</b>\n・ROM をアップデートする前にモジュールをアンインストールすること。\n・ROM を変えたりアップデートしたりしたときはモジュールを作り直すこと。\n・ROM に基づいて作成されていないモジュールをフラッシュしないこと。</string>
+    <string name="volume_module_installation_guide">このオプションは、内部ストレージのダウンロードフォルダに Magisk モジュールを作成します。Magisk で IconifyCompanion.zip という名前のモジュールをフラッシュしてください。新しいモジュールをフラッシュする前に、前の Iconify Companion モジュールを常にアンインストールし、再起動してください。\n\n<b>注意:</b>\n• ROM を更新する前にモジュールをアンインストールしてください。\n• ROM を変更または更新した場合は、モジュールを再作成してください。\n• ROM に基づいて作成されていないモジュールをフラッシュしないでください。</string>
     <!-- Media Player -->
     <string name="cont_desc_media_player">メディアプレーヤー プレビュー</string>
-    <string name="media_player_preview_music_title">Music Title</string>
-    <string name="media_player_preview_artist_name">Artist Name</string>
-    <string name="media_player_preview_playing_on">Phone speaker</string>
+    <string name="media_player_preview_music_title">音楽タイトル</string>
+    <string name="media_player_preview_artist_name">アーティスト名</string>
+    <string name="media_player_preview_playing_on">スマートフォンスピーカー</string>
     <string name="section_title_background_color">背景の色</string>
     <string name="mp_accent_background_title">背景のアクセント</string>
-    <string name="mp_accent_background_desc">Make background follow accent</string>
-    <string name="mp_system_background_title">System Background</string>
-    <string name="mp_system_background_desc">Make background follow system</string>
-    <string name="mp_pb_background_title">Pitch Black Background</string>
-    <string name="mp_pb_background_desc">Make background pitch black</string>
+    <string name="mp_accent_background_desc">背景をアクセントに従って変更します</string>
+    <string name="mp_system_background_title">システム背景</string>
+    <string name="mp_system_background_desc">背景をシステムに従って変更します</string>
+    <string name="mp_pb_background_title">ピッチブラック背景</string>
+    <string name="mp_pb_background_desc">背景をピッチブラックにします</string>
     <!-- Miscellaneous -->
     <string name="section_title_tablet_mode">タブレットモード</string>
     <string name="tablet_landscape_title">タブレット横画面</string>
@@ -427,24 +429,24 @@
     <string name="window_level_blur_title">ウインドウ レベルのぼかし</string>
     <string name="window_level_blur_desc">動作には再起動が必要です</string>
     <string name="aggressive_blur_title">積極的なぼかしを有効化</string>
-    <string name="aggressive_blur_desc">いつくかの ROM ではブートループを引き起こします</string>
+    <string name="aggressive_blur_desc">Might bootloop in some roms</string>
     <string name="blur_intensity_title">ぼかしの強さ</string>
     <!-- Themes -->
     <string name="section_title_for_pixel_roms">For Pixel Roms</string>
     <string name="light_theme_title">ライト テーマ</string>
     <string name="light_theme_desc">ライト モードで明るいクイック設定を使用します\nカスタムクイック設定形状の使用が必要です</string>
-    <string name="dual_tone_title">Dual Tone</string>
-    <string name="dual_tone_desc">Use different color for header</string>
-    <string name="section_title_for_custom_roms">For Custom Roms</string>
+    <string name="dual_tone_title">デュアルトーン</string>
+    <string name="dual_tone_desc">ヘッダーに異なる色を使用します</string>
+    <string name="section_title_for_custom_roms">カスタムROM用</string>
     <string name="black_theme_title">Pixel Black Theme</string>
-    <string name="black_theme_desc">Black QS theme in light mode\nMust use Pixel QS Shape\nSwitch dark theme to fix text color</string>
-    <string name="section_title_translucent_theme">Translucent Theme</string>
+    <string name="black_theme_desc">ライトモードでの黒いQSテーマ\nPixel QS Shapeを使用する必要があります\nテキスト色を修正するにはダークテーマに切り替えてください</string>
+    <string name="section_title_translucent_theme">透過テーマ</string>
     <string name="fluid_qs_theme_title">Fluid QS Theme</string>
-    <string name="fluid_qs_theme_desc">Two tone translucent QS theme\nSwitch theme to fix color\nDo not use custom shapes</string>
+    <string name="fluid_qs_theme_desc">2色の透過QSテーマ\n色を修正するにはテーマを切り替えてください\nカスタム形状は使用しないでください</string>
     <string name="notification_transparency_title">通知の透過</string>
-    <string name="notification_transparency_desc">Notification transparency for Fluid QS\nDo not use custom notification style</string>
+    <string name="notification_transparency_desc">Fluid QSのための通知透過\nカスタム通知スタイルは使用しないでください</string>
     <string name="power_menu_transparency_title">電源メニューの透過</string>
-    <string name="power_menu_transparency_desc">Power menu transparency for Fluid QS\nDo not use custom notification style</string>
+    <string name="power_menu_transparency_desc">Fluid QSのための電源メニュー透過\nカスタム通知スタイルは使用しないでください</string>
     <string name="section_title_others">その他</string>
     <string name="fix_notification_color_title">通知の色を修正</string>
     <string name="fix_notification_color_desc">Android 14 でのカスタム通知スタイルを修正します</string>
@@ -455,6 +457,11 @@
     <string name="hide_qs_tile_label_title">クイック設定タイルのラベルを非表示</string>
     <string name="hide_qs_tile_label_desc">垂直タイルの時のみ使用してください</string>
     <string name="section_title_qs_margin">クイック設定マージン</string>
+    <string name="section_title_qs_elements">QS要素</string>
+    <string name="hide_qs_silent_text_title">サイレントテキストを非表示</string>
+    <string name="hide_qs_silent_text_desc">サイレント通知のヘッダーとして表示されるサイレントテキストを非表示にします（SystemUIの再起動が必要です）</string>
+    <string name="hide_qs_footer_buttons_title">フッターボタンを非表示</string>
+    <string name="hide_qs_footer_buttons_desc">通知スタックの下に表示されるフッターボタンを非表示にします</string>
     <!-- Battery Style -->
     <string name="battery_style_title">バッテリースタイル</string>
     <string name="battery_width_title">バッテリー横幅</string>
@@ -535,6 +542,8 @@
     <string name="battery_landscape_battery_m">横向き バッテリー M</string>
     <string name="battery_landscape_battery_n">横向き バッテリー N</string>
     <string name="battery_landscape_battery_o">横向き バッテリー O</string>
+    <string name="battery_circle">Circle Battery</string>
+    <string name="battery_dotted_circle">Dotted Circle Battery</string>
     <!-- Header Image -->
     <string name="header_image_title">ヘッダー画像を選択</string>
     <string name="header_image_desc">クイック設定パネルのヘッダー画像を追加します\n「最近」からファイルを選択しないでください</string>
@@ -585,10 +594,10 @@
     <string name="lockscreen_clock_white_text_title">ホワイト テキスト</string>
     <string name="lockscreen_clock_white_text_desc">すべての色を白に強制します</string>
     <!-- Depth Wallpaper -->
-    <string name="enable_depth_wallpaper_title">Enable Depth Wallpaper</string>
-    <string name="enable_depth_wallpaper_desc">Show iOS like depth wallpaper\nMust use custom lockscreen clock</string>
-    <string name="wallpaper_fade_animation_title">Fade in AOD</string>
-    <string name="wallpaper_fade_animation_desc">Animate wallpaper and fade away in AOD</string>
+    <string name="enable_depth_wallpaper_title">深度壁紙を有効にする</string>
+    <string name="enable_depth_wallpaper_desc">iOS風の深度壁紙を表示します\nカスタムロック画面時計を使用する必要があります</string>
+    <string name="wallpaper_fade_animation_title">AODでフェードイン</string>
+    <string name="wallpaper_fade_animation_desc">AODで壁紙をアニメーション表示し、フェードアウトします</string>
     <string name="foreground_image_title">前景の画像</string>
     <string name="foreground_image_desc">深度のある壁紙の前景画像</string>
     <string name="background_image_title">背景の画像</string>
@@ -623,7 +632,7 @@
     <string name="hide_ls_statusbar_title">ロック画面のステータスバーを非表示</string>
     <string name="hide_ls_statusbar_desc">ロック画面のステータスバーを非表示にします</string>
     <string name="fixed_status_icons_title">ステータス アイコンを固定</string>
-    <string name="fixed_status_icons_desc">ステータスアイコンを固定した位置に設定します\nいくつかの ROM ではバグを引き起こします</string>
+    <string name="fixed_status_icons_desc">ステータスアイコンを固定位置に設定します\n一部のROMでバグが発生する可能性があります</string>
     <!-- Changelog -->
     <string name="activity_title_changelog">変更履歴</string>
     <string name="no_internet_connection">サーバーに接続できませんでした！\nインターネット接続に問題があるか、一時的にサーバーダウンしている可能性があります。あとでもう一度やり直してください。</string>
@@ -662,29 +671,44 @@
     <string name="info_contributor_desc">GitHub での貢献。</string>
     <string name="info_contributor_desc_2">Telegram での補助。</string>
     <string name="section_title_translators">翻訳者</string>
-    <string name="ar_translation">アラビア語の翻訳</string>
-    <string name="fa_translation">ペルシャ語の翻訳</string>
-    <string name="fr_translation">フランス語の翻訳</string>
-    <string name="ja_translation">日本語の翻訳</string>
-    <string name="id_translation">インドネシア語の翻訳</string>
-    <string name="it_translation">イタリア語の翻訳</string>
-    <string name="pt_br_translation">ブラジル人向けのポルトガル語の翻訳</string>
-    <string name="pt_translation">ポルトガル語の翻訳</string>
-    <string name="ru_translation">ロシア語の翻訳</string>
-    <string name="tr_translation">トルコ語の翻訳</string>
-    <string name="vi_translation">ベトナム語の翻訳</string>
-    <string name="es_translation">スペイン語の翻訳</string>
-    <string name="zh_cn_translation">簡体字中国語の翻訳</string>
-    <string name="zh_tw_translation">繁体字中国語の翻訳</string>
-    <string name="pl_translation">ポーランド語の翻訳</string>
+    <string name="af_translation">アフリカーンス語翻訳</string>
+    <string name="ar_translation">アラビア語翻訳</string>
+    <string name="ca_translation">カタロニア語翻訳</string>
+    <string name="zh_cn_translation">中国語翻訳</string>
+    <string name="zh_tw_translation">中国語繁体字翻訳</string>
+    <string name="cs_translation">チェコ語翻訳</string>
+    <string name="da_translation">デンマーク語翻訳</string>
+    <string name="nl_translation">オランダ語翻訳</string>
+    <string name="fi_translation">フィンランド語翻訳</string>
+    <string name="fr_translation">フランス語翻訳</string>
+    <string name="de_translation">ドイツ語翻訳</string>
+    <string name="el_translation">ギリシャ語翻訳</string>
+    <string name="hu_translation">ハンガリー語翻訳</string>
+    <string name="id_translation">インドネシア語翻訳</string>
+    <string name="it_translation">イタリア語翻訳</string>
+    <string name="ja_translation">日本語翻訳</string>
+    <string name="ko_translation">韓国語翻訳</string>
+    <string name="no_translation">ノルウェー語翻訳</string>
+    <string name="fa_translation">ペルシア語翻訳</string>
+    <string name="pl_translation">ポーランド語翻訳</string>
+    <string name="pt_translation">ポルトガル語翻訳</string>
+    <string name="pt_br_translation">ポルトガル語（ブラジル）翻訳</string>
+    <string name="ro_translation">ルーマニア語翻訳</string>
+    <string name="ru_translation">ロシア語翻訳</string>
+    <string name="sr_translation">セルビア語（キリル文字）翻訳</string>
+    <string name="es_translation">スペイン語翻訳</string>
+    <string name="sv_translation">スウェーデン語翻訳</string>
+    <string name="tr_translation">トルコ語翻訳</string>
+    <string name="uk_translation">ウクライナ語翻訳</string>
+    <string name="vi_translation">ベトナム語翻訳</string>
     <!-- Experimental -->
     <string name="experimental_features_title">実験的</string>
-    <string name="overlap_header_image_title">Overlap Header Image</string>
-    <string name="overlap_header_image_desc">Overlap header image on expanded QS</string>
-    <string name="unzoom_depth_wallpaper_title">Unzoom Depth Wallpaper</string>
-    <string name="unzoom_depth_wallpaper_desc">Remove the zoom effect on depth wallpaper</string>
-    <string name="hide_data_disabled_icon_title">Hide Data Disabled Icon</string>
-    <string name="hide_data_disabled_icon_desc">Hide data disabled indicator</string>
+    <string name="overlap_header_image_title">ヘッダー画像の重なり</string>
+    <string name="overlap_header_image_desc">拡張されたQS上でヘッダー画像を重ねます</string>
+    <string name="unzoom_depth_wallpaper_title">深度壁紙のズーム解除</string>
+    <string name="unzoom_depth_wallpaper_desc">深度壁紙のズーム効果を解除します</string>
+    <string name="hide_data_disabled_icon_title">データ無効アイコンの非表示</string>
+    <string name="hide_data_disabled_icon_desc">データ無効インジケータを非表示にします</string>
     <!-- Bottom Navigation -->
     <string name="navbar_home">ホーム</string>
     <string name="navbar_tweaks">調整</string>
@@ -760,9 +784,9 @@
     <string name="toast_disable_everything">長押ししてすべてを無効化</string>
     <string name="toast_disabled_everything">すべてが無効化されました</string>
     <string name="toast_restart_sysui">長押ししてシステム UI を再起動</string>
-    <string name="toast_rename_file">Rename file to something simpler</string>
-    <string name="toast_lorn_colored_battery">Lorn uses colored battery by default</string>
-    <string name="toast_plumpy_colored_battery">Plumpy uses colored battery by default</string>
+    <string name="toast_rename_file">ファイル名をより簡単なものに変更します</string>
+    <string name="toast_lorn_colored_battery">Lornはデフォルトでカラーバッテリーを使用します</string>
+    <string name="toast_plumpy_colored_battery">Plumpyはデフォルトでカラーバッテリーを使用します</string>
     <string name="toast_select_style">はじめにスタイルを選択して下さい</string>
     <string name="toast_ksu_not_supported">KernelSU は現在サポートされていません</string>
     <string name="toast_reboot_required">再起動が必要です</string>
@@ -777,6 +801,7 @@
     <string name="toast_export_settings_successfull">設定のエクスポートが完了しました</string>
     <string name="toast_selected_successfully">選択が完了しました</string>
     <string name="toast_unavailable">利用不可能</string>
+    <string name="toast_use_from_xposed_menu">この機能はXposedメニューから使用してください</string>
     <!-- Push Notification -->
     <string name="new_update_title">アップデートがあります</string>
     <string name="new_update_desc">新しいバージョンの Iconify が利用可能です。</string>
@@ -839,17 +864,17 @@
     <string name="custom_qs_margin_title">カスタムクイック設定マージン</string>
     <string name="custom_qs_margin_desc">クイック設定のカスタムマージンを有効化します</string>
     <string name="force_enable_blur_title">ぼかしの有効化を強制</string>
-    <string name="force_enable_blur_desc">サポートされていない ROM でのぼかしの有効化を強制します</string>
+    <string name="force_enable_blur_desc">サポートされていないROMに対してぼかしを強制的に有効にします</string>
     <string name="choose_header_image">ヘッダー画像を選択</string>
     <string name="choose_clock_font">時計フォントを選択</string>
-    <string name="pick_style">Pick a style of your choice</string>
+    <string name="pick_style">お好みのスタイルを選択</string>
     <string name="attention">注意！</string>
-    <string name="method_toggle_dark_mode">Double Toggle Dark Mode</string>
+    <string name="method_toggle_dark_mode">ダブルトグルダークモード</string>
     <string name="method_restart_systemui">システム UI を再起動</string>
-    <string name="method_do_nothing">Do Nothing (I will do it myself)</string>
+    <string name="method_do_nothing">何もしない（自分で行います）</string>
     <string name="list_title_xposed_settings">Xposed 設定</string>
-    <string name="list_title_force_apply_method">Force Apply Method</string>
-    <string name="list_desc_force_apply_method">Method to force apply the changes in xposed menu</string>
+    <string name="list_title_force_apply_method">強制適用メソッド</string>
+    <string name="list_desc_force_apply_method">Xposedメニューでの変更を強制的に適用するメソッド</string>
     <string name="list_title_miscellaneous_settings">その他の設定</string>
     <string name="list_title_general_settings">一般設定</string>
     <string name="list_title_use_light_accent">明るいアクセントを使用</string>
@@ -859,8 +884,8 @@
     <string name="custom_battery_title">カスタムバッテリー</string>
     <string name="custom_battery_desc">カスタムバッテリースタイルを有効化します</string>
     <string name="toast_message">トースト メッセージ</string>
-    <string name="created_by_drdisagree">Made with \u2764\uFE0E by DrDisagree</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="created_by_drdisagree">DrDisagreeによる\u2764\uFE0Eで作成</string>
+    <string name="hello_blank_fragment">こんにちは、空のフラグメント</string>
     <string name="lockscreen_customization_title">ロック画面のカスタマイズ</string>
     <string name="lockscreen_customization_desc">ロック画面のカスタマイズを有効化します</string>
     <string name="general_on">オン</string>
@@ -868,4 +893,5 @@
     <string name="one_time_reboot_needed">デバイスを再起動してください！</string>
     <string name="tap_to_select">プレビューをタップして選択</string>
     <string name="dont_show_again">次回から表示しない</string>
+    <string name="requires_lsposed_for_a14">適切な機能を確保するために、Android 14以上ではLSPosedでIconifyモジュールを有効にすることが必須です。\n\nその後、次の修正を有効にします：Tweaks &gt; Xposed Menu &gt; Themes &gt; Others。</string>
 </resources>

@@ -173,7 +173,7 @@ public class OnboardingView extends FrameLayout {
                 return;
             }
 
-            if (!(RootUtil.isMagiskInstalled() || RootUtil.isKSUInstalled())) {
+            if (!RootUtil.deviceProperlyRooted()) {
                 ErrorDialog errorDialog = new ErrorDialog(getContext());
                 errorDialog.show(R.string.compatible_root_not_found_title, R.string.compatible_root_not_found_desc);
                 return;
@@ -185,7 +185,7 @@ public class OnboardingView extends FrameLayout {
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     clickedContinue = true;
                     SystemUtil.requestStoragePermission(getContext());
-                }, clickedContinue ? 10 : 2000);
+                }, clickedContinue ? 10 : 1000);
             } else {
                 boolean moduleExists = ModuleUtil.moduleExists();
                 boolean overlayExists = OverlayUtil.overlayExists();
@@ -221,7 +221,7 @@ public class OnboardingView extends FrameLayout {
                 return;
             }
 
-            if (!(RootUtil.isMagiskInstalled() || RootUtil.isKSUInstalled())) {
+            if (!RootUtil.deviceProperlyRooted()) {
                 ErrorDialog errorDialog = new ErrorDialog(getContext());
                 errorDialog.show(R.string.compatible_root_not_found_title, R.string.compatible_root_not_found_desc);
                 return;
@@ -233,7 +233,7 @@ public class OnboardingView extends FrameLayout {
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     clickedContinue = true;
                     SystemUtil.requestStoragePermission(getContext());
-                }, clickedContinue ? 10 : 2000);
+                }, clickedContinue ? 10 : 1000);
             } else {
                 if (!ModuleUtil.moduleExists()) {
                     Prefs.clearAllPrefs();
@@ -491,11 +491,11 @@ public class OnboardingView extends FrameLayout {
             publishProgress(step);
             waiter(1000);
 
-            logger = "2...";
+            logger = "2..";
             publishProgress(step);
             waiter(1000);
 
-            logger = "1...";
+            logger = "1.";
             publishProgress(step);
             waiter(1000);
 

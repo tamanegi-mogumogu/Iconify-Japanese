@@ -17,12 +17,16 @@ package com.drdisagree.iconify.xposed.modules;
  * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
+import static android.service.quicksettings.Tile.STATE_ACTIVE;
 import static com.drdisagree.iconify.common.Const.SYSTEMUI_PACKAGE;
 import static com.drdisagree.iconify.common.Preferences.FIX_NOTIFICATION_COLOR;
+import static com.drdisagree.iconify.common.Preferences.FIX_QS_TILE_COLOR;
 import static com.drdisagree.iconify.common.Preferences.HIDE_QSLABEL_SWITCH;
 import static com.drdisagree.iconify.common.Preferences.HIDE_QS_FOOTER_BUTTONS;
 import static com.drdisagree.iconify.common.Preferences.HIDE_QS_SILENT_TEXT;
 import static com.drdisagree.iconify.common.Preferences.QQS_TOPMARGIN;
+import static com.drdisagree.iconify.common.Preferences.QS_TEXT_ALWAYS_WHITE;
+import static com.drdisagree.iconify.common.Preferences.QS_TEXT_FOLLOW_ACCENT;
 import static com.drdisagree.iconify.common.Preferences.QS_TOPMARGIN;
 import static com.drdisagree.iconify.common.Preferences.VERTICAL_QSTILE_SWITCH;
 import static com.drdisagree.iconify.config.XPrefs.Xprefs;
@@ -32,12 +36,16 @@ import static de.robv.android.xposed.XposedBridge.log;
 import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
+import static de.robv.android.xposed.XposedHelpers.findClassIfExists;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
 import static de.robv.android.xposed.XposedHelpers.setObjectField;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Build;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -45,10 +53,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
+import androidx.core.content.res.ResourcesCompat;
+
 import com.drdisagree.iconify.xposed.ModPack;
+import com.drdisagree.iconify.xposed.modules.utils.Helpers;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -62,7 +75,10 @@ public class QuickSettings extends ModPack {
     private static Float QsTileSecondaryTextSize = null;
     private static boolean qqsTopMarginEnabled = false;
     private static boolean qsTopMarginEnabled = false;
+    private boolean fixQsTileColor = true;
     private boolean fixNotificationColor = true;
+    private boolean qsTextAlwaysWhite = false;
+    private boolean qsTextFollowAccent = false;
     private boolean hideFooterButtons = false;
     private boolean hideSilentText = false;
     private int qqsTopMargin = 100;
@@ -90,8 +106,13 @@ public class QuickSettings extends ModPack {
         qqsTopMargin = Xprefs.getInt(QQS_TOPMARGIN, 100);
         qsTopMargin = Xprefs.getInt(QS_TOPMARGIN, 100);
 
+        fixQsTileColor = Build.VERSION.SDK_INT >= 34 &&
+                Xprefs.getBoolean(FIX_QS_TILE_COLOR, true);
         fixNotificationColor = Build.VERSION.SDK_INT >= 34 &&
                 Xprefs.getBoolean(FIX_NOTIFICATION_COLOR, true);
+
+        qsTextAlwaysWhite = Xprefs.getBoolean(QS_TEXT_ALWAYS_WHITE, false);
+        qsTextFollowAccent = Xprefs.getBoolean(QS_TEXT_FOLLOW_ACCENT, false);
 
         hideSilentText = Xprefs.getBoolean(HIDE_QS_SILENT_TEXT, false);
         hideFooterButtons = Xprefs.getBoolean(HIDE_QS_FOOTER_BUTTONS, false);
@@ -103,6 +124,7 @@ public class QuickSettings extends ModPack {
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam loadPackageParam) {
         setVerticalTiles(loadPackageParam);
         setQsMargin(loadPackageParam);
+        fixQsTileAndLabelColorA14(loadPackageParam);
         fixNotificationColorA14(loadPackageParam);
         manageQsElementVisibility(loadPackageParam);
     }
@@ -193,7 +215,8 @@ public class QuickSettings extends ModPack {
                 if (qsTopMarginEnabled) {
                     String[] qsHeaderResNames = {
                             "qs_panel_padding_top",
-                            "qs_panel_padding_top_combined_headers"
+                            "qs_panel_padding_top_combined_headers",
+                            "qs_header_height"
                     };
 
                     for (String resName : qsHeaderResNames) {
@@ -235,6 +258,193 @@ public class QuickSettings extends ModPack {
         } catch (Throwable throwable) {
             log(TAG + throwable);
         }
+    }
+
+    private void fixQsTileAndLabelColorA14(XC_LoadPackage.LoadPackageParam loadPackageParam) {
+        try {
+            Class<?> QSTileViewImplClass = findClass(SYSTEMUI_PACKAGE + ".qs.tileimpl.QSTileViewImpl", loadPackageParam.classLoader);
+
+            XC_MethodHook removeQsTileTint = new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) {
+                    if (fixQsTileColor && Build.VERSION.SDK_INT >= 34) {
+                        try {
+                            setObjectField(param.thisObject, "colorActive", Color.WHITE);
+                            setObjectField(param.thisObject, "colorInactive", Color.TRANSPARENT);
+                            setObjectField(param.thisObject, "colorUnavailable", Color.TRANSPARENT);
+                        } catch (Throwable throwable) {
+                            log(TAG + throwable);
+                        }
+                    }
+                }
+            };
+
+            hookAllConstructors(QSTileViewImplClass, removeQsTileTint);
+            hookAllMethods(QSTileViewImplClass, "updateResources", removeQsTileTint);
+
+            hookAllConstructors(QSTileViewImplClass, new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) {
+                    if (!qsTextAlwaysWhite && !qsTextFollowAccent) return;
+
+                    @ColorInt int color = getQsIconLabelColor();
+                    @ColorInt int colorAlpha = (color & 0xFFFFFF) | (Math.round(Color.alpha(color) * 0.8f) << 24);
+
+                    setObjectField(param.thisObject, "colorLabelActive", color);
+                    setObjectField(param.thisObject, "colorSecondaryLabelActive", colorAlpha);
+                }
+            });
+
+            hookAllMethods(QSTileViewImplClass, "getLabelColorForState", new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) {
+                    if (isQsIconLabelStateActive(param, 0)) {
+                        param.setResult(getQsIconLabelColor());
+                    }
+                }
+            });
+
+            hookAllMethods(QSTileViewImplClass, "getSecondaryLabelColorForState", new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) {
+                    if (isQsIconLabelStateActive(param, 0)) {
+                        @ColorInt int color = getQsIconLabelColor();
+                        @ColorInt int colorAlpha = (color & 0xFFFFFF) | (Math.round(Color.alpha(color) * 0.8f) << 24);
+                        param.setResult(colorAlpha);
+                    }
+                }
+            });
+        } catch (Throwable throwable) {
+            log(TAG + throwable);
+        }
+
+        try {
+            Class<?> QSIconViewImplClass = findClass(SYSTEMUI_PACKAGE + ".qs.tileimpl.QSIconViewImpl", loadPackageParam.classLoader);
+
+            hookAllMethods(QSIconViewImplClass, "getIconColorForState", new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) {
+                    if (isQsIconLabelStateActive(param, 1)) {
+                        param.setResult(getQsIconLabelColor());
+                    }
+                }
+            });
+            try {
+                hookAllMethods(QSIconViewImplClass, "updateIcon", new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) {
+                        if (isQsIconLabelStateActive(param, 1)) {
+                            ImageView mIcon = (ImageView) param.args[0];
+                            mIcon.setImageTintList(ColorStateList.valueOf(getQsIconLabelColor()));
+                        }
+                    }
+                });
+            } catch (Throwable ignored) {
+            }
+        } catch (Throwable throwable) {
+            log(TAG + throwable);
+        }
+
+        try {
+            Class<?> QSContainerImplClass = findClass(SYSTEMUI_PACKAGE + ".qs.QSContainerImpl", loadPackageParam.classLoader);
+
+            hookAllMethods(QSContainerImplClass, "updateResources", new XC_MethodHook() {
+                @SuppressLint("DiscouragedApi")
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) {
+                    if (!qsTextAlwaysWhite && !qsTextFollowAccent) return;
+
+                    try {
+                        Resources res = mContext.getResources();
+                        ViewGroup view = ((ViewGroup) param.thisObject).findViewById(res.getIdentifier("qs_footer_actions", "id", mContext.getPackageName()));
+                        @ColorInt int color = getQsIconLabelColor();
+
+                        try {
+                            ViewGroup pm_button_container = view.findViewById(res.getIdentifier("pm_lite", "id", mContext.getPackageName()));
+                            ((ImageView) pm_button_container.getChildAt(0)).setColorFilter(color, PorterDuff.Mode.SRC_IN);
+                        } catch (Throwable ignored) {
+                            ImageView pm_button = view.findViewById(res.getIdentifier("pm_lite", "id", mContext.getPackageName()));
+                            pm_button.setImageTintList(ColorStateList.valueOf(color));
+                        }
+                    } catch (Throwable ignored) {
+                    }
+                }
+            });
+        } catch (Throwable ignored) {
+        }
+
+        try { // Compose implementation of QS Footer actions
+            Class<?> FooterActionsButtonViewModelClass = findClass(SYSTEMUI_PACKAGE + ".qs.footer.ui.viewmodel.FooterActionsButtonViewModel", loadPackageParam.classLoader);
+
+            hookAllConstructors(FooterActionsButtonViewModelClass, new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) {
+                    if (!qsTextAlwaysWhite && !qsTextFollowAccent) return;
+
+                    if (mContext.getResources().getResourceName((Integer) param.args[0]).split("/")[1].equals("pm_lite")) {
+                        param.args[2] = getQsIconLabelColor();
+                    }
+                }
+            });
+        } catch (Throwable ignored) {
+        }
+
+        // Auto brightness icon color
+        Class<?> BrightnessControllerClass = findClass(SYSTEMUI_PACKAGE + ".settings.brightness.BrightnessController", loadPackageParam.classLoader);
+        Class<?> BrightnessMirrorControllerClass = findClass(SYSTEMUI_PACKAGE + ".statusbar.policy.BrightnessMirrorController", loadPackageParam.classLoader);
+        Class<?> BrightnessSliderControllerClass = findClassIfExists(SYSTEMUI_PACKAGE + ".settings.brightness.BrightnessSliderController", loadPackageParam.classLoader);
+
+        hookAllMethods(BrightnessControllerClass, "updateIcon", new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) {
+                if (!qsTextAlwaysWhite && !qsTextFollowAccent) return;
+
+                @ColorInt int color = getQsIconLabelColor();
+
+                try {
+                    ((ImageView) getObjectField(param.thisObject, "mIcon")).setImageTintList(ColorStateList.valueOf(color));
+                } catch (Throwable throwable) {
+                    log(TAG + throwable);
+                }
+            }
+        });
+
+        if (BrightnessSliderControllerClass != null) {
+            hookAllConstructors(BrightnessSliderControllerClass, new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) {
+                    if (!qsTextAlwaysWhite && !qsTextFollowAccent) return;
+
+                    @ColorInt int color = getQsIconLabelColor();
+
+                    try {
+                        ((ImageView) getObjectField(param.thisObject, "mIcon")).setImageTintList(ColorStateList.valueOf(color));
+                    } catch (Throwable throwable) {
+                        try {
+                            ((ImageView) getObjectField(param.thisObject, "mIconView")).setImageTintList(ColorStateList.valueOf(color));
+                        } catch (Throwable ignored) {
+                        }
+                    }
+                }
+            });
+        } else {
+            log(TAG + "Not a crash... BrightnessSliderController class not found.");
+        }
+
+        hookAllMethods(BrightnessMirrorControllerClass, "updateIcon", new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) {
+                if (!qsTextAlwaysWhite && !qsTextFollowAccent) return;
+
+                @ColorInt int color = getQsIconLabelColor();
+
+                try {
+                    ((ImageView) getObjectField(param.thisObject, "mIcon")).setImageTintList(ColorStateList.valueOf(color));
+                } catch (Throwable throwable) {
+                    log(TAG + throwable);
+                }
+            }
+        });
     }
 
     private void fixNotificationColorA14(XC_LoadPackage.LoadPackageParam loadPackageParam) {
@@ -319,9 +529,9 @@ public class QuickSettings extends ModPack {
                     Integer resId2 = mContext.getResources().getIdentifier("dismiss_text", "id", mContext.getPackageName());
 
                     if (resId1 != null) {
-                        mFooterButtonsContainer = (ViewGroup) ((Button) view.findViewById(resId1)).getParent();
+                        mFooterButtonsContainer = (ViewGroup) view.findViewById(resId1).getParent();
                     } else if (resId2 != null) {
-                        mFooterButtonsContainer = (ViewGroup) ((Button) view.findViewById(resId2)).getParent();
+                        mFooterButtonsContainer = (ViewGroup) view.findViewById(resId2).getParent();
                     }
 
                     triggerQsElementVisibility();
@@ -346,6 +556,48 @@ public class QuickSettings extends ModPack {
         } catch (Throwable throwable) {
             log(TAG + throwable);
         }
+    }
+
+    private boolean isQsIconLabelStateActive(XC_MethodHook.MethodHookParam param, int stateIndex) {
+        if (param == null || param.args == null) return false;
+        if (!qsTextAlwaysWhite && !qsTextFollowAccent) return false;
+
+        boolean isActiveState = false;
+
+        try {
+            isActiveState = (int) getObjectField(param.args[stateIndex], "state") == STATE_ACTIVE;
+        } catch (Throwable throwable) {
+            try {
+                isActiveState = (int) param.args[stateIndex] == STATE_ACTIVE;
+            } catch (Throwable throwable1) {
+                try {
+                    isActiveState = (boolean) param.args[stateIndex];
+                } catch (Throwable throwable2) {
+                    log(TAG + throwable2);
+                }
+            }
+        }
+
+        return isActiveState;
+    }
+
+    private @ColorInt int getQsIconLabelColor() {
+        try {
+            if (qsTextAlwaysWhite) {
+                return Color.WHITE;
+            } else if (qsTextFollowAccent) {
+                return ResourcesCompat.getColor(
+                        mContext.getResources(),
+                        Helpers.isPixelVariant() ?
+                                android.R.color.holo_green_light :
+                                android.R.color.holo_blue_light,
+                        mContext.getTheme()
+                );
+            }
+        } catch (Throwable throwable) {
+            log(TAG + throwable);
+        }
+        return Color.WHITE;
     }
 
     private void triggerQsElementVisibility() {
