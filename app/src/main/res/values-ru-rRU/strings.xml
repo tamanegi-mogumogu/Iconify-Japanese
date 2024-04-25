@@ -4,6 +4,7 @@
     <!-- Onboarding -->
     <string name="init_module_installation">Начало установки</string>
     <string name="step">Шаг</string>
+    <string name="step_number">Step %1$d/%2$d</string>
     <string name="module_installation_step1">Создание скриптов модуля</string>
     <string name="module_installation_step2">Извлечение необходимых файлов</string>
     <string name="module_installation_step3">Создание оверлеев</string>
@@ -458,7 +459,7 @@
     <string name="hide_qs_tile_label_desc">Используйте только с вертикальными плитками</string>
     <string name="section_title_qs_margin">Отступ быстрых настроек</string>
     <string name="section_title_qs_elements">Элементы быстрых настроек</string>
-    <string name="hide_qs_silent_text_title">Hide Silent Text</string>
+    <string name="hide_qs_silent_text_title">Скрыть надпись Без звука у уведомлений</string>
     <string name="hide_qs_silent_text_desc">Hide silent text shown as header of silent notifications (Requires SystemUI restart)</string>
     <string name="hide_qs_footer_buttons_title">Hide Footer Buttons</string>
     <string name="hide_qs_footer_buttons_desc">Hide footer buttons shown under notification stack</string>
@@ -542,14 +543,20 @@
     <string name="battery_landscape_battery_m">Горизонтальная батарея M</string>
     <string name="battery_landscape_battery_n">Горизонтальная батарея N</string>
     <string name="battery_landscape_battery_o">Горизонтальная батарея O</string>
-    <string name="battery_circle">Circle Battery</string>
-    <string name="battery_dotted_circle">Dotted Circle Battery</string>
+    <string name="battery_circle">Круглая батарея</string>
+    <string name="battery_dotted_circle">Точечный круг батареи</string>
+    <!-- Volume Panel -->
+    <string name="volume_percentage_title">Volume Percentage</string>
+    <string name="volume_percentage_desc">Show percentage above volume slider</string>
+    <string name="safety_warning_title">Safety Warning</string>
+    <string name="safety_warning_desc">Show warning on high volume</string>
     <!-- Header Image -->
     <string name="header_image_title">Выберите изображение заголовка</string>
     <string name="header_image_desc">Добавить изображения на панель быстрых настроек\nНе выбирайте его из вкладки \"Последние\"</string>
     <string name="btn_pick_image">Выбрать изображение</string>
     <string name="header_image_height_title">Высота изображения</string>
     <string name="header_image_alpha">Прозрачность изображения</string>
+    <string name="header_image_bottom_fade">Bottom Fade Amount</string>
     <string name="header_image_zoom_to_fit_title">Увеличить размер</string>
     <string name="header_image_zoom_to_fit_desc">Размер изображение растянут по умолчанию</string>
     <string name="header_image_hide_in_landscape_title">Скрыть в ландшафтном режиме</string>
@@ -593,6 +600,13 @@
     <string name="lockscreen_clock_bottom_margin_title">Нижнее поле</string>
     <string name="lockscreen_clock_white_text_title">Белый текст</string>
     <string name="lockscreen_clock_white_text_desc">Сделать цвет белым</string>
+    <string name="btn_select">Select</string>
+    <string name="battery_charging">Battery Charging</string>
+    <string name="battery_discharging">Battery Discharging</string>
+    <string name="battery_full">Battery Full</string>
+    <string name="battery_level_percentage">Battery Level</string>
+    <string name="welcome_back">Welcome back!</string>
+    <string name="default_user_name">User</string>
     <!-- Depth Wallpaper -->
     <string name="enable_depth_wallpaper_title">Включить глубинные обои</string>
     <string name="enable_depth_wallpaper_desc">Показывать iOS-подобные глубинные обои\nНеобходимо использовать пользовательские часы блокировки экрана</string>
@@ -602,7 +616,11 @@
     <string name="foreground_image_desc">Изображение на переднем плане для глубинных обоев</string>
     <string name="background_image_title">Изображение на заднем плане</string>
     <string name="background_image_desc">Изображение на заднем плане для глубинных обоев</string>
-    <string name="depth_wallpaper_alert_msg">Эта функция ещё находится в бета-тестировании. Поэтому ожидайте появление ошибок.\n\n<b>Известные проблемы:</b>\n• Always on Display не работает. Отключите AOD, чтобы избежать проблемы.\n• От любого нажатия на экране блокировки обои начнут прыгать.</string>
+    <string name="depth_wallpaper_alert_msg">This feature is currently in beta stage. So bugs are expected.\n\n<b>Known Bug(s):</b>\n• Tapping on lockscreen makes the wallpaper jump.</string>
+    <string name="wallpaper_parallax_effect_title">Parallax Effect</string>
+    <string name="wallpaper_parallax_effect_summary">Move background and foreground layers at different speeds</string>
+    <string name="wallpaper_foreground_sensitivity_title">Foreground Sensitivity</string>
+    <string name="wallpaper_background_sensitivity_title">Background Sensitivity</string>
     <!-- Background Chip -->
     <string name="section_title_status_bar">Строка состояния</string>
     <string name="sb_clock_background_chip_title">Фишка часов статусбара</string>
@@ -657,6 +675,8 @@
     <string name="update_schedule3">Каждый день</string>
     <string name="update_schedule4">Каждую неделю</string>
     <string name="update_schedule5">Никогда</string>
+    <string name="current_version_number">Current Version: %s</string>
+    <string name="latest_version_number">Latest Version: %s</string>
     <!-- Credits -->
     <string name="section_title_credits">Благодарности</string>
     <string name="section_title_thanks">Особые благодарности</string>
@@ -667,14 +687,15 @@
     <string name="info_xposed_desc">За помощь с Xposed.</string>
     <string name="info_tester_desc">За тестирование приложения.</string>
     <string name="info_betterqs_desc">За разрешение на использование Better QS</string>
+    <string name="info_binaries_desc">For android executable binaries.</string>
     <string name="section_title_contributors">Участники проекта</string>
     <string name="info_contributor_desc">Вклад на github.</string>
     <string name="info_contributor_desc_2">Помощь мне в Telegram.</string>
     <string name="section_title_translators">Переводчики</string>
-    <string name="af_translation">Afrikaans translation.</string>
+    <string name="af_translation">Африканский перевод.</string>
     <string name="ar_translation">Перевод на арабский.</string>
     <string name="ca_translation">Catalan translation.</string>
-    <string name="zh_cn_translation">Chinese translation.</string>
+    <string name="zh_cn_translation">Китайский перевод.</string>
     <string name="zh_tw_translation">Chinese translation.</string>
     <string name="cs_translation">Czech translation.</string>
     <string name="da_translation">Danish translation.</string>
@@ -789,6 +810,7 @@
     <string name="toast_plumpy_colored_battery">Plumpy по умолчанию использует цветную батарею</string>
     <string name="toast_select_style">Сначала выберите стиль</string>
     <string name="toast_ksu_not_supported">KernelSU пока что не поддерживается</string>
+    <string name="toast_only_magisk_supported">Only magisk is supported currently</string>
     <string name="toast_reboot_required">Необходима перезагрузка</string>
     <string name="toast_lsposed_not_found">LSposed не найден!</string>
     <string name="toast_easter_egg">Как ты об этом догадался?</string>
@@ -827,8 +849,11 @@
     <string name="section_title_media_player_icons">Иконки медиаплееров</string>
     <string name="opt_selected">Выбрано:</string>
     <string name="opt_selected1">Выбрано: %s</string>
-    <string name="opt_selected2">Выбрано: %s%s</string>
+    <string name="opt_selected2">Selected: %1$s%2$s</string>
+    <string name="opt_selected3">Selected: %1$s%2$s %3$s</string>
     <string name="opt_default">(Стандартное)</string>
+    <string name="clock_none">No Clock</string>
+    <string name="clock_style_name">Clock Style %d</string>
     <string name="loading_dialog_wait">Пожалуйста, подождите</string>
     <string name="rebooting_desc">Перезагрузка через 5 секунд</string>
     <string name="iconify_clipboard_label_version">Версия Iconify</string>

@@ -1,8 +1,8 @@
 {
-  "versionName": "6.7.0-translated_by_tqmane",
-  "versionCode": 17,
-  "apkUrl": "https://github.com/tqmane/Iconify-Japanese/releases/download/v6.7.0-jp/Iconify.v6.7.0-translated_by_tqmane.apk",
+  "versionName": "6.7.6",
+  "versionCode": 19,
+  "apkUrl": "https://github.com/tqmane/Iconify/releases/download/v6.7.6/Iconify.v6.7.6.apk",
   "changelog": [
-    "### Iconify v6.7.0が到着しました！ 以下の新しい変更があります：\n\n## 機能の変更:\n- __QSパネルタイル:__\n    - Android 14でのブートループを修正\n- __QSテキストカラー:__\n    - Android 14でのブートループを修正\n- __アイコン形状:__\n    - 強制的に丸いシステムアイコン形状を追加\n- __Xposedメニュー:__\n    - 円と点線のバッテリースタイルを追加（[PixelXpert](https://github.com/siavash79/PixelXpert)に感謝）\n    - 透明なQSを使用しながらロックスクリーンを暗く保つことを許可\n    - xposed QSマージンをpxではなくdpで適用するように修正\n    - カスタム時計の最初の文字の大文字化を修正\n    - QS通知フッターボタンを非表示にすることを許可\n    - サイレント通知セクションのヘッダーを非表示にすることを許可\n    - Android 14で大きなトップマージンを使用するとステータスアイコンが切れる問題を修正\n- __その他:__\n    - Pixel ROMsとの互換性のために一部の通常のバリアントオーバーレイを更新\n\n## アプリの変更:\n- アップデート後に再起動リマインダーが時々表示されない問題を修正\n- 翻訳を更新\n- その他多くの改善...\n\nこのバージョンにはバグ修正やその他の改善も含まれています。"
+    "### Iconify v6.7.6 (Hotfix) has arrived! It has the following new changes:\n\n## Feature Changes:\n- __Xposed Menu:__\n    - Hotfix for LSPosed mod not enabling for android 12.0 and 12.1\n\n## App Changes:\n- Bump AGP\n- And many more improvements...\n\nAlso included in this version are bug fixes and other improvements."
   ]
 }

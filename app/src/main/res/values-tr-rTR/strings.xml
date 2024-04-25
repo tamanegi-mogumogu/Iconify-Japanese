@@ -4,6 +4,7 @@
     <!-- Onboarding -->
     <string name="init_module_installation">Kurulum başlatılıyor</string>
     <string name="step">Adım</string>
+    <string name="step_number">Adım %1$d/%2$d</string>
     <string name="module_installation_step1">Modül kabuğu oluşturuluyor</string>
     <string name="module_installation_step2">Gerekli dosyalar ayıklanıyor</string>
     <string name="module_installation_step3">Kaplama APK\'ları oluşturuluyor</string>
@@ -21,10 +22,10 @@
     <string name="onboarding_desc_3">Dahili görevlerin başlatılması, temel çalışmaların başlatılmasını işaret eder. Başlamaya hazır mısınız?</string>
     <string name="need_storage_perm_title">Depolama İzni Gerekiyor</string>
     <string name="need_storage_perm_desc">Gerekli dosyaları oluşturmak için depolama izni gereklidir.</string>
-    <string name="compatible_root_not_found_title">Uyumlu Root Yöntemi Bulunamadı</string>
-    <string name="compatible_root_not_found_desc">Devam etmek için popüler root çözümlerden herhangi birini kullanın.</string>
-    <string name="root_not_found_title">Root Erişilebilir Değil</string>
-    <string name="root_not_found_desc">Görünüşe göre cihazınız rootlu değil!</string>
+    <string name="compatible_root_not_found_title">Uyumlu Kök Yöntemi Bulunamadı</string>
+    <string name="compatible_root_not_found_desc">Devam etmek için popüler kök çözümlerden herhangi birini kullanın.</string>
+    <string name="root_not_found_title">Kök Erişilebilir Değil</string>
+    <string name="root_not_found_desc">Görünüşe göre cihazınız kök erişimine sahip değil!</string>
     <string name="need_reboot_title">Cihazınızın Yeniden Başlatılması Gerekiyor</string>
     <string name="need_reboot_desc">Tüm dosyaları yerine yerleştirmek için cihazınızı yeniden başlatın.</string>
     <string name="installation_failed_title">Tüh Bunu Beklemiyordum</string>
@@ -544,12 +545,18 @@
     <string name="battery_landscape_battery_o">Yatay Pil O</string>
     <string name="battery_circle">Daire Pil</string>
     <string name="battery_dotted_circle">Noktalı Daire Pil</string>
+    <!-- Volume Panel -->
+    <string name="volume_percentage_title">Ses yüzdesi</string>
+    <string name="volume_percentage_desc">Ses kaydırıcısının üzerinde yüzdeyi göster</string>
+    <string name="safety_warning_title">Güvenlik uyarısı</string>
+    <string name="safety_warning_desc">Yüksek ses seviyesinde uyarı göster</string>
     <!-- Header Image -->
     <string name="header_image_title">Başlık Resmi Seç</string>
     <string name="header_image_desc">QS paneline başlık resmi ekle\nSon kullanılanlar\'dan dosya seçmeyin</string>
     <string name="btn_pick_image">Resim Seç</string>
     <string name="header_image_height_title">Resim Yüksekliği</string>
     <string name="header_image_alpha">Resim Değeri</string>
+    <string name="header_image_bottom_fade">Alt Solma Miktarı</string>
     <string name="header_image_zoom_to_fit_title">Sığdırmak İçin Yakınlaştır</string>
     <string name="header_image_zoom_to_fit_desc">Görüntü varsayılan olarak sığacak şekilde uzatılır</string>
     <string name="header_image_hide_in_landscape_title">Yatayda gizle</string>
@@ -593,6 +600,13 @@
     <string name="lockscreen_clock_bottom_margin_title">Alt Kenar Boşluğu</string>
     <string name="lockscreen_clock_white_text_title">Beyaz Metin</string>
     <string name="lockscreen_clock_white_text_desc">Metin renklerini beyaz olmaya zorla</string>
+    <string name="btn_select">Seç</string>
+    <string name="battery_charging">Pil şarj ediliyor</string>
+    <string name="battery_discharging">Pil şarj edilmiyor</string>
+    <string name="battery_full">Pil dolu</string>
+    <string name="battery_level_percentage">Pil seviyesi</string>
+    <string name="welcome_back">Tekrar Hoş Geldiniz!</string>
+    <string name="default_user_name">Kullanıcı</string>
     <!-- Depth Wallpaper -->
     <string name="enable_depth_wallpaper_title">Derinlikli Duvar Kağıdını Etkinleştir</string>
     <string name="enable_depth_wallpaper_desc">iOS\'a benzer derinlik duvar kağıdını göster\nÖzel kilit ekranı saati kullanılmalıdır</string>
@@ -602,7 +616,11 @@
     <string name="foreground_image_desc">Derinlikli duvar kağıdı için ön plan resmi</string>
     <string name="background_image_title">Arkaplan Resmi</string>
     <string name="background_image_desc">Derinlikli duvar kağıdı için arka plan resmi</string>
-    <string name="depth_wallpaper_alert_msg">Bu özellik şu anda beta aşamasındadır. Bu nedenle hatalar bekleniyor.\n\n<b>Bilinen Hatalar:</b>\n• Always on Display bozuk. Görüntüleme sorunlarını önlemek için AOD\'yi devre dışı bırakın.\n• Kilit ekranına dokunulduğunda duvar kağıdının sıçraması sağlanır.</string>
+    <string name="depth_wallpaper_alert_msg">Bu özellik şu anda beta aşamasındadır. Bu nedenle hatalar görülebilir.\n\n<b>Bilinen hatalar:</b>\n• Kilit ekranına dokunmak duvar kağıdının sıçramasına neden olur.</string>
+    <string name="wallpaper_parallax_effect_title">Paralaks etkisi</string>
+    <string name="wallpaper_parallax_effect_summary">Arka plan ve ön plan katmanlarını farklı hızlarda hareket ettir</string>
+    <string name="wallpaper_foreground_sensitivity_title">Ön Plan Hassasiyeti</string>
+    <string name="wallpaper_background_sensitivity_title">Arka Plan Hassasiyeti</string>
     <!-- Background Chip -->
     <string name="section_title_status_bar">Durum Çubuğu</string>
     <string name="sb_clock_background_chip_title">Durum Çubuğu Saat Çipi</string>
@@ -657,6 +675,8 @@
     <string name="update_schedule3">Her Gün</string>
     <string name="update_schedule4">Her Hafta</string>
     <string name="update_schedule5">Hiçbir Zaman</string>
+    <string name="current_version_number">Mevcut sürüm: %s</string>
+    <string name="latest_version_number">Son sürüm: %s</string>
     <!-- Credits -->
     <string name="section_title_credits">Krediler</string>
     <string name="section_title_thanks">Özel Teşekkürler</string>
@@ -667,6 +687,7 @@
     <string name="info_xposed_desc">Xposed konusunda bana yardım ettiğin için.</string>
     <string name="info_tester_desc">Uygulamayı test ettiğin için.</string>
     <string name="info_betterqs_desc">Better QS kullanım izni için.</string>
+    <string name="info_binaries_desc">Android çalıştırılabilir ikili dosyaları için.</string>
     <string name="section_title_contributors">Katkıda Bulunanlar</string>
     <string name="info_contributor_desc">GitHub\'dan destek olmak için.</string>
     <string name="info_contributor_desc_2">Telegram\'da bana yardım etmek için.</string>
@@ -789,6 +810,7 @@
     <string name="toast_plumpy_colored_battery">Plumpy varsayılan olarak renkli pil kullanır</string>
     <string name="toast_select_style">Önce bir stil seçin</string>
     <string name="toast_ksu_not_supported">KernelSU şu anda desteklenmiyor</string>
+    <string name="toast_only_magisk_supported">Şu anda yalnızca magisk desteklenmektedir</string>
     <string name="toast_reboot_required">Yeniden başlatma gerekiyor</string>
     <string name="toast_lsposed_not_found">LSPosed bulunamadı!</string>
     <string name="toast_easter_egg">Bunu nereden biliyorsun?</string>
@@ -827,8 +849,11 @@
     <string name="section_title_media_player_icons">Medya Oynatıcı Simgeleri</string>
     <string name="opt_selected">Seçildi:</string>
     <string name="opt_selected1">Seçildi: %s</string>
-    <string name="opt_selected2">Seçildi: %s%s</string>
+    <string name="opt_selected2">Seçilen: %1$s%2$s</string>
+    <string name="opt_selected3">Seçilen: %1$s%2$s %3$s</string>
     <string name="opt_default">(Varsayılan)</string>
+    <string name="clock_none">Saat yok</string>
+    <string name="clock_style_name">Saat stili %d</string>
     <string name="loading_dialog_wait">Lütfen Bekleyin</string>
     <string name="rebooting_desc">5 saniye içinde yeniden başlatılıyor</string>
     <string name="iconify_clipboard_label_version">Iconify Sürümü</string>
