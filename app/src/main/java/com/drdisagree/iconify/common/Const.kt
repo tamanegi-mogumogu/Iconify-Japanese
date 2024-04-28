@@ -21,17 +21,17 @@ object Const {
     )
 
     // Github repo
-    const val GITHUB_REPO = "https://github.com/Mahmud0808/Iconify"
+    const val GITHUB_REPO = "https://github.com/tqmane/Iconify-Japanese"
 
     // Telegram group
     const val TELEGRAM_GROUP = "https://t.me/IconifyDiscussion"
 
     // Parse new update
     const val LATEST_VERSION_URL =
-        "https://raw.githubusercontent.com/Mahmud0808/Iconify/stable/latestVersion.json"
+        "https://raw.githubusercontent.com/tqmane/Iconify-Japanese/stable/latestVersion.json"
 
     // Parse changelogs
-    const val CHANGELOG_URL = "https://api.github.com/repos/Mahmud0808/Iconify/releases/tags/v"
+    const val CHANGELOG_URL = "https://api.github.com/repos/tqmane/Iconify-Japanese/releases/tags/v"
 
     // Fragment variables
     const val TRANSITION_DELAY = 120
