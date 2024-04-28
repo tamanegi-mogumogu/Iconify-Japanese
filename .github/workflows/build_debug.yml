@@ -29,10 +29,10 @@ jobs:
         with:
           gradlePath: app/build.gradle.kts
           versionCode: ${{github.run_number}}
-          versionName: "${{ env.VERSION_NAME }}"
+          versionName: "${{ env.VERSION_NAME }}
 
       - name: Write sign info
-        if: github.repository == 'tqmane/Iconify-Japanese'
+        if: github.repository == 'tqmane/Iconify'
         run: |
           if [ ! -z "${{ secrets.KEYSTORE }}" ]; then
             echo storePassword='${{ secrets.KEYSTORE_PASSWORD }}' >> keystore.properties
@@ -48,6 +48,6 @@ jobs:
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: "Iconify-Japanese v${{ env.VERSION_NAME }}"
+          name: "Iconify-Japanese v${{ env.VERSION_NAME }} Dev (#${{github.run_number}})"
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
