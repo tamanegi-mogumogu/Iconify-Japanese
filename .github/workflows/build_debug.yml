@@ -29,7 +29,7 @@ jobs:
         with:
           gradlePath: app/build.gradle.kts
           versionCode: ${{github.run_number}}
-          versionName: "${{ env.VERSION_NAME }}
+          versionName: "${{ env.VERSION_NAME }}"
 
       - name: Write sign info
         if: github.repository == 'tqmane/Iconify'
