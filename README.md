@@ -1,12 +1,12 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/Mahmud0808/Iconify/beta/.github/resources/banner.png" width="100%" alt="Banner">
+  <img src="https://raw.githubusercontent.com/tqmane/Iconify-Japanese/beta/.github/resources/banner.png" width="100%" alt="Banner">
   
   # v6.7.6 is out!
 </div>
 <p align="center">
-  <a href="https://github.com/Mahmud0808/Iconify/releases"><img src="https://img.shields.io/github/downloads/Mahmud0808/Iconify/total?color=%233DDC84&logo=android&logoColor=%23fff&style=for-the-badge" alt="Downloads"></a>
-  <a href="https://github.com/Mahmud0808/Iconify"><img alt="Repo Size" src="https://img.shields.io/github/repo-size/Mahmud0808/Iconify?style=for-the-badge"></a>
-  <a href="https://github.com/Mahmud0808/Iconify/actions"><img src="https://img.shields.io/github/actions/workflow/status/Mahmud0808/Iconify/build_debug.yml?branch=beta&label=Debug%20Build&style=for-the-badge" alt="Debug Build"></a>
+  <a href="https://github.com/tqmane/Iconify-Japanese/releases"><img src="https://img.shields.io/github/downloads/tqmane/Iconify-Japanese/total?color=%233DDC84&logo=android&logoColor=%23fff&style=for-the-badge" alt="Downloads"></a>
+  <a href="https://github.com/tqmane/Iconify-Japanese"><img alt="Repo Size" src="https://img.shields.io/github/repo-size/tqmane/Iconify-Japanese?style=for-the-badge"></a>
+  <a href="https://github.com/tqmane/Iconify-Japanese/actions"><img src="https://img.shields.io/github/actions/workflow/status/tqmane/Iconify-Japanese/build_debug.yml?branch=beta&label=Debug%20Build&style=for-the-badge" alt="Debug Build"></a>
   <a href="https://telegram.me/IconifyOfficial"><img src="https://img.shields.io/badge/Telegram-5K+-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram"></a>
 </p>
 <div align="center">
@@ -23,9 +23,9 @@ Furthermore, the open-source nature of Iconify encourages community contribution
 </p>
 <div align="center">
   <br>
-  <a href="https://www.buymeacoffee.com/DrDisagree"><img src="https://github.com/Mahmud0808/Iconify/blob/beta/.github/resources/bmc-button.png" width="30%" alt="Buy me a coffee" /></a>
+  <a href="https://www.buymeacoffee.com/DrDisagree"><img src="https://github.com/tqmane/Iconify-Japanese/blob/beta/.github/resources/bmc-button.png" width="30%" alt="Buy me a coffee" /></a>
   <br><br>
-  <img src="https://raw.githubusercontent.com/Mahmud0808/Iconify/beta/.github/resources/features.png" width="100%" alt="Features">
+  <img src="https://raw.githubusercontent.com/tqmane/Iconify-Japanese/beta/.github/resources/features.png" width="100%" alt="Features">
 </div>
 
 > [!CAUTION]
@@ -87,7 +87,7 @@ Furthermore, the open-source nature of Iconify encourages community contribution
 
 # 🤫 Roadmap
 
-You can track all the progress [HERE](https://github.com/Mahmud0808/Iconify/commits/beta)
+You can track all the progress [HERE](https://github.com/tqmane/Iconify-Japanese/commits/beta)
 
 - Fix bugs.
 
@@ -148,7 +148,7 @@ You can help translate Iconify [on Crowdin](https://crowdin.com/project/iconify)
 <details>
   <summary>What is the difference between Release build and Debug build?</summary>
 
-- [Release build](https://github.com/Mahmud0808/Iconify/releases/latest) is an optimized version intended for distribution to end-users, while [Debug build](https://github.com/Mahmud0808/Iconify/actions) includes additional features and information for debugging and development purposes.
+- [Release build](https://github.com/tqmane/Iconify-Japanese/releases/latest) is an optimized version intended for distribution to end-users, while [Debug build](https://github.com/tqmane/Iconify-Japanese/actions) includes additional features and information for debugging and development purposes.
 </details>
 
 <details>
@@ -166,13 +166,13 @@ You can help translate Iconify [on Crowdin](https://crowdin.com/project/iconify)
 <details>
   <summary>I found a bug. How do I report it?</summary>
 
-- To report a bug, please navigate to the [Issues](https://github.com/Mahmud0808/Iconify/issues/new/choose) section. Create a new issue and ensure you select the `Bug Report` template. Provide as much detailed information as possible, including steps to reproduce the bug and any relevant error messages or screenshots.
+- To report a bug, please navigate to the [Issues](https://github.com/tqmane/Iconify-Japanese/issues/new/choose) section. Create a new issue and ensure you select the `Bug Report` template. Provide as much detailed information as possible, including steps to reproduce the bug and any relevant error messages or screenshots.
 </details>
 
 <details>
   <summary>How do I request a new feature?</summary>
 
-- If you have a feature request, please go to the [Issues](https://github.com/Mahmud0808/Iconify/issues/new/choose) section. Create a new issue and choose the `Feature Request` template. Be sure to include comprehensive details about the desired feature, its potential benefits, and any other relevant information that can assist in understanding and evaluating the request.
+- If you have a feature request, please go to the [Issues](https://github.com/tqmane/Iconify-Japanese/issues/new/choose) section. Create a new issue and choose the `Feature Request` template. Be sure to include comprehensive details about the desired feature, its potential benefits, and any other relevant information that can assist in understanding and evaluating the request.
 </details>
 
 <details>
@@ -194,7 +194,7 @@ You can help translate Iconify [on Crowdin](https://crowdin.com/project/iconify)
 - [AOSPMods](https://github.com/siavash79/AOSPMods), [@siavash79](https://t.me/siavash7999) for helping me with Xposed mods.
 - [@Sanely_insane](https://t.me/sanely_insane), [@Jaguar](https://t.me/Jaguar0066) for support and motivation.
 - [HideNavBar](https://github.com/Magisk-Modules-Repo/HideNavBar) for the navbar tweaks.
-- And everyone who [contributed](https://github.com/Mahmud0808/Iconify/graphs/contributors) and [translated](https://crowdin.com/project/iconify/members)... :)
+- And everyone who [contributed](https://github.com/tqmane/Iconify-Japanese/graphs/contributors) and [translated](https://crowdin.com/project/iconify/members)... :)
 
 # 📝 Disclaimer
 

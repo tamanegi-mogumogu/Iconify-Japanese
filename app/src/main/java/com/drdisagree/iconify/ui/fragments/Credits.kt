@@ -437,6 +437,15 @@ class Credits : BaseFragment() {
                     R.drawable.flag_pl
                 )
             )
+            add(
+                InfoModel(
+                    requireContext(),
+                    "Tqmane",
+                    appContextLocale.resources.getString(R.string.ja_translation),
+                    "https://github.com/tqmane",
+                    R.drawable.flag_ja
+                )
+            )
         }
 
         return InfoAdapter(
