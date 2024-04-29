@@ -126,7 +126,7 @@
     <string name="settings_disable_everything_desc">Disable all Iconify overlays, colors, and miscellaneous changes.</string>
     <string name="settings_section_title_about">About</string>
     <string name="settings_github_repository_title">Github Repository</string>
-    <string name="settings_github_repository_desc" translatable="false">tqmane/Iconify-Japanese</string>
+    <string name="settings_github_repository_desc" translatable="false">Mahmud0808/Iconify</string>
     <string name="settings_telegram_group_title">Telegram Group</string>
     <string name="settings_telegram_group_desc" translatable="false">\@IconifyDiscussion</string>
     <string name="settings_credits_title">Credits</string>
@@ -749,12 +749,12 @@
     <string name="nl_translation">Dutch translation.</string>
     <string name="fi_translation">Finnish translation.</string>
     <string name="fr_translation">French translation.</string>
-    <string name="ja_translation">Japanese translation.</string>
     <string name="de_translation">German translation.</string>
     <string name="el_translation">Greek translation.</string>
     <string name="hu_translation">Hungarian translation.</string>
     <string name="id_translation">Indonesian translation.</string>
     <string name="it_translation">Italian translation.</string>
+    <string name="ja_translation">Japanese translation.</string>
     <string name="ko_translation">Korean translation.</string>
     <string name="no_translation">Norwegian translation.</string>
     <string name="fa_translation">Persian translation.</string>

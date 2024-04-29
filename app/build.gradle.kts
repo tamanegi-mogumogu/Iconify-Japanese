@@ -16,7 +16,7 @@ android {
         minSdk = 31
         targetSdk = 34
         versionCode = 19
-        versionName = "6.7.6-translated_by_tqmane"
+        versionName = "6.7.6"
         setProperty("archivesBaseName", "Iconify v$versionName")
         buildConfigField("int", "MIN_SDK_VERSION", "$minSdk")
     }

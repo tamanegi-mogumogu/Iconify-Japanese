@@ -17,7 +17,6 @@
         <item>English</item>
         <item>Finnish</item>
         <item>French</item>
-        <item>Japanese</item>
         <item>German</item>
         <item>Greek</item>
         <item>Hungarian</item>
@@ -51,8 +50,6 @@
         <item>en-US</item>
         <item>fi-FI</item>
         <item>fr-FR</item>
-        <item>ja-JP</item>
-        <item>in-ID</item>
         <item>de-DE</item>
         <item>el-GR</item>
         <item>hu-HU</item>
