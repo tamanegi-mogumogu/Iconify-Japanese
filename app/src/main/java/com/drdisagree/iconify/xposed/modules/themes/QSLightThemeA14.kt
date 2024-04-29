@@ -298,7 +298,7 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
                         mContext.packageName
                     )
                 ).also {
-                    it.background.setTint(Color.TRANSPARENT)
+                    it.background?.setTint(Color.TRANSPARENT)
                     it.elevation = 0f
                 }
 
@@ -407,17 +407,26 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
                 // QS Footer built text row
                 override fun afterHookedMethod(param: MethodHookParam) {
                     if (!isDark && lightQSHeaderEnabled) {
-                        (getObjectField(param.thisObject, "mBuildText") as TextView)
-                            .setTextColor(Color.BLACK)
+                        try {
+                            (getObjectField(param.thisObject, "mBuildText") as TextView)
+                                .setTextColor(Color.BLACK)
+                        } catch (ignored: Throwable) {
+                        }
 
-                        (getObjectField(param.thisObject, "mEditButton") as ImageView)
-                            .setColorFilter(Color.BLACK)
+                        try {
+                            (getObjectField(param.thisObject, "mEditButton") as ImageView)
+                                .setColorFilter(Color.BLACK)
+                        } catch (ignored: Throwable) {
+                        }
 
-                        setObjectField(
-                            getObjectField(param.thisObject, "mPageIndicator"),
-                            "mTint",
-                            ColorStateList.valueOf(Color.BLACK)
-                        )
+                        try {
+                            setObjectField(
+                                getObjectField(param.thisObject, "mPageIndicator"),
+                                "mTint",
+                                ColorStateList.valueOf(Color.BLACK)
+                            )
+                        } catch (ignored: Throwable) {
+                        }
                     }
                 }
             })
@@ -1069,31 +1078,15 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
                 setObjectField(unlockedScrimState, "mBehindTint", Color.TRANSPARENT)
             }
 
-            val res = mContext.resources
-
             if (!isDark) {
-                colorInactive = res.getColor(
-                    res.getIdentifier(
-                        "android:color/system_neutral1_10",
-                        "color",
-                        mContext.packageName
-                    ), mContext.theme
-                )
+                colorInactive = mContext.getColor(android.R.color.system_neutral1_10)
             }
 
-            mScrimBehindTint = if (isDark) res.getColor(
-                res.getIdentifier(
-                    "android:color/system_neutral1_1000",
-                    "color",
-                    mContext.packageName
-                ), mContext.theme
-            ) else res.getColor(
-                res.getIdentifier(
-                    "android:color/system_neutral1_100",
-                    "color",
-                    mContext.packageName
-                ), mContext.theme
-            )
+            mScrimBehindTint = if (isDark) {
+                mContext.getColor(android.R.color.system_neutral1_1000)
+            } else {
+                mContext.getColor(android.R.color.system_neutral1_100)
+            }
         } catch (throwable: Throwable) {
             log(TAG + throwable)
         }

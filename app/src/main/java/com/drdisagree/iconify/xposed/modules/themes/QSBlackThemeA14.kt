@@ -272,7 +272,7 @@ class QSBlackThemeA14(context: Context?) : ModPack(context!!) {
                         mContext.packageName
                     )
                 ).also {
-                    it.background.setTint(Color.BLACK)
+                    it.background?.setTint(Color.BLACK)
                     it.elevation = 0f
                 }
 
@@ -380,17 +380,26 @@ class QSBlackThemeA14(context: Context?) : ModPack(context!!) {
             hookAllMethods(qsFooterViewClass, "onFinishInflate", object : XC_MethodHook() {
                 override fun afterHookedMethod(param: MethodHookParam) {
                     if (blackQSHeaderEnabled) {
-                        (getObjectField(param.thisObject, "mBuildText") as TextView)
-                            .setTextColor(Color.WHITE)
+                        try {
+                            (getObjectField(param.thisObject, "mBuildText") as TextView)
+                                .setTextColor(Color.WHITE)
+                        } catch (ignored: Throwable) {
+                        }
 
-                        (getObjectField(param.thisObject, "mEditButton") as ImageView)
-                            .setColorFilter(Color.WHITE)
+                        try {
+                            (getObjectField(param.thisObject, "mEditButton") as ImageView)
+                                .setColorFilter(Color.WHITE)
+                        } catch (ignored: Throwable) {
+                        }
 
-                        setObjectField(
-                            getObjectField(param.thisObject, "mPageIndicator"),
-                            "mTint",
-                            ColorStateList.valueOf(Color.WHITE)
-                        )
+                        try {
+                            setObjectField(
+                                getObjectField(param.thisObject, "mPageIndicator"),
+                                "mTint",
+                                ColorStateList.valueOf(Color.WHITE)
+                            )
+                        } catch (ignored: Throwable) {
+                        }
                     }
                 }
             })
@@ -1082,15 +1091,7 @@ class QSBlackThemeA14(context: Context?) : ModPack(context!!) {
 
     private fun calculateColors() {
         try {
-            val res = mContext.resources
-
-            colorText = res.getColor(
-                res.getIdentifier(
-                    "android:color/system_neutral1_900",
-                    "color",
-                    mContext.packageName
-                ), mContext.theme
-            )
+            colorText = mContext.getColor(android.R.color.system_neutral1_900)
 
             colorTextAlpha = colorText!! and 0xFFFFFF or (Math.round(
                 Color.alpha(
