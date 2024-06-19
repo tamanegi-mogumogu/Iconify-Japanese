@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.agp.app)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
@@ -15,8 +16,8 @@ android {
         applicationId = "com.drdisagree.iconify"
         minSdk = 31
         targetSdk = 34
-        versionCode = 19
-        versionName = "6.7.6-translated_by_tqmane"
+        versionCode = 20
+        versionName = "6.8.0"
         setProperty("archivesBaseName", "Iconify v$versionName")
         buildConfigField("int", "MIN_SDK_VERSION", "$minSdk")
     }

@@ -68,7 +68,7 @@ class XposedQuickSettings : BaseFragment() {
             putBoolean(HIDE_QSLABEL_SWITCH, isChecked)
 
             Handler(Looper.getMainLooper()).postDelayed(
-                { SystemUtil.doubleToggleDarkMode() },
+                { SystemUtil.handleSystemUIRestart() },
                 SWITCH_ANIMATION_DELAY
             )
         }

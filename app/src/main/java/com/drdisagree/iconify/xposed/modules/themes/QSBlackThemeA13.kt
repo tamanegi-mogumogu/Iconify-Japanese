@@ -436,7 +436,8 @@ class QSBlackThemeA13(context: Context?) : ModPack(context!!) {
 
         hookAllMethods(qsIconViewImplClass, "getIconColorForState", object : XC_MethodHook() {
             override fun beforeHookedMethod(param: MethodHookParam) {
-                val (isDisabledState: Boolean, isActiveState: Boolean) = getTileState(param)
+                val (isDisabledState: Boolean,
+                    isActiveState: Boolean) = Utils.getTileState(param)
 
                 if (blackQSHeaderEnabled) {
                     if (isDisabledState) {
@@ -455,7 +456,8 @@ class QSBlackThemeA13(context: Context?) : ModPack(context!!) {
                 override fun afterHookedMethod(param: MethodHookParam) {
                     if (qsTextAlwaysWhite || qsTextFollowAccent) return
 
-                    val (isDisabledState: Boolean, isActiveState: Boolean) = getTileState(param)
+                    val (isDisabledState: Boolean,
+                        isActiveState: Boolean) = Utils.getTileState(param)
 
                     if (blackQSHeaderEnabled) {
                         val mIcon = param.args[0] as ImageView
@@ -736,43 +738,6 @@ class QSBlackThemeA13(context: Context?) : ModPack(context!!) {
         })
     }
 
-    private fun getTileState(param: XC_MethodHook.MethodHookParam): Pair<Boolean, Boolean> {
-        val isDisabledState: Boolean = try {
-            getObjectField(
-                param.args[1],
-                "disabledByPolicy"
-            ) as Boolean ||
-                    getObjectField(
-                        param.args[1],
-                        "state"
-                    ) as Int == Tile.STATE_UNAVAILABLE
-        } catch (throwable: Throwable) {
-            getObjectField(
-                param.args[1],
-                "state"
-            ) as Int == Tile.STATE_UNAVAILABLE
-        }
-
-        val isActiveState: Boolean = try {
-            getObjectField(
-                param.args[1],
-                "state"
-            ) as Int == QSLightThemeA13.STATE_ACTIVE
-        } catch (throwable: Throwable) {
-            try {
-                param.args[1] as Int == QSLightThemeA13.STATE_ACTIVE
-            } catch (throwable1: Throwable) {
-                try {
-                    param.args[1] as Boolean
-                } catch (throwable2: Throwable) {
-                    false
-                }
-            }
-        }
-
-        return Pair(isDisabledState, isActiveState)
-    }
-
     private fun initColors(force: Boolean) {
         val isDark: Boolean = SystemUtil.isDarkMode
         if (isDark == this.isDark && !force) return
@@ -784,7 +749,13 @@ class QSBlackThemeA13(context: Context?) : ModPack(context!!) {
 
     private fun calculateColors() {
         try {
-            colorText = mContext.getColor(android.R.color.system_neutral1_900)
+            colorText = mContext.resources.getColor(
+                mContext.resources.getIdentifier(
+                    "android:color/system_neutral1_900",
+                    "color",
+                    mContext.packageName
+                ), mContext.theme
+            )
 
             colorTextAlpha = colorText!! and 0xFFFFFF or (Math.round(
                 Color.alpha(

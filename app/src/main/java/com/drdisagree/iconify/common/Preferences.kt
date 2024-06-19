@@ -62,6 +62,7 @@ object Preferences {
     const val FIXED_STATUS_ICONS_TOPMARGIN = "xposed_fixedstatusiconstopmargin"
     const val HIDE_LOCKSCREEN_STATUSBAR = "xposed_hidelockscreenstatusbar"
     const val HIDE_LOCKSCREEN_CARRIER = "xposed_hidelockscreencarrier"
+    const val HIDE_LOCKSCREEN_LOCK_ICON = "xposed_hidelockscreenlockicon"
     const val LIGHT_QSPANEL = "xposed_lightqspanel"
     const val DUALTONE_QSPANEL = "xposed_dualtoneqspanel"
     const val BLACK_QSPANEL = "xposed_blackqspanel"
@@ -73,6 +74,7 @@ object Preferences {
     const val CUSTOM_BATTERY_HEIGHT = "xposed_custombatteryheight"
     const val HIDE_DATA_DISABLED_ICON = "xposed_hideDataDisabledIcon"
     const val DEPTH_WALLPAPER_SWITCH = "xposed_depthwallpaper"
+    const val DEPTH_WALLPAPER_FOREGROUND_ALPHA = "xposed_depthwallpaperforegroundalpha"
     const val DEPTH_WALLPAPER_FADE_ANIMATION = "xposed_depthwallpaperfadeanimation"
     const val DEPTH_WALLPAPER_PARALLAX_EFFECT = "xposed_depthwallpaperparallaxeffect"
     const val DEPTH_WALLPAPER_BACKGROUND_MOVEMENT_MULTIPLIER = "xposed_depthwallpaperbackgroundmovementmultiplier"
@@ -161,6 +163,7 @@ object Preferences {
     const val BATTERY_STYLE_LANDSCAPE_BATTERYO = 34
     const val BATTERY_STYLE_CIRCLE = 35
     const val BATTERY_STYLE_DOTTED_CIRCLE = 36
+    const val BATTERY_STYLE_FILLED_CIRCLE = 37
 
     // Xposed force reload overlay
     const val FORCE_RELOAD_PACKAGE_NAME = "com.android.internal.display.cutout.emulation.corner"
@@ -245,6 +248,7 @@ object Preferences {
     const val SHOW_XPOSED_WARN = "IconifyShowXposedWarn"
     const val SHOW_HOME_CARD = "IconifyShowHomeCard"
     const val XPOSED_ONLY_MODE = "IconifyXposedOnlyMode"
+
     @JvmField
     var isXposedOnlyMode = getBoolean(XPOSED_ONLY_MODE, true) &&
             !SplashActivity.SKIP_TO_HOMEPAGE_FOR_TESTING

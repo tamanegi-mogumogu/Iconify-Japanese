@@ -62,13 +62,11 @@ import com.drdisagree.iconify.xposed.modules.utils.ViewHelper.applyTextMarginRec
 import com.drdisagree.iconify.xposed.modules.utils.ViewHelper.applyTextScalingRecursively
 import com.drdisagree.iconify.xposed.modules.utils.ViewHelper.findViewContainsTag
 import com.drdisagree.iconify.xposed.modules.utils.ViewHelper.findViewWithTagAndChangeColor
-import com.drdisagree.iconify.xposed.modules.utils.ViewHelper.loadLottieAnimationView
 import com.drdisagree.iconify.xposed.modules.utils.ViewHelper.setMargins
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge.hookAllMethods
 import de.robv.android.xposed.XposedBridge.log
 import de.robv.android.xposed.XposedHelpers.findClass
-import de.robv.android.xposed.XposedHelpers.findClassIfExists
 import de.robv.android.xposed.XposedHelpers.getObjectField
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 import java.io.File
@@ -95,7 +93,6 @@ class LockscreenClock(context: Context?) : ModPack(context!!) {
     private var mBatteryPercentage = 1
     private var mVolumeLevelArcProgress: ImageView? = null
     private var mRamUsageArcProgress: ImageView? = null
-    private var lottieAnimationViewClass: Class<*>? = null
     private val mBatteryReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action != null && intent.action == Intent.ACTION_BATTERY_CHANGED) {
@@ -145,11 +142,6 @@ class LockscreenClock(context: Context?) : ModPack(context!!) {
     override fun handleLoadPackage(loadPackageParam: LoadPackageParam) {
         initResources(mContext)
 
-        lottieAnimationViewClass = findClassIfExists(
-            "com.airbnb.lottie.LottieAnimationView",
-            loadPackageParam.classLoader
-        )
-
         val keyguardStatusViewClass = findClass(
             "com.android.keyguard.KeyguardStatusView",
             loadPackageParam.classLoader
@@ -169,26 +161,26 @@ class LockscreenClock(context: Context?) : ModPack(context!!) {
                 }
 
                 // Hide stock clock
-                val keyguardStatusView = param.thisObject as GridLayout
-
-                val mClockView = keyguardStatusView.findViewById<RelativeLayout>(
+                (param.thisObject as GridLayout).findViewById<RelativeLayout>(
                     mContext.resources.getIdentifier(
                         "keyguard_clock_container",
                         "id",
                         mContext.packageName
                     )
-                )
-                mClockView.layoutParams.height = 0
-                mClockView.layoutParams.width = 0
-                mClockView.visibility = View.INVISIBLE
+                ).apply {
+                    layoutParams.height = 0
+                    layoutParams.width = 0
+                    visibility = View.INVISIBLE
+                }
 
-                val mMediaHostContainer = getObjectField(
+                (getObjectField(
                     param.thisObject,
                     "mMediaHostContainer"
-                ) as View
-                mMediaHostContainer.layoutParams.height = 0
-                mMediaHostContainer.layoutParams.width = 0
-                mMediaHostContainer.visibility = View.INVISIBLE
+                ) as View).apply {
+                    layoutParams.height = 0
+                    layoutParams.width = 0
+                    visibility = View.INVISIBLE
+                }
 
                 registerClockUpdater()
             }
@@ -283,12 +275,12 @@ class LockscreenClock(context: Context?) : ModPack(context!!) {
 
     // Broadcast receiver for updating clock
     private fun registerClockUpdater() {
-        val filter = IntentFilter()
-
-        filter.addAction(Intent.ACTION_TIME_TICK)
-        filter.addAction(Intent.ACTION_TIME_CHANGED)
-        filter.addAction(Intent.ACTION_TIMEZONE_CHANGED)
-        filter.addAction(Intent.ACTION_LOCALE_CHANGED)
+        val filter = IntentFilter().also {
+            it.addAction(Intent.ACTION_TIME_TICK)
+            it.addAction(Intent.ACTION_TIME_CHANGED)
+            it.addAction(Intent.ACTION_TIMEZONE_CHANGED)
+            it.addAction(Intent.ACTION_LOCALE_CHANGED)
+        }
 
         val timeChangedReceiver: BroadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
@@ -320,7 +312,7 @@ class LockscreenClock(context: Context?) : ModPack(context!!) {
         // Remove existing clock view
         if (isClockAdded) {
             mClockViewContainer!!.removeView(
-                mClockViewContainer!!.findViewWithTag<View>(
+                mClockViewContainer!!.findViewWithTag(
                     ICONIFY_LOCKSCREEN_CLOCK_TAG
                 )
             )
@@ -396,14 +388,6 @@ class LockscreenClock(context: Context?) : ModPack(context!!) {
                 null
             )
 
-            lottieAnimationViewClass?.let {
-                loadLottieAnimationView(
-                    appContext = appContext!!,
-                    lottieAnimationViewClass = it,
-                    parent = view
-                )
-            }
-
             return view
         }
 
@@ -421,15 +405,33 @@ class LockscreenClock(context: Context?) : ModPack(context!!) {
         val customColorEnabled: Boolean = Xprefs!!.getBoolean(LSCLOCK_COLOR_SWITCH, false)
         val accent1: Int = Xprefs!!.getInt(
             LSCLOCK_COLOR_CODE_ACCENT1,
-            ContextCompat.getColor(mContext, android.R.color.system_accent1_300)
+            mContext.resources.getColor(
+                mContext.resources.getIdentifier(
+                    "android:color/system_accent1_300",
+                    "color",
+                    mContext.packageName
+                ), mContext.theme
+            )
         )
         val accent2: Int = Xprefs!!.getInt(
             LSCLOCK_COLOR_CODE_ACCENT2,
-            ContextCompat.getColor(mContext, android.R.color.system_accent2_300)
+            mContext.resources.getColor(
+                mContext.resources.getIdentifier(
+                    "android:color/system_accent2_300",
+                    "color",
+                    mContext.packageName
+                ), mContext.theme
+            )
         )
         val accent3: Int = Xprefs!!.getInt(
             LSCLOCK_COLOR_CODE_ACCENT3,
-            ContextCompat.getColor(mContext, android.R.color.system_accent3_300)
+            mContext.resources.getColor(
+                mContext.resources.getIdentifier(
+                    "android:color/system_accent3_300",
+                    "color",
+                    mContext.packageName
+                ), mContext.theme
+            )
         )
         val text1: Int = Xprefs!!.getInt(
             LSCLOCK_COLOR_CODE_TEXT1,

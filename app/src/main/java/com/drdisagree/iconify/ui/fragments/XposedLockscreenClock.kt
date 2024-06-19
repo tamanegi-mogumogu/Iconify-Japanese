@@ -22,6 +22,7 @@ import com.drdisagree.iconify.Iconify.Companion.appContext
 import com.drdisagree.iconify.Iconify.Companion.appContextLocale
 import com.drdisagree.iconify.R
 import com.drdisagree.iconify.common.Const.SWITCH_ANIMATION_DELAY
+import com.drdisagree.iconify.common.Dynamic.isAtleastA14
 import com.drdisagree.iconify.common.Preferences.LSCLOCK_BOTTOMMARGIN
 import com.drdisagree.iconify.common.Preferences.LSCLOCK_COLOR_CODE_ACCENT1
 import com.drdisagree.iconify.common.Preferences.LSCLOCK_COLOR_CODE_ACCENT2
@@ -53,10 +54,12 @@ import com.drdisagree.iconify.utils.FileUtil.getRealPath
 import com.drdisagree.iconify.utils.FileUtil.moveToIconifyHiddenDir
 import com.drdisagree.iconify.utils.SystemUtil
 import com.google.android.material.slider.Slider
+import com.topjohnwu.superuser.Shell
 
 class XposedLockscreenClock : BaseFragment() {
 
     private lateinit var binding: FragmentXposedLockscreenClockBinding
+    private var totalClocks: Int = 1
 
     private var startActivityIntent = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -96,6 +99,12 @@ class XposedLockscreenClock : BaseFragment() {
         // Enable lockscreen clock
         binding.enableLockscreenClock.isSwitchChecked = getBoolean(LSCLOCK_SWITCH, false)
         binding.enableLockscreenClock.setSwitchChangeListener { _: CompoundButton?, isChecked: Boolean ->
+            if (isChecked && isAtleastA14) {
+                Shell.cmd(
+                    "adb shell settings put secure lock_screen_custom_clock_face default"
+                ).exec()
+            }
+
             putBoolean(LSCLOCK_SWITCH, isChecked)
 
             updateEnabled(isChecked)
@@ -110,17 +119,25 @@ class XposedLockscreenClock : BaseFragment() {
 
         // Lockscreen clock style
         val snapHelper: SnapHelper = LinearSnapHelper()
-        binding.rvLockscreenClockPreview.setLayoutManager(
-            CarouselLayoutManager(
-                requireContext(),
-                RecyclerView.HORIZONTAL,
-                false
-            )
+        val carouselLayoutManager = CarouselLayoutManager(
+            requireContext(),
+            RecyclerView.HORIZONTAL,
+            false
         )
+        carouselLayoutManager.setMinifyDistance(0.8f)
+
+        binding.rvLockscreenClockPreview.setLayoutManager(carouselLayoutManager)
         binding.rvLockscreenClockPreview.setAdapter(initLockscreenClockStyles())
         binding.rvLockscreenClockPreview.setHasFixedSize(true)
         snapHelper.attachToRecyclerView(binding.rvLockscreenClockPreview)
-        binding.rvLockscreenClockPreview.scrollToPosition(getInt(LSCLOCK_STYLE, 0))
+
+        // if index exceeds limit, set to highest available
+        var lsClockStyle = getInt(LSCLOCK_STYLE, 0)
+        if (lsClockStyle >= totalClocks) {
+            lsClockStyle = totalClocks - 1
+            putInt(LSCLOCK_STYLE, lsClockStyle)
+        }
+        binding.rvLockscreenClockPreview.scrollToPosition(lsClockStyle)
 
         // Lockscreen clock font picker
         binding.lockscreenClockFont.setActivityResultLauncher(startActivityIntent)
@@ -344,6 +361,8 @@ class XposedLockscreenClock : BaseFragment() {
         ) {
             maxIndex++
         }
+
+        totalClocks = maxIndex
 
         for (i in 0 until maxIndex) {
             lsClock.add(
