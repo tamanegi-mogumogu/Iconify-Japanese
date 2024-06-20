@@ -66,7 +66,7 @@ object Logger {
     private val deviceInfo: StringBuilder
         get() {
             val info = StringBuilder("Iconify bug report ")
-            val sdf = SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.getDefault())
+            val sdf = SimpleDateFormat("yyyy MMM d'日' HH:mm:ss", Locale.getDefault())
 
             info.append(sdf.format(Date())).append('\n')
             info.append("version: " + BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")\n")
