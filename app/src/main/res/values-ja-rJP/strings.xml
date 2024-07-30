@@ -931,5 +931,5 @@
     <string name="one_time_reboot_needed">デバイスを再起動してください！</string>
     <string name="tap_to_select">プレビューをタップして選択</string>
     <string name="dont_show_again">次回から表示しない</string>
-    <string name="requires_lsposed_for_a14">To ensure proper functionality, enabling the Iconify module in LSPosed is mandatory for android 14 and above.\n\nAfter that, enable the fixes from: Tweaks &gt; Xposed Menu &gt; Themes &gt; Others.</string>
+    <string name="requires_lsposed_for_a14">適切な機能を確保するため、Android 14以降ではLSPosedでIconifyモジュールを有効にすることが必須です。\n\nその後、以下から修正を有効にしてください: 調整 &gt; Xposedメニュー &gt; テーマ &gt; その他。</string>
 </resources>
