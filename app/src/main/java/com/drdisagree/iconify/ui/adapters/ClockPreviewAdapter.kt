@@ -31,7 +31,8 @@ class ClockPreviewAdapter(
     private val context: Context,
     private val itemList: ArrayList<ClockModel>,
     prefSwitch: String?,
-    prefStyle: String
+    prefStyle: String,
+    private val mOnStyleSelected: OnStyleSelected? = null
 ) : RecyclerView.Adapter<ClockPreviewAdapter.ViewHolder>() {
 
     private val prefStyle: String
@@ -67,26 +68,20 @@ class ClockPreviewAdapter(
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val container: LinearLayout
-        private val title: TextView
-        private val clockContainer: LinearLayout
-        val checkIcon: ImageView
-        val button: MaterialButton
-        private val wallpaperView: ImageView
-
-        init {
-            container = itemView.findViewById(R.id.clock_preview_child)
-            title = itemView.findViewById(R.id.clock_title)
-            clockContainer = itemView.findViewById(R.id.clock_view_container)
-            checkIcon = itemView.findViewById(R.id.icon_selected)
-            button = itemView.findViewById(R.id.btn_select_style)
-            wallpaperView = itemView.findViewById(R.id.wallpaper_view)
-        }
+        val container: LinearLayout = itemView.findViewById(R.id.clock_preview_child)
+        private val title: TextView = itemView.findViewById(R.id.clock_title)
+        private val clockContainer: LinearLayout = itemView.findViewById(R.id.clock_view_container)
+        val checkIcon: ImageView = itemView.findViewById(R.id.icon_selected)
+        val button: MaterialButton = itemView.findViewById(R.id.btn_select_style)
+        private val wallpaperView: ImageView = itemView.findViewById(R.id.wallpaper_view)
 
         fun bind(model: ClockModel, position: Int) {
             title.text = model.title
             button.setOnClickListener {
                 RPrefs.putInt(prefStyle, position)
+                if (mOnStyleSelected != null) {
+                    mOnStyleSelected!!.onStyleSelected(position)
+                }
                 refreshLayout(this)
             }
 
@@ -173,6 +168,15 @@ class ClockPreviewAdapter(
                 adapter.notifyDataSetChanged()
             }
         }
+    }
+
+    /**
+     * Interface for style selection
+     * @param position The position of the selected style,
+     * in our case is the num of the layout
+     */
+    interface OnStyleSelected {
+        fun onStyleSelected(position: Int)
     }
 
     companion object {

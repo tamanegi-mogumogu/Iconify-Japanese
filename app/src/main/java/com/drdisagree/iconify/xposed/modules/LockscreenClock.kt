@@ -29,6 +29,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
+import android.widget.TextClock
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -46,17 +47,20 @@ import com.drdisagree.iconify.common.Preferences.LSCLOCK_COLOR_CODE_ACCENT3
 import com.drdisagree.iconify.common.Preferences.LSCLOCK_COLOR_CODE_TEXT1
 import com.drdisagree.iconify.common.Preferences.LSCLOCK_COLOR_CODE_TEXT2
 import com.drdisagree.iconify.common.Preferences.LSCLOCK_COLOR_SWITCH
+import com.drdisagree.iconify.common.Preferences.LSCLOCK_DEVICENAME
 import com.drdisagree.iconify.common.Preferences.LSCLOCK_FONT_LINEHEIGHT
 import com.drdisagree.iconify.common.Preferences.LSCLOCK_FONT_SWITCH
 import com.drdisagree.iconify.common.Preferences.LSCLOCK_FONT_TEXT_SCALING
 import com.drdisagree.iconify.common.Preferences.LSCLOCK_STYLE
 import com.drdisagree.iconify.common.Preferences.LSCLOCK_SWITCH
 import com.drdisagree.iconify.common.Preferences.LSCLOCK_TOPMARGIN
+import com.drdisagree.iconify.common.Preferences.LSCLOCK_USERNAME
 import com.drdisagree.iconify.common.Resources.LOCKSCREEN_CLOCK_LAYOUT
 import com.drdisagree.iconify.config.XPrefs.Xprefs
 import com.drdisagree.iconify.utils.TextUtil
 import com.drdisagree.iconify.xposed.ModPack
 import com.drdisagree.iconify.xposed.modules.utils.ArcProgressWidget.generateBitmap
+import com.drdisagree.iconify.xposed.modules.utils.TimeUtils
 import com.drdisagree.iconify.xposed.modules.utils.ViewHelper.applyFontRecursively
 import com.drdisagree.iconify.xposed.modules.utils.ViewHelper.applyTextMarginRecursively
 import com.drdisagree.iconify.xposed.modules.utils.ViewHelper.applyTextScalingRecursively
@@ -133,6 +137,8 @@ class LockscreenClock(context: Context?) : ModPack(context!!) {
                     key[0] == LSCLOCK_FONT_LINEHEIGHT ||
                     key[0] == LSCLOCK_FONT_SWITCH ||
                     key[0] == LSCLOCK_FONT_TEXT_SCALING ||
+                    key[0] == LSCLOCK_USERNAME ||
+                    key[0] == LSCLOCK_DEVICENAME ||
                     key[0] == DEPTH_WALLPAPER_FADE_ANIMATION)
         ) {
             updateClockView()
@@ -403,6 +409,9 @@ class LockscreenClock(context: Context?) : ModPack(context!!) {
         val lineHeight: Int = Xprefs!!.getInt(LSCLOCK_FONT_LINEHEIGHT, 0)
         val customFontEnabled: Boolean = Xprefs!!.getBoolean(LSCLOCK_FONT_SWITCH, false)
         val customColorEnabled: Boolean = Xprefs!!.getBoolean(LSCLOCK_COLOR_SWITCH, false)
+        val customUserName: String = Xprefs!!.getString(LSCLOCK_USERNAME, "").toString()
+        val customDeviceName: String = Xprefs!!.getString(LSCLOCK_DEVICENAME, "").toString()
+
         val accent1: Int = Xprefs!!.getInt(
             LSCLOCK_COLOR_CODE_ACCENT1,
             mContext.resources.getColor(
@@ -483,7 +492,8 @@ class LockscreenClock(context: Context?) : ModPack(context!!) {
 
             7 -> {
                 val usernameView = clockView.findViewContainsTag("summary") as TextView?
-                usernameView?.text = userName
+                usernameView?.text = if (customUserName.isNotEmpty()) customUserName
+                else  userName
                 val imageView = clockView.findViewContainsTag("user_profile_image") as ImageView?
                 userImage?.let { imageView?.setImageDrawable(it) }
             }
@@ -495,7 +505,17 @@ class LockscreenClock(context: Context?) : ModPack(context!!) {
                 mVolumeLevelArcProgress =
                     clockView.findViewContainsTag("volume_progress") as ImageView?
                 mRamUsageArcProgress = clockView.findViewContainsTag("ram_usage_info") as ImageView?
-                (clockView.findViewContainsTag("device_name") as TextView).text = Build.MODEL
+                val devName = clockView.findViewContainsTag("device_name") as TextView?
+                devName!!.text = if (customDeviceName.isNotEmpty()) customDeviceName
+                else Build.MODEL
+            }
+
+            22 -> {
+                val hourView = clockView.findViewContainsTag("textHour") as TextView
+                val minuteView = clockView.findViewContainsTag("textMinute") as TextView
+                val tickIndicator = clockView.findViewContainsTag("tickIndicator") as TextClock
+
+                TimeUtils.setCurrentTimeTextClock(mContext, tickIndicator, hourView, minuteView)
             }
 
             else -> {

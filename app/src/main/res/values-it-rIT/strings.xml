@@ -35,6 +35,10 @@
     <string name="activity_title_home_page">Iconify</string>
     <string name="activity_title_icon_pack">Pacchetto Icone</string>
     <string name="activity_desc_icon_pack">Cambia le icone di sistema</string>
+    <string name="activity_title_signal_icons">Signal Icons</string>
+    <string name="activity_desc_signal_icons">Change system signal icons</string>
+    <string name="activity_title_wifi_icons">WiFi Icons</string>
+    <string name="activity_desc_wifi_icons">Change system WiFi icons</string>
     <string name="activity_title_brightness_bar">Barra Luminosità</string>
     <string name="activity_desc_brightness_bar">Personalizza il cursore di avanzamento</string>
     <string name="activity_title_qs_shape">Pannello Riquadri QS</string>
@@ -602,6 +606,9 @@
     <string name="lockscreen_clock_bottom_margin_title">Margine Inferiore</string>
     <string name="lockscreen_clock_white_text_title">Testo Bianco</string>
     <string name="lockscreen_clock_white_text_desc">Forza tutti i colori per essere bianchi</string>
+    <string name="lsclock_custom_image_title">Use Custom Image</string>
+    <string name="lsclock_custom_image_desc">Use custom image for lockscreen clock.</string>
+    <string name="lsclock_custom_image_picker_title">Custom Image Picker</string>
     <string name="btn_select">Seleziona</string>
     <string name="battery_charging">Batteria in Carica</string>
     <string name="battery_discharging">Batteria in Scaricamento</string>
@@ -647,6 +654,7 @@
     <string name="hide_carrier_group_desc">Nascondi gruppo operatore dal pannello QS</string>
     <string name="hide_status_icons_title">Nascondi Icone Di Stato</string>
     <string name="hide_status_icons_desc">Rimuovi le icone di ora, data e batteria</string>
+    <string name="sb_clock_size">Statusbar Clock Size</string>
     <string name="lock_screen">Schermata di Blocco</string>
     <string name="hide_ls_carrier_title">Nascondi Operatore LS</string>
     <string name="hide_ls_carrier_desc">Nascondi nome operatore nella schermata di blocco</string>

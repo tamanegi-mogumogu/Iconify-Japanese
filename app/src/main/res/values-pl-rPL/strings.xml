@@ -35,6 +35,10 @@
     <string name="activity_title_home_page">Iconify</string>
     <string name="activity_title_icon_pack">Paczka ikon</string>
     <string name="activity_desc_icon_pack">Zmień systemową paczkę ikon</string>
+    <string name="activity_title_signal_icons">Signal Icons</string>
+    <string name="activity_desc_signal_icons">Change system signal icons</string>
+    <string name="activity_title_wifi_icons">WiFi Icons</string>
+    <string name="activity_desc_wifi_icons">Change system WiFi icons</string>
     <string name="activity_title_brightness_bar">Pasek jasności</string>
     <string name="activity_desc_brightness_bar">Dostosuj wygląd paska jasności</string>
     <string name="activity_title_qs_shape">Kafelki</string>
@@ -602,6 +606,9 @@
     <string name="lockscreen_clock_bottom_margin_title">Margines dolny</string>
     <string name="lockscreen_clock_white_text_title">Biały tekst</string>
     <string name="lockscreen_clock_white_text_desc">Wymuś wszystkie kolory na białe</string>
+    <string name="lsclock_custom_image_title">Use Custom Image</string>
+    <string name="lsclock_custom_image_desc">Use custom image for lockscreen clock.</string>
+    <string name="lsclock_custom_image_picker_title">Custom Image Picker</string>
     <string name="btn_select">Select</string>
     <string name="battery_charging">Battery Charging</string>
     <string name="battery_discharging">Battery Discharging</string>
@@ -647,6 +654,7 @@
     <string name="hide_carrier_group_desc">Ukryj nazwę operatora w szybkich ustawieniach</string>
     <string name="hide_status_icons_title">Ukryj ikony stanu</string>
     <string name="hide_status_icons_desc">Ukryj ikony stanu takie jak Wi-Fi, bateria oraz pozostałe</string>
+    <string name="sb_clock_size">Statusbar Clock Size</string>
     <string name="lock_screen">Ekran blokady</string>
     <string name="hide_ls_carrier_title">Ukryj nazwę operatora</string>
     <string name="hide_ls_carrier_desc">Ukryj nazwę operatora na ekranie blokady</string>

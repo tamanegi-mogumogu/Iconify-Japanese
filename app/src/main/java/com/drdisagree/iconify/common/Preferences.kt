@@ -57,10 +57,13 @@ object Preferences {
     const val LSCLOCK_FONT_SWITCH = "xposed_lockscreenclockfont"
     const val LSCLOCK_FONT_LINEHEIGHT = "xposed_lockscreenclockfontlineheight"
     const val LSCLOCK_FONT_TEXT_SCALING = "xposed_lockscreenclocktextscaling"
+    const val LSCLOCK_USERNAME = "xposed_lockscreenclockcustomusername"
+    const val LSCLOCK_DEVICENAME = "xposed_lockscreenclockcustomdevicename"
     const val FIXED_STATUS_ICONS_SWITCH = "xposed_fixedstatusicons"
     const val FIXED_STATUS_ICONS_SIDEMARGIN = "xposed_fixedstatusiconssidemargin"
     const val FIXED_STATUS_ICONS_TOPMARGIN = "xposed_fixedstatusiconstopmargin"
     const val HIDE_LOCKSCREEN_STATUSBAR = "xposed_hidelockscreenstatusbar"
+    const val SB_CLOCK_SIZE = "xposed_sbclocksize"
     const val HIDE_LOCKSCREEN_CARRIER = "xposed_hidelockscreencarrier"
     const val HIDE_LOCKSCREEN_LOCK_ICON = "xposed_hidelockscreenlockicon"
     const val LIGHT_QSPANEL = "xposed_lightqspanel"
@@ -249,7 +252,6 @@ object Preferences {
     const val SHOW_HOME_CARD = "IconifyShowHomeCard"
     const val XPOSED_ONLY_MODE = "IconifyXposedOnlyMode"
 
-    @JvmField
     var isXposedOnlyMode = getBoolean(XPOSED_ONLY_MODE, true) &&
             !SplashActivity.SKIP_TO_HOMEPAGE_FOR_TESTING
 
