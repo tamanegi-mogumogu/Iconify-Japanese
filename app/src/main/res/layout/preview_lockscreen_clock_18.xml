@@ -78,8 +78,8 @@
         android:layout_marginTop="5dp"
         android:layout_toEndOf="@id/timeCircle3"
         android:fontFamily="@font/steelfish_rounded_bd"
-        android:format12Hour="MMM.dd"
-        android:format24Hour="dd.MMM"
+        android:format12Hour="MMMM.d'日'"
+        android:format24Hour="MMMM.d'日'"
         android:tag="text1"
         android:textColor="@android:color/white"
         android:textSize="30sp" />

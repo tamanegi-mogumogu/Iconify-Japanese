@@ -56,7 +56,7 @@ object Dynamic {
 
     fun isSecurityPatchBeforeJune2024(): Boolean {
         val securityPatch = Build.VERSION.SECURITY_PATCH
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val dateFormat = SimpleDateFormat("yyyy-MM-d'日'", Locale.US)
 
         return try {
             val securityPatchDate = dateFormat.parse(securityPatch)

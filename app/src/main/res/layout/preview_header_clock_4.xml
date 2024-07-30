@@ -33,8 +33,8 @@
         <TextClock
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:format12Hour="dd MMMM"
-            android:format24Hour="dd MMMM"
+            android:format12Hour="MMMM d'日'"
+            android:format24Hour="MMMM d'日'"
             android:includeFontPadding="false"
             android:singleLine="true"
             android:tag="text1"

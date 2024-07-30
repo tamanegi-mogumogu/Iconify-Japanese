@@ -58,8 +58,8 @@
         <TextClock
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:format12Hour="EEEE"
-            android:format24Hour="EEEE"
+            android:format12Hour="MMMM d'日'"
+            android:format24Hour="MMMM d'日'"
             android:singleLine="true"
             android:includeFontPadding="false"
             android:tag="text1"
@@ -71,8 +71,8 @@
         <TextClock
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:format12Hour="dd MMMM"
-            android:format24Hour="dd MMMM"
+            android:format12Hour="EEEE"
+            android:format24Hour="EEEE"
             android:singleLine="true"
             android:includeFontPadding="false"
             android:tag="text1"
