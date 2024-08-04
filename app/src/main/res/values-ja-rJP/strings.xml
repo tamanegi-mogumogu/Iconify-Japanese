@@ -609,6 +609,10 @@
     <string name="lsclock_custom_image_title">Use Custom Image</string>
     <string name="lsclock_custom_image_desc">Use custom image for lockscreen clock.</string>
     <string name="lsclock_custom_image_picker_title">Custom Image Picker</string>
+    <string name="lockscreen_clock_custom_devicename">Custom Device Name</string>
+    <string name="lockscreen_clock_custom_devicename_desc">Set custom device name for lockscreen clock.\nKeep blank to use System\'s Device Name.</string>
+    <string name="lockscreen_clock_custom_username">Custom User Name</string>
+    <string name="lockscreen_clock_custom_username_desc">Set custom user name for lockscreen clock.\nKeep blank to use System\'s User Name.</string>
     <string name="btn_select">選択</string>
     <string name="battery_charging">バッテリー充電中</string>
     <string name="battery_discharging">バッテリー放電中</string>
@@ -761,31 +765,7 @@
     <string name="exported_settings">設定の保存が完了しました</string>
     <!-- Style List -->
     <string name="style_0">なし</string>
-    <string name="style_1">スタイル 1</string>
-    <string name="style_2">スタイル 2</string>
-    <string name="style_3">スタイル 3</string>
-    <string name="style_4">スタイル 4</string>
-    <string name="style_5">スタイル 5</string>
-    <string name="style_6">スタイル 6</string>
-    <string name="style_7">スタイル 7</string>
-    <string name="style_8">スタイル 8</string>
-    <string name="style_9">スタイル 9</string>
-    <string name="style_10">スタイル 10</string>
-    <string name="style_11">スタイル 11</string>
-    <string name="style_12">スタイル 12</string>
-    <string name="style_13">スタイル 13</string>
-    <string name="style_14">スタイル 14</string>
-    <string name="style_15">スタイル 15</string>
-    <string name="style_16">スタイル 16</string>
-    <string name="style_17">スタイル 17</string>
-    <string name="style_18">スタイル 18</string>
-    <string name="style_19">スタイル 19</string>
-    <string name="style_20">スタイル 20</string>
-    <string name="style_21">スタイル 21</string>
-    <string name="style_22">スタイル 22</string>
-    <string name="style_23">スタイル 23</string>
-    <string name="style_24">スタイル 24</string>
-    <string name="style_25">スタイル 25</string>
+    <string name="style">Style %d</string>
     <!-- Buttons -->
     <string name="btn_continue">続ける</string>
     <string name="btn_restart">再起動</string>

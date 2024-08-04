@@ -609,6 +609,10 @@
     <string name="lsclock_custom_image_title">Özel Resim Kullan</string>
     <string name="lsclock_custom_image_desc">Kilit ekranı saati için özel resim kullan.</string>
     <string name="lsclock_custom_image_picker_title">Özel Resim Seçici</string>
+    <string name="lockscreen_clock_custom_devicename">Özel Cihaz Adı</string>
+    <string name="lockscreen_clock_custom_devicename_desc">Kilit ekranı saati için özel cihaz adı ayarlayın.\nSistemin Cihaz Adını kullanmak için boş bırakın.</string>
+    <string name="lockscreen_clock_custom_username">Özel Kullanıcı Adı</string>
+    <string name="lockscreen_clock_custom_username_desc">Kilit ekranı saati için özel kullanıcı adı ayarlayın.\nSistemin Kullanıcı Adını kullanmak için boş bırakın.</string>
     <string name="btn_select">Seç</string>
     <string name="battery_charging">Pil şarj ediliyor</string>
     <string name="battery_discharging">Pil şarj edilmiyor</string>
@@ -761,31 +765,7 @@
     <string name="exported_settings">Ayarlar başarıyla kaydedildi</string>
     <!-- Style List -->
     <string name="style_0">Yok</string>
-    <string name="style_1">Stil 1</string>
-    <string name="style_2">Stil 2</string>
-    <string name="style_3">Stil 3</string>
-    <string name="style_4">Stil 4</string>
-    <string name="style_5">Stil 5</string>
-    <string name="style_6">Stil 6</string>
-    <string name="style_7">Stil 7</string>
-    <string name="style_8">Stil 8</string>
-    <string name="style_9">Stil 9</string>
-    <string name="style_10">Stil 10</string>
-    <string name="style_11">Stil 11</string>
-    <string name="style_12">Stil 12</string>
-    <string name="style_13">Stil 13</string>
-    <string name="style_14">Stil 14</string>
-    <string name="style_15">Stil 15</string>
-    <string name="style_16">Stil 16</string>
-    <string name="style_17">Stil 17</string>
-    <string name="style_18">Stil 18</string>
-    <string name="style_19">Stil 19</string>
-    <string name="style_20">Stil 20</string>
-    <string name="style_21">Stil 21</string>
-    <string name="style_22">Stil 22</string>
-    <string name="style_23">Stil 23</string>
-    <string name="style_24">Stil 24</string>
-    <string name="style_25">Stil 25</string>
+    <string name="style">Style %d</string>
     <!-- Buttons -->
     <string name="btn_continue">Devam et</string>
     <string name="btn_restart">Yeniden Başlat</string>

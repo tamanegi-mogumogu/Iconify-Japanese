@@ -609,6 +609,10 @@
     <string name="lsclock_custom_image_title">Egyéni kép használata</string>
     <string name="lsclock_custom_image_desc">Saját képet használhat a záróképernyő órájához.</string>
     <string name="lsclock_custom_image_picker_title">Egyéni kép-kijelölés</string>
+    <string name="lockscreen_clock_custom_devicename">Egyéni Készüléknév</string>
+    <string name="lockscreen_clock_custom_devicename_desc">Állítson be egyéni nevet a zárolási képernyő órájához.\nHagyja üresen, ha a rendszer nevezze el.</string>
+    <string name="lockscreen_clock_custom_username">Egyéni Felhasználónév</string>
+    <string name="lockscreen_clock_custom_username_desc">Állítson be egyéni nevet a zárolási képernyő órájához.\nHagyja üresen, ha a rendszer nevezze el.</string>
     <string name="btn_select">Választás</string>
     <string name="battery_charging">Az akku töltödik</string>
     <string name="battery_discharging">Az akku nem töltödik</string>
@@ -654,7 +658,7 @@
     <string name="hide_carrier_group_desc">A Gyorsbeállításokban nem látszik a szolgáltató</string>
     <string name="hide_status_icons_title">Az Állapotikonok elrejtése</string>
     <string name="hide_status_icons_desc">Az Idő, a Dátum és az Akkujelzés sem látható</string>
-    <string name="sb_clock_size">Statusbar Clock Size</string>
+    <string name="sb_clock_size">Az állapotsori Óra mérete</string>
     <string name="lock_screen">Záróképernyő</string>
     <string name="hide_ls_carrier_title">Nincs Szolgáltató a képernyőzáron</string>
     <string name="hide_ls_carrier_desc">A záróképernyőről eltűnik a Szolgáltató neve</string>
@@ -761,31 +765,7 @@
     <string name="exported_settings">A beállítások mentése sikeres volt</string>
     <!-- Style List -->
     <string name="style_0">Nincs</string>
-    <string name="style_1">1.stílus</string>
-    <string name="style_2">2.stílus</string>
-    <string name="style_3">3.stílus</string>
-    <string name="style_4">4.stílus</string>
-    <string name="style_5">5.stílus</string>
-    <string name="style_6">6.stílus</string>
-    <string name="style_7">7.stílus</string>
-    <string name="style_8">8.stílus</string>
-    <string name="style_9">9.stílus</string>
-    <string name="style_10">10.stílus</string>
-    <string name="style_11">11.stílus</string>
-    <string name="style_12">12.stílus</string>
-    <string name="style_13">13.stílus</string>
-    <string name="style_14">14.stílus</string>
-    <string name="style_15">15.stílus</string>
-    <string name="style_16">16.stílus</string>
-    <string name="style_17">17.stílus</string>
-    <string name="style_18">18.stílus</string>
-    <string name="style_19">19.stílus</string>
-    <string name="style_20">20.stílus</string>
-    <string name="style_21">21.stílus</string>
-    <string name="style_22">22.stílus</string>
-    <string name="style_23">23.stílus</string>
-    <string name="style_24">24.stílus</string>
-    <string name="style_25">25.stílus</string>
+    <string name="style">%d stílus</string>
     <!-- Buttons -->
     <string name="btn_continue">Folytatás</string>
     <string name="btn_restart">Újraindítás</string>

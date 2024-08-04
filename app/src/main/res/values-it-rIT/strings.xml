@@ -609,6 +609,10 @@
     <string name="lsclock_custom_image_title">Use Custom Image</string>
     <string name="lsclock_custom_image_desc">Use custom image for lockscreen clock.</string>
     <string name="lsclock_custom_image_picker_title">Custom Image Picker</string>
+    <string name="lockscreen_clock_custom_devicename">Custom Device Name</string>
+    <string name="lockscreen_clock_custom_devicename_desc">Set custom device name for lockscreen clock.\nKeep blank to use System\'s Device Name.</string>
+    <string name="lockscreen_clock_custom_username">Custom User Name</string>
+    <string name="lockscreen_clock_custom_username_desc">Set custom user name for lockscreen clock.\nKeep blank to use System\'s User Name.</string>
     <string name="btn_select">Seleziona</string>
     <string name="battery_charging">Batteria in Carica</string>
     <string name="battery_discharging">Batteria in Scaricamento</string>
@@ -761,31 +765,7 @@
     <string name="exported_settings">Impostazioni salvate con successo</string>
     <!-- Style List -->
     <string name="style_0">Nessuno</string>
-    <string name="style_1">Stile 1</string>
-    <string name="style_2">Stile 2</string>
-    <string name="style_3">Stile 3</string>
-    <string name="style_4">Stile 4</string>
-    <string name="style_5">Stile 5</string>
-    <string name="style_6">Stile 6</string>
-    <string name="style_7">Stile 7</string>
-    <string name="style_8">Stile 8</string>
-    <string name="style_9">Stile 9</string>
-    <string name="style_10">Stile 10</string>
-    <string name="style_11">Stile 11</string>
-    <string name="style_12">Stile 12</string>
-    <string name="style_13">Stile 13</string>
-    <string name="style_14">Stile 14</string>
-    <string name="style_15">Stile 15</string>
-    <string name="style_16">Stile 16</string>
-    <string name="style_17">Stile 17</string>
-    <string name="style_18">Stile 18</string>
-    <string name="style_19">Stile 19</string>
-    <string name="style_20">Stile 20</string>
-    <string name="style_21">Stile 21</string>
-    <string name="style_22">Stile 22</string>
-    <string name="style_23">Stile 23</string>
-    <string name="style_24">Stile 24</string>
-    <string name="style_25">Stile 25</string>
+    <string name="style">Style %d</string>
     <!-- Buttons -->
     <string name="btn_continue">Continua</string>
     <string name="btn_restart">Riavvia</string>
