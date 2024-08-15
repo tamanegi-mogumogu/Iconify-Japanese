@@ -2,6 +2,7 @@ package com.drdisagree.iconify
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen
@@ -14,6 +15,7 @@ import com.drdisagree.iconify.utils.ModuleUtil
 import com.drdisagree.iconify.utils.RootUtil
 import com.drdisagree.iconify.utils.SystemUtil
 import com.drdisagree.iconify.utils.overlay.OverlayUtil
+import com.drdisagree.iconify.xposed.modules.utils.BitmapSubjectSegmenter
 import com.google.android.material.color.DynamicColors
 import com.topjohnwu.superuser.Shell
 
@@ -48,6 +50,9 @@ class SplashActivity : AppCompatActivity() {
                     isVersionCodeCorrect
                 ) {
                     keepShowing = false
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                        BitmapSubjectSegmenter(this@SplashActivity)
+                    }
                     Intent(this@SplashActivity, MainActivity::class.java)
                 } else {
                     keepShowing = false

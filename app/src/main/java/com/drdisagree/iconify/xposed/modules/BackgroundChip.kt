@@ -8,14 +8,12 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -38,11 +36,9 @@ import com.drdisagree.iconify.config.XPrefs.Xprefs
 import com.drdisagree.iconify.xposed.HookRes.Companion.resParams
 import com.drdisagree.iconify.xposed.ModPack
 import com.drdisagree.iconify.xposed.modules.utils.Helpers.findClassInArray
-import com.drdisagree.iconify.xposed.modules.utils.ViewHelper.toPx
-import com.drdisagree.iconify.xposed.modules.utils.StatusBarClock.getCenterClockView
-import com.drdisagree.iconify.xposed.modules.utils.StatusBarClock.getLeftClockView
-import com.drdisagree.iconify.xposed.modules.utils.StatusBarClock.getRightClockView
+import com.drdisagree.iconify.xposed.modules.utils.StatusBarClock
 import com.drdisagree.iconify.xposed.modules.utils.StatusBarClock.setClockGravity
+import com.drdisagree.iconify.xposed.modules.utils.ViewHelper.toPx
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge.hookAllMethods
 import de.robv.android.xposed.XposedBridge.log
@@ -131,7 +127,7 @@ class BackgroundChip(context: Context?) : ModPack(context!!) {
 
     private fun statusBarClockChip(loadPackageParam: LoadPackageParam) {
         val collapsedStatusBarFragment = findClassInArray(
-            loadPackageParam,
+            loadPackageParam.classLoader,
             "$SYSTEMUI_PACKAGE.statusbar.phone.CollapsedStatusBarFragment",
             "$SYSTEMUI_PACKAGE.statusbar.phone.fragment.CollapsedStatusBarFragment"
 
@@ -152,9 +148,9 @@ class BackgroundChip(context: Context?) : ModPack(context!!) {
             Bundle::class.java,
             object : XC_MethodHook() {
                 override fun afterHookedMethod(param: MethodHookParam) {
-                    mClockView = getLeftClockView(mContext, param)
-                    mCenterClockView = getCenterClockView(mContext, param)
-                    mRightClockView = getRightClockView(mContext, param)
+                    mClockView = StatusBarClock.getLeftClockView(mContext, param)
+                    mCenterClockView = StatusBarClock.getCenterClockView(mContext, param)
+                    mRightClockView = StatusBarClock.getRightClockView(mContext, param)
 
                     (getObjectField(
                         param.thisObject,
@@ -435,10 +431,10 @@ class BackgroundChip(context: Context?) : ModPack(context!!) {
                 (clockView as TextView).paint.setXfermode(null)
                 try {
                     callMethod(
-                    callStaticMethod(dependencyClass, "get", darkIconDispatcherClass),
-                    "removeDarkReceiver",
-                    clockView
-                )
+                        callStaticMethod(dependencyClass, "get", darkIconDispatcherClass),
+                        "removeDarkReceiver",
+                        clockView
+                    )
                 } catch (ignored: Throwable) {
                     callMethod(
                         callMethod(

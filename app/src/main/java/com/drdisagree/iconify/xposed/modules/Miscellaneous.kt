@@ -24,6 +24,7 @@ import com.drdisagree.iconify.common.Preferences.HIDE_LOCKSCREEN_STATUSBAR
 import com.drdisagree.iconify.common.Preferences.HIDE_STATUS_ICONS_SWITCH
 import com.drdisagree.iconify.common.Preferences.QSPANEL_HIDE_CARRIER
 import com.drdisagree.iconify.common.Preferences.SB_CLOCK_SIZE
+import com.drdisagree.iconify.common.Preferences.SB_CLOCK_SIZE_SWITCH
 import com.drdisagree.iconify.config.XPrefs.Xprefs
 import com.drdisagree.iconify.xposed.HookRes.Companion.resParams
 import com.drdisagree.iconify.xposed.ModPack
@@ -34,6 +35,7 @@ import com.drdisagree.iconify.xposed.modules.utils.StatusBarClock.getRightClockV
 import com.drdisagree.iconify.xposed.modules.utils.StatusBarClock.setClockGravity
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge.hookAllMethods
+import de.robv.android.xposed.XposedBridge.log
 import de.robv.android.xposed.XposedHelpers.callMethod
 import de.robv.android.xposed.XposedHelpers.findAndHookMethod
 import de.robv.android.xposed.XposedHelpers.findClass
@@ -59,10 +61,14 @@ class Miscellaneous(context: Context?) : ModPack(context!!) {
     private var statusIcons: LinearLayout? = null
     private var statusIconContainer: LinearLayout? = null
     private var mobileSignalControllerParam: Any? = null
+    private var sbClockSizeSwitch = false
     private var sbClockSize = 14
     private var mClockView: TextView? = null
     private var mCenterClockView: TextView? = null
     private var mRightClockView: TextView? = null
+    private var mLeftClockSize = 14
+    private var mCenterClockSize = 14
+    private var mRightClockSize = 14
 
     override fun updatePrefs(vararg key: String) {
         if (Xprefs == null) return
@@ -77,6 +83,7 @@ class Miscellaneous(context: Context?) : ModPack(context!!) {
             hideLockscreenStatusbar = getBoolean(HIDE_LOCKSCREEN_STATUSBAR, false)
             hideLockscreenLockIcon = getBoolean(HIDE_LOCKSCREEN_LOCK_ICON, false)
             hideDataDisabledIcon = getBoolean(HIDE_DATA_DISABLED_ICON, false)
+            sbClockSizeSwitch = getBoolean(SB_CLOCK_SIZE_SWITCH, false)
             sbClockSize = getInt(SB_CLOCK_SIZE, 14)
         }
 
@@ -98,7 +105,9 @@ class Miscellaneous(context: Context?) : ModPack(context!!) {
                     fixedStatusIconsA12()
                 }
 
-                if (it == SB_CLOCK_SIZE) {
+                if (it == SB_CLOCK_SIZE_SWITCH ||
+                    it == SB_CLOCK_SIZE
+                ) {
                     setClockSize()
                 }
 
@@ -799,13 +808,15 @@ class Miscellaneous(context: Context?) : ModPack(context!!) {
 
     private fun applyClockSize(loadPackageParam: LoadPackageParam) {
         val collapsedStatusBarFragment = findClassInArray(
-            loadPackageParam,
+            loadPackageParam.classLoader,
             "$SYSTEMUI_PACKAGE.statusbar.phone.CollapsedStatusBarFragment",
             "$SYSTEMUI_PACKAGE.statusbar.phone.fragment.CollapsedStatusBarFragment"
-
         )
 
-        if (collapsedStatusBarFragment == null) return
+        if (collapsedStatusBarFragment == null) {
+            log("$TAG - applyClockSize: CollapsedStatusBarFragment not found")
+            return
+        }
 
         findAndHookMethod(collapsedStatusBarFragment,
             "onViewCreated",
@@ -817,16 +828,37 @@ class Miscellaneous(context: Context?) : ModPack(context!!) {
                     mCenterClockView = getCenterClockView(mContext, param) as? TextView
                     mRightClockView = getRightClockView(mContext, param) as? TextView
 
+                    mLeftClockSize = mClockView?.textSize?.toInt() ?: 14
+                    mCenterClockSize = mCenterClockView?.textSize?.toInt() ?: 14
+                    mRightClockSize = mRightClockView?.textSize?.toInt() ?: 14
+
                     setClockSize()
 
-                    val textClock = mClockView ?: mCenterClockView ?: mRightClockView as TextView
-                    textClock.addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-                        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+                    val textChangeListener = object : TextWatcher {
+                        override fun beforeTextChanged(
+                            s: CharSequence,
+                            start: Int,
+                            count: Int,
+                            after: Int
+                        ) {
+                        }
+
+                        override fun onTextChanged(
+                            s: CharSequence,
+                            start: Int,
+                            before: Int,
+                            count: Int
+                        ) {
+                        }
+
                         override fun afterTextChanged(s: Editable) {
                             setClockSize()
                         }
-                    })
+                    }
+
+                    mClockView?.addTextChangedListener(textChangeListener)
+                    mCenterClockView?.addTextChangedListener(textChangeListener)
+                    mRightClockView?.addTextChangedListener(textChangeListener)
                 }
             })
 
@@ -834,25 +866,34 @@ class Miscellaneous(context: Context?) : ModPack(context!!) {
 
     @SuppressLint("RtlHardcoded")
     private fun setClockSize() {
-        if (mClockView != null) mClockView!!.setTextSize(TypedValue.COMPLEX_UNIT_SP, sbClockSize.toFloat())
-        if (mCenterClockView != null) mCenterClockView!!.setTextSize(TypedValue.COMPLEX_UNIT_SP, sbClockSize.toFloat())
-        if (mRightClockView != null) mRightClockView!!.setTextSize(TypedValue.COMPLEX_UNIT_SP, sbClockSize.toFloat())
+        val leftClockSize = if (sbClockSizeSwitch) sbClockSize else mLeftClockSize
+        val centerClockSize = if (sbClockSizeSwitch) sbClockSize else mCenterClockSize
+        val rightClockSize = if (sbClockSizeSwitch) sbClockSize else mRightClockSize
+        val unit = if (sbClockSizeSwitch) TypedValue.COMPLEX_UNIT_SP else TypedValue.COMPLEX_UNIT_PX
 
-        setClockGravity(
-            mClockView,
-            Gravity.LEFT or Gravity.CENTER
-        )
+        mClockView?.let {
+            it.setTextSize(unit, leftClockSize.toFloat())
 
-        setClockGravity(
-            mCenterClockView,
-            Gravity.CENTER
-        )
+            if (sbClockSizeSwitch) {
+                setClockGravity(it, Gravity.LEFT or Gravity.CENTER)
+            }
+        }
 
-        setClockGravity(
-            mRightClockView,
-            Gravity.RIGHT or Gravity.CENTER
-        )
+        mCenterClockView?.let {
+            it.setTextSize(unit, centerClockSize.toFloat())
 
+            if (sbClockSizeSwitch) {
+                setClockGravity(it, Gravity.CENTER)
+            }
+        }
+
+        mRightClockView?.let {
+            it.setTextSize(unit, rightClockSize.toFloat())
+
+            if (sbClockSizeSwitch) {
+                setClockGravity(it, Gravity.RIGHT or Gravity.CENTER)
+            }
+        }
     }
 
     companion object {

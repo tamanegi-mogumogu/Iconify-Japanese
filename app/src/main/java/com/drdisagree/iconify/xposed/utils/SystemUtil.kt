@@ -5,13 +5,21 @@ import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.os.Process
+import android.os.UserManager
 import com.drdisagree.iconify.xposed.utils.BootLoopProtector.resetCounter
 import com.topjohnwu.superuser.Shell
+import de.robv.android.xposed.XposedBridge.log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.annotations.Contract
+import java.util.concurrent.CountDownLatch
+import javax.annotation.Nullable
+
 
 class SystemUtil(var mContext: Context) {
 
@@ -20,14 +28,52 @@ class SystemUtil(var mContext: Context) {
     }
 
     private val isDark: Boolean
-        get() = mContext.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_YES == Configuration.UI_MODE_NIGHT_YES
+        get() = mContext.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_YES ==
+                Configuration.UI_MODE_NIGHT_YES
+
+    private fun getUserManager(): UserManager? {
+        if (mUserManager == null) {
+            val latch = CountDownLatch(1)
+
+            Handler(Looper.getMainLooper()).post {
+                try {
+                    mUserManager = mContext.getSystemService(Context.USER_SERVICE) as UserManager
+                } catch (throwable: Throwable) {
+                    log(TAG + throwable)
+                } finally {
+                    latch.countDown()
+                }
+            }
+
+            try {
+                latch.await()
+            } catch (e: InterruptedException) {
+                log(TAG + e.message)
+            }
+        }
+
+        return mUserManager
+    }
 
     companion object {
         @SuppressLint("StaticFieldLeak")
         var instance: SystemUtil? = null
+
         private var darkSwitching = false
-        val isDarkMode: Boolean
-            get() = if (instance == null) false else instance!!.isDark
+        private var mUserManager: UserManager? = null
+
+        val isDarkMode: Boolean get() = instance?.isDark ?: false
+
+        @Nullable
+        @get:Contract(pure = true)
+        val UserManager: UserManager? get() = instance?.getUserManager()
+
+        fun sleep(millis: Int) {
+            try {
+                Thread.sleep(millis.toLong())
+            } catch (ignored: Throwable) {
+            }
+        }
 
         fun doubleToggleDarkMode() {
             val isDark = isDarkMode
@@ -59,5 +105,7 @@ class SystemUtil(var mContext: Context) {
             }
             Process.killProcess(Process.myPid())
         }
+
+        private val TAG = "Iconify - ${this::class.java.simpleName}: "
     }
 }

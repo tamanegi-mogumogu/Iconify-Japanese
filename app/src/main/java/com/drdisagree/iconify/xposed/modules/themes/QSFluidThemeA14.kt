@@ -279,12 +279,12 @@ class QSFluidThemeA14(context: Context?) : ModPack(context!!) {
                     // Security footer
                     view.let {
                         it.getChildAt(0)?.apply {
-                            background.setTint(colorInactiveAlpha[0])
-                            background.alpha = (INACTIVE_ALPHA * 255).toInt()
+                            background?.setTint(colorInactiveAlpha[0])
+                            background?.alpha = (INACTIVE_ALPHA * 255).toInt()
                         }
                         it.getChildAt(1)?.apply {
-                            background.setTint(colorInactiveAlpha[0])
-                            background.alpha = (INACTIVE_ALPHA * 255).toInt()
+                            background?.setTint(colorInactiveAlpha[0])
+                            background?.alpha = (INACTIVE_ALPHA * 255).toInt()
                         }
                     }
 
@@ -374,12 +374,20 @@ class QSFluidThemeA14(context: Context?) : ModPack(context!!) {
                     )
 
                     try {
-                        val zeroAlphaFlow =
-                            stateFlowImplClass.getConstructor(Any::class.java).newInstance(0f)
+                        val zeroAlphaFlow = stateFlowImplClass
+                            .getConstructor(Any::class.java)
+                            .newInstance(0f)
+
+                        val readonlyStateFlowInstance = try {
+                            readonlyStateFlowClass.constructors[0].newInstance(zeroAlphaFlow)
+                        } catch (ignored: Throwable) {
+                            readonlyStateFlowClass.constructors[0].newInstance(zeroAlphaFlow, null)
+                        }
+
                         setObjectField(
                             param.thisObject,
                             "backgroundAlpha",
-                            readonlyStateFlowClass.constructors[0].newInstance(zeroAlphaFlow)
+                            readonlyStateFlowInstance
                         )
                     } catch (throwable: Throwable) {
                         log(TAG + throwable)
@@ -429,8 +437,8 @@ class QSFluidThemeA14(context: Context?) : ModPack(context!!) {
                         mSlider!!.progressDrawable = createBrightnessDrawable(mContext)
 
                         val progress = mSlider!!.progressDrawable as LayerDrawable
-                        val progressSlider =
-                            progress.findDrawableByLayerId(android.R.id.progress) as DrawableWrapper
+                        val progressSlider = progress
+                            .findDrawableByLayerId(android.R.id.progress) as DrawableWrapper
 
                         try {
                             val actualProgressSlider = progressSlider.drawable as LayerDrawable?
@@ -944,13 +952,15 @@ class QSFluidThemeA14(context: Context?) : ModPack(context!!) {
 
         val backgroundShape = ShapeDrawable(RoundRectShape(radiusF, null, null))
         backgroundShape.setIntrinsicHeight(height)
-        backgroundShape.paint.setColor(changeAlpha(colorInactiveAlpha[0], UNAVAILABLE_ALPHA))
+        backgroundShape.paint.setColor(changeAlpha(colorInactiveAlpha[0], INACTIVE_ALPHA))
+        backgroundShape.setTint(colorInactiveAlpha[0])
 
         // Create the progress drawable
         var progressDrawable: RoundedCornerProgressDrawable? = null
         try {
-            progressDrawable =
-                RoundedCornerProgressDrawable(createBrightnessForegroundDrawable(context))
+            progressDrawable = RoundedCornerProgressDrawable(
+                createBrightnessForegroundDrawable(context)
+            )
             progressDrawable.alpha = (ACTIVE_ALPHA * 255).toInt()
             progressDrawable.setTint(colorActive[0])
         } catch (ignored: Throwable) {
