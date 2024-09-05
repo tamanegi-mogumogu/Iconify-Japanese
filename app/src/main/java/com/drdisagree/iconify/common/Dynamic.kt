@@ -1,13 +1,9 @@
 package com.drdisagree.iconify.common
 
 import android.os.Build
-import android.util.Log
 import com.drdisagree.iconify.Iconify.Companion.appContext
 import com.topjohnwu.superuser.Shell
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 
 object Dynamic {
 
@@ -17,9 +13,6 @@ object Dynamic {
 
     val TOTAL_BRIGHTNESSBARSPIXEL =
         Shell.cmd("cmd overlay list | grep '....IconifyComponentBBP'").exec().out.size
-
-    val TOTAL_ICONPACKS =
-        Shell.cmd("cmd overlay list | grep '....IconifyComponentIPAS'").exec().out.size
 
     val TOTAL_NOTIFICATIONS =
         Shell.cmd("cmd overlay list | grep '....IconifyComponentNFN'").exec().out.size
@@ -53,21 +46,9 @@ object Dynamic {
 
     // Device information
     val isAtleastA14 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
+    val isAndroid14 = Build.VERSION.SDK_INT == Build.VERSION_CODES.UPSIDE_DOWN_CAKE
 
-    fun isSecurityPatchBeforeJune2024(): Boolean {
-        val securityPatch = Build.VERSION.SECURITY_PATCH
-        val dateFormat = SimpleDateFormat("yyyy-MM-d'日'", Locale.US)
-
-        return try {
-            val securityPatchDate = dateFormat.parse(securityPatch)
-
-            val june2024 = Calendar.getInstance()
-            june2024.set(2024, Calendar.JUNE, 1)
-
-            (securityPatchDate != null && (securityPatchDate < june2024.time))
-        } catch (e: Exception) {
-            Log.e("SECURITY_PATCH_CHECK", "Error parsing security patch date", e)
-            false
-        }
-    }
+    // Floating action buttons
+    var requiresSystemUiRestart = false
+    var requiresDeviceRestart = false
 }

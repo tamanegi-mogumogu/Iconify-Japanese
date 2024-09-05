@@ -8,20 +8,26 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.RemoteException
+import android.os.UserManager
 import com.drdisagree.iconify.BuildConfig
 import com.drdisagree.iconify.IRootProviderProxy
 import com.drdisagree.iconify.R
 import com.drdisagree.iconify.common.Const.FRAMEWORK_PACKAGE
-import com.drdisagree.iconify.config.XPrefs
-import com.drdisagree.iconify.config.XPrefs.Xprefs
 import com.drdisagree.iconify.xposed.utils.BootLoopProtector
-import com.drdisagree.iconify.xposed.utils.SystemUtil
+import com.drdisagree.iconify.xposed.utils.SystemUtils
+import com.drdisagree.iconify.xposed.utils.XPrefs
+import com.drdisagree.iconify.xposed.utils.XPrefs.Xprefs
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge.hookAllMethods
 import de.robv.android.xposed.XposedBridge.log
 import de.robv.android.xposed.XposedHelpers.findAndHookMethod
 import de.robv.android.xposed.XposedHelpers.findClass
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.LinkedList
 import java.util.Queue
 import java.util.concurrent.CompletableFuture
@@ -71,33 +77,35 @@ class HookEntry : ServiceConnection {
             }
 
             else -> {
-                findAndHookMethod(
-                    Instrumentation::class.java,
-                    "newApplication",
-                    ClassLoader::class.java,
-                    String::class.java,
-                    Context::class.java,
-                    object : XC_MethodHook() {
-                        override fun afterHookedMethod(param: MethodHookParam) {
-                            try {
-                                if (mContext == null) {
-                                    mContext = param.args[2] as Context
+                if (!isChildProcess) {
+                    findAndHookMethod(
+                        Instrumentation::class.java,
+                        "newApplication",
+                        ClassLoader::class.java,
+                        String::class.java,
+                        Context::class.java,
+                        object : XC_MethodHook() {
+                            override fun afterHookedMethod(param: MethodHookParam) {
+                                try {
+                                    if (mContext == null) {
+                                        mContext = param.args[2] as Context
 
-                                    HookRes.modRes = mContext!!.createPackageContext(
-                                        BuildConfig.APPLICATION_ID,
-                                        Context.CONTEXT_IGNORE_SECURITY
-                                    ).resources
+                                        HookRes.modRes = mContext!!.createPackageContext(
+                                            BuildConfig.APPLICATION_ID,
+                                            Context.CONTEXT_IGNORE_SECURITY
+                                        ).resources
 
-                                    XPrefs.init(mContext!!)
+                                        XPrefs.init(mContext!!)
 
-                                    waitForXprefsLoad(loadPackageParam)
+                                        waitForXprefsLoad(loadPackageParam)
+                                    }
+                                } catch (throwable: Throwable) {
+                                    log(TAG + throwable)
                                 }
-                            } catch (throwable: Throwable) {
-                                log(throwable)
                             }
                         }
-                    }
-                )
+                    )
+                }
             }
         }
     }
@@ -108,7 +116,7 @@ class HookEntry : ServiceConnection {
             return
         }
 
-        SystemUtil(mContext!!)
+        SystemUtils(mContext!!)
 
         loadModPacks(loadPackageParam)
     }
@@ -143,10 +151,10 @@ class HookEntry : ServiceConnection {
     private fun waitForXprefsLoad(loadPackageParam: LoadPackageParam) {
         while (true) {
             try {
-                Xprefs!!.getBoolean("LoadTestBooleanValue", false)
+                Xprefs.getBoolean("LoadTestBooleanValue", false)
                 break
             } catch (ignored: Throwable) {
-                SystemUtil.sleep(1000);
+                SystemUtils.sleep(1000);
             }
         }
 
@@ -156,34 +164,36 @@ class HookEntry : ServiceConnection {
     }
 
     private fun forceConnectRootService() {
-        Thread {
-            while (SystemUtil.UserManager == null || !SystemUtil.UserManager!!.isUserUnlocked) {
-                // device is still CE encrypted
-                SystemUtil.sleep(2000)
-            }
+        CoroutineScope(Dispatchers.Main).launch {
+            val mUserManager = mContext!!.getSystemService(Context.USER_SERVICE) as UserManager?
 
-            SystemUtil.sleep(5000) // wait for the unlocked account to settle down a bit
+            withContext(Dispatchers.IO) {
+                while (mUserManager == null || !mUserManager.isUserUnlocked) {
+                    // device is still CE encrypted
+                    delay(2000)
+                }
 
-            while (rootProxyIPC == null) {
-                connectRootService()
-                SystemUtil.sleep(5000)
+                delay(5000) // wait for the unlocked account to settle down a bit
+
+                while (rootProxyIPC == null) {
+                    connectRootService()
+                    delay(5000)
+                }
             }
-        }.start()
+        }
     }
 
     private fun connectRootService() {
         try {
             val intent = Intent().apply {
-                setComponent(
-                    ComponentName(
-                        BuildConfig.APPLICATION_ID,
-                        "${
-                            BuildConfig.APPLICATION_ID.replace(
-                                ".debug",
-                                ""
-                            )
-                        }.services.RootProviderProxy"
-                    )
+                component = ComponentName(
+                    BuildConfig.APPLICATION_ID,
+                    "${
+                        BuildConfig.APPLICATION_ID.replace(
+                            ".debug",
+                            ""
+                        )
+                    }.services.RootProviderProxy"
                 )
             }
 
@@ -242,34 +252,6 @@ class HookEntry : ServiceConnection {
                 }
 
                 instance!!.forceConnectRootService()
-            }
-        }
-
-        fun enableOverlay(packageName: String) {
-            enqueueProxyCommand { proxy ->
-                proxy?.enableOverlay(packageName)
-            }
-        }
-
-        fun enableOverlays(vararg packageNames: String) {
-            enqueueProxyCommand { proxy ->
-                packageNames.forEach { packageName ->
-                    proxy?.enableOverlay(packageName)
-                }
-            }
-        }
-
-        fun disableOverlay(packageName: String) {
-            enqueueProxyCommand { proxy ->
-                proxy?.disableOverlay(packageName)
-            }
-        }
-
-        fun disableOverlays(vararg packageNames: String) {
-            enqueueProxyCommand { proxy ->
-                packageNames.forEach { packageName ->
-                    proxy?.disableOverlay(packageName)
-                }
             }
         }
     }

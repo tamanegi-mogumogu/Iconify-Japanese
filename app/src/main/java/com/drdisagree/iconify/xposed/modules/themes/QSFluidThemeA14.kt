@@ -26,13 +26,14 @@ import com.drdisagree.iconify.common.Const.SYSTEMUI_PACKAGE
 import com.drdisagree.iconify.common.Preferences.FLUID_NOTIF_TRANSPARENCY
 import com.drdisagree.iconify.common.Preferences.FLUID_POWERMENU_TRANSPARENCY
 import com.drdisagree.iconify.common.Preferences.FLUID_QSPANEL
-import com.drdisagree.iconify.config.XPrefs.Xprefs
 import com.drdisagree.iconify.xposed.HookRes
 import com.drdisagree.iconify.xposed.ModPack
 import com.drdisagree.iconify.xposed.modules.utils.RoundedCornerProgressDrawable
 import com.drdisagree.iconify.xposed.modules.utils.SettingsLibUtils
 import com.drdisagree.iconify.xposed.modules.utils.ViewHelper.toPx
-import com.drdisagree.iconify.xposed.utils.SystemUtil
+import com.drdisagree.iconify.xposed.utils.SystemUtils
+import com.drdisagree.iconify.xposed.utils.XPrefs.Xprefs
+import com.drdisagree.iconify.xposed.utils.XPrefs.XprefsIsInitialized
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge.hookAllConstructors
 import de.robv.android.xposed.XposedBridge.hookAllMethods
@@ -49,7 +50,7 @@ import kotlin.math.min
 @SuppressLint("DiscouragedApi")
 class QSFluidThemeA14(context: Context?) : ModPack(context!!) {
 
-    private var wasDark: Boolean = SystemUtil.isDarkMode
+    private var wasDark: Boolean = SystemUtils.isDarkMode
     private var mSlider: SeekBar? = null
     val colorActive = intArrayOf(
         mContext.resources.getColor(
@@ -78,13 +79,15 @@ class QSFluidThemeA14(context: Context?) : ModPack(context!!) {
     )
 
     override fun updatePrefs(vararg key: String) {
-        if (Xprefs == null) return
+        if (!XprefsIsInitialized) return
 
-        fluidQsThemeEnabled = Xprefs!!.getBoolean(FLUID_QSPANEL, false)
-        fluidNotifEnabled = fluidQsThemeEnabled &&
-                Xprefs!!.getBoolean(FLUID_NOTIF_TRANSPARENCY, false)
-        fluidPowerMenuEnabled = fluidQsThemeEnabled &&
-                Xprefs!!.getBoolean(FLUID_POWERMENU_TRANSPARENCY, false)
+        Xprefs.apply {
+            fluidQsThemeEnabled = getBoolean(FLUID_QSPANEL, false)
+            fluidNotifEnabled = fluidQsThemeEnabled &&
+                    getBoolean(FLUID_NOTIF_TRANSPARENCY, false)
+            fluidPowerMenuEnabled = fluidQsThemeEnabled &&
+                    getBoolean(FLUID_POWERMENU_TRANSPARENCY, false)
+        }
 
         initResources()
     }
@@ -229,10 +232,8 @@ class QSFluidThemeA14(context: Context?) : ModPack(context!!) {
                     if (param.args[0] is ImageView &&
                         getIntField(param.args[1], "state") == Tile.STATE_ACTIVE
                     ) {
-                        (param.args[0] as ImageView).setImageTintList(
-                            ColorStateList.valueOf(
-                                colorActive[0]
-                            )
+                        (param.args[0] as ImageView).imageTintList = ColorStateList.valueOf(
+                            colorActive[0]
                         )
                     }
                 } catch (ignored: Throwable) {
@@ -332,7 +333,7 @@ class QSFluidThemeA14(context: Context?) : ModPack(context!!) {
                         background.alpha = (ACTIVE_ALPHA * 255).toInt()
 
                         if (this is ImageView) {
-                            setImageTintList(ColorStateList.valueOf(colorActive[0]))
+                            imageTintList = ColorStateList.valueOf(colorActive[0])
                         } else if (this is ViewGroup) {
                             (getChildAt(0) as ImageView).setColorFilter(
                                 colorActive[0],
@@ -469,19 +470,15 @@ class QSFluidThemeA14(context: Context?) : ModPack(context!!) {
                     (getObjectField(
                         param.thisObject,
                         "mIcon"
-                    ) as ImageView).setImageTintList(
-                        ColorStateList.valueOf(
-                            colorActive[0]
-                        )
+                    ) as ImageView).imageTintList = ColorStateList.valueOf(
+                        colorActive[0]
                     )
 
                     (getObjectField(
                         param.thisObject,
                         "mIcon"
-                    ) as ImageView).setBackgroundTintList(
-                        ColorStateList.valueOf(
-                            colorActiveAlpha[0]
-                        )
+                    ) as ImageView).backgroundTintList = ColorStateList.valueOf(
+                        colorActiveAlpha[0]
                     )
                 } catch (throwable: Throwable) {
                     log(TAG + throwable)
@@ -498,38 +495,30 @@ class QSFluidThemeA14(context: Context?) : ModPack(context!!) {
                         (getObjectField(
                             param.thisObject,
                             "mIcon"
-                        ) as ImageView).setImageTintList(
-                            ColorStateList.valueOf(
-                                colorActive[0]
-                            )
+                        ) as ImageView).imageTintList = ColorStateList.valueOf(
+                            colorActive[0]
                         )
 
                         (getObjectField(
                             param.thisObject,
                             "mIcon"
-                        ) as ImageView).setBackgroundTintList(
-                            ColorStateList.valueOf(
-                                colorActiveAlpha[0]
-                            )
+                        ) as ImageView).backgroundTintList = ColorStateList.valueOf(
+                            colorActiveAlpha[0]
                         )
                     } catch (throwable: Throwable) {
                         try {
                             (getObjectField(
                                 param.thisObject,
                                 "mIconView"
-                            ) as ImageView).setImageTintList(
-                                ColorStateList.valueOf(
-                                    colorActive[0]
-                                )
+                            ) as ImageView).imageTintList = ColorStateList.valueOf(
+                                colorActive[0]
                             )
 
                             (getObjectField(
                                 param.thisObject,
                                 "mIconView"
-                            ) as ImageView).setBackgroundTintList(
-                                ColorStateList.valueOf(
-                                    colorActiveAlpha[0]
-                                )
+                            ) as ImageView).backgroundTintList = ColorStateList.valueOf(
+                                colorActiveAlpha[0]
                             )
                         } catch (ignored: Throwable) {
                         }
@@ -549,19 +538,15 @@ class QSFluidThemeA14(context: Context?) : ModPack(context!!) {
                         (getObjectField(
                             param.thisObject,
                             "mIcon"
-                        ) as ImageView).setImageTintList(
-                            ColorStateList.valueOf(
-                                colorActive[0]
-                            )
+                        ) as ImageView).imageTintList = ColorStateList.valueOf(
+                            colorActive[0]
                         )
 
                         (getObjectField(
                             param.thisObject,
                             "mIcon"
-                        ) as ImageView).setBackgroundTintList(
-                            ColorStateList.valueOf(
-                                colorActiveAlpha[0]
-                            )
+                        ) as ImageView).backgroundTintList = ColorStateList.valueOf(
+                            colorActiveAlpha[0]
                         )
                     } catch (throwable: Throwable) {
                         log(TAG + throwable)
@@ -781,7 +766,7 @@ class QSFluidThemeA14(context: Context?) : ModPack(context!!) {
 
                     val mBackgroundNormal =
                         getObjectField(param.thisObject, "mBackgroundNormal") as View?
-                    mBackgroundNormal?.setAlpha(INACTIVE_ALPHA)
+                    mBackgroundNormal?.alpha = INACTIVE_ALPHA
                 }
             })
 
@@ -888,7 +873,7 @@ class QSFluidThemeA14(context: Context?) : ModPack(context!!) {
     }
 
     private fun initResources() {
-        val isDark: Boolean = SystemUtil.isDarkMode
+        val isDark: Boolean = SystemUtils.isDarkMode
 
         if (isDark != wasDark) {
             wasDark = isDark
@@ -951,8 +936,8 @@ class QSFluidThemeA14(context: Context?) : ModPack(context!!) {
         }
 
         val backgroundShape = ShapeDrawable(RoundRectShape(radiusF, null, null))
-        backgroundShape.setIntrinsicHeight(height)
-        backgroundShape.paint.setColor(changeAlpha(colorInactiveAlpha[0], INACTIVE_ALPHA))
+        backgroundShape.intrinsicHeight = height
+        backgroundShape.paint.color = changeAlpha(colorInactiveAlpha[0], INACTIVE_ALPHA)
         backgroundShape.setTint(colorInactiveAlpha[0])
 
         // Create the progress drawable
@@ -967,20 +952,16 @@ class QSFluidThemeA14(context: Context?) : ModPack(context!!) {
         }
 
         // Create the start and end drawables
-        val startDrawable = HookRes.modRes?.let {
-            ResourcesCompat.getDrawable(
-                it,
-                R.drawable.ic_brightness_low,
-                context.theme
-            )
-        }
-        val endDrawable = HookRes.modRes?.let {
-            ResourcesCompat.getDrawable(
-                it,
-                R.drawable.ic_brightness_full,
-                context.theme
-            )
-        }
+        val startDrawable = ResourcesCompat.getDrawable(
+            HookRes.modRes,
+            R.drawable.ic_brightness_low,
+            context.theme
+        )
+        val endDrawable = ResourcesCompat.getDrawable(
+            HookRes.modRes,
+            R.drawable.ic_brightness_full,
+            context.theme
+        )
 
         if (startDrawable != null && endDrawable != null) {
             startDrawable.setTint(colorActive[0])
@@ -1011,7 +992,7 @@ class QSFluidThemeA14(context: Context?) : ModPack(context!!) {
             )
         )
 
-        rectangleDrawable.setCornerRadius(cornerRadius.toFloat())
+        rectangleDrawable.cornerRadius = cornerRadius.toFloat()
         rectangleDrawable.setColor(colorActive[0])
 
         val layerDrawable = LayerDrawable(arrayOf<Drawable>(rectangleDrawable))

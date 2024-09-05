@@ -113,6 +113,7 @@ dependencies {
 
     // Data Binding
     implementation(libs.library)
+    implementation(libs.androidx.palette.ktx)
 
     // Xposed API
     compileOnly(files("libs/api-82.jar"))
@@ -129,7 +130,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     // Color Picker
-    implementation(libs.colorpicker)
+    implementation(libs.jaredrummler.colorpicker)
 
     // Splash Screen
     implementation(libs.androidx.core.splashscreen)
@@ -142,6 +143,9 @@ dependencies {
 
     // Zip Util
     implementation(libs.zip4j)
+
+    // Preference
+    implementation(libs.androidx.preference.ktx)
 
     // Remote Preference
     implementation(libs.remotepreferences)
@@ -195,12 +199,16 @@ dependencies {
     implementation(libs.com.google.android.gms.play.services.mlkit.subject.segmentation)
     implementation(libs.play.services.base)
 
+    // Blur View
+    implementation(libs.blurview)
+
     // Misc
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.work.runtime)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.slf4j.api)
+    implementation(libs.commons.text)
 }
 
 tasks.register("printVersionName") {

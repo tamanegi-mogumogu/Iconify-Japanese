@@ -8,6 +8,8 @@ import android.os.BatteryManager
 import android.os.Handler
 import android.os.Looper
 import android.util.TypedValue
+import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -74,11 +76,15 @@ object ViewHelper {
         }
     }
 
-    fun setHeader(context: Context, toolbar: Toolbar, title: Int) {
+    fun setHeader(context: Context, toolbar: Toolbar, title: Any) {
         (context as AppCompatActivity).setSupportActionBar(toolbar)
         context.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         context.supportActionBar?.setDisplayShowHomeEnabled(true)
-        toolbar.setTitle(title)
+        if (title is Int) {
+            toolbar.setTitle(title)
+        } else if (title is String) {
+            toolbar.setTitle(title)
+        }
     }
 
     fun setHeader(
@@ -87,7 +93,21 @@ object ViewHelper {
         toolbar: Toolbar,
         title: Int
     ) {
-        toolbar.setTitle(context.resources.getString(title))
+        setHeader(
+            context,
+            fragmentManager,
+            toolbar,
+            context.resources.getString(title)
+        )
+    }
+
+    fun setHeader(
+        context: Context,
+        fragmentManager: FragmentManager,
+        toolbar: Toolbar,
+        title: String
+    ) {
+        toolbar.setTitle(title)
         (context as AppCompatActivity).setSupportActionBar(toolbar)
         context.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         context.supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -178,6 +198,7 @@ object ViewHelper {
                 batteryDrawables[2] = getRotateDrawable(batteryIcon, -90f)
             }
         }
+
         return batteryDrawables
     }
 
@@ -251,4 +272,27 @@ object ViewHelper {
     private fun getDrawable(context: Context, @DrawableRes batteryRes: Int): Drawable? {
         return ResourcesCompat.getDrawable(context.resources, batteryRes, context.theme)
     }
+
+    fun setTextRecursively(viewGroup: ViewGroup, text: String?) {
+        for (i in 0 until viewGroup.childCount) {
+            val child = viewGroup.getChildAt(i)
+            if (child is ViewGroup) {
+                setTextRecursively(child, text)
+            } else if (child is TextView) {
+                child.text = text
+            }
+        }
+    }
+
+    fun applyTextSizeRecursively(viewGroup: ViewGroup, textSize: Int) {
+        for (i in 0 until viewGroup.childCount) {
+            val child = viewGroup.getChildAt(i)
+            if (child is ViewGroup) {
+                applyTextSizeRecursively(child, textSize)
+            } else if (child is TextView) {
+                child.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize.toFloat())
+            }
+        }
+    }
+
 }

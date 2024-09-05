@@ -1,8 +1,8 @@
 package com.drdisagree.iconify.utils.overlay.manager
 
-import com.drdisagree.iconify.config.Prefs
-import com.drdisagree.iconify.utils.color.ColorUtil.colorNames
-import com.drdisagree.iconify.utils.color.ColorUtil.colorToHex
+import com.drdisagree.iconify.config.RPrefs
+import com.drdisagree.iconify.utils.color.ColorUtils.colorNames
+import com.drdisagree.iconify.utils.color.ColorUtils.colorToHex
 import com.drdisagree.iconify.utils.overlay.compiler.MonetCompiler
 import java.io.IOException
 
@@ -18,8 +18,8 @@ object MonetEngineManager {
 
         for (i in colors.indices) {
             for (j in colors[i].indices) {
-                Prefs.putString(colors[i][j] + "_day", palette[0][i][j].toString())
-                Prefs.putString(colors[i][j] + "_night", palette[1][i][j].toString())
+                RPrefs.putString(colors[i][j] + "_day", palette[0][i][j].toString())
+                RPrefs.putString(colors[i][j] + "_night", palette[1][i][j].toString())
 
                 resources
                     .append("    <color name=\"${colors[i][j]}\">${colorToHex(palette[0][i][j] as Int)}</color>\n")

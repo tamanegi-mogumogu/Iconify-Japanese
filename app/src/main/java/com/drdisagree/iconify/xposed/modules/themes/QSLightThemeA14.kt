@@ -18,14 +18,13 @@ import com.drdisagree.iconify.common.Preferences.DUALTONE_QSPANEL
 import com.drdisagree.iconify.common.Preferences.LIGHT_QSPANEL
 import com.drdisagree.iconify.common.Preferences.QS_TEXT_ALWAYS_WHITE
 import com.drdisagree.iconify.common.Preferences.QS_TEXT_FOLLOW_ACCENT
-import com.drdisagree.iconify.config.XPrefs.Xprefs
-import com.drdisagree.iconify.xposed.HookEntry.Companion.disableOverlays
-import com.drdisagree.iconify.xposed.HookEntry.Companion.enableOverlay
 import com.drdisagree.iconify.xposed.ModPack
 import com.drdisagree.iconify.xposed.modules.utils.Helpers.findClassInArray
 import com.drdisagree.iconify.xposed.modules.utils.SettingsLibUtils.Companion.getColorAttr
 import com.drdisagree.iconify.xposed.modules.utils.SettingsLibUtils.Companion.getColorAttrDefaultColor
-import com.drdisagree.iconify.xposed.utils.SystemUtil
+import com.drdisagree.iconify.xposed.utils.SystemUtils
+import com.drdisagree.iconify.xposed.utils.XPrefs.Xprefs
+import com.drdisagree.iconify.xposed.utils.XPrefs.XprefsIsInitialized
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge.hookAllConstructors
 import de.robv.android.xposed.XposedBridge.hookAllMethods
@@ -59,19 +58,26 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
     private val qsDualToneOverlay = "IconifyComponentQSDT.overlay"
 
     init {
-        isDark = SystemUtil.isDarkMode
+        isDark = SystemUtils.isDarkMode
     }
 
     override fun updatePrefs(vararg key: String) {
-        if (Xprefs == null) return
+        if (!XprefsIsInitialized) return
 
-        lightQSHeaderEnabled = Xprefs!!.getBoolean(LIGHT_QSPANEL, false)
-        dualToneQSEnabled = lightQSHeaderEnabled &&
-                Xprefs!!.getBoolean(DUALTONE_QSPANEL, false)
-        qsTextAlwaysWhite = Xprefs!!.getBoolean(QS_TEXT_ALWAYS_WHITE, false)
-        qsTextFollowAccent = Xprefs!!.getBoolean(QS_TEXT_FOLLOW_ACCENT, false)
+        Xprefs.apply {
+            lightQSHeaderEnabled = getBoolean(LIGHT_QSPANEL, false)
+            dualToneQSEnabled = lightQSHeaderEnabled && getBoolean(DUALTONE_QSPANEL, false)
+            qsTextAlwaysWhite = getBoolean(QS_TEXT_ALWAYS_WHITE, false)
+            qsTextFollowAccent = getBoolean(QS_TEXT_FOLLOW_ACCENT, false)
+        }
 
-        applyOverlays(true)
+        if (key.isNotEmpty()) {
+            key[0].let {
+                if (it == LIGHT_QSPANEL || it == DUALTONE_QSPANEL) {
+                    applyOverlays(true)
+                }
+            }
+        }
     }
 
     override fun handleLoadPackage(loadPackageParam: LoadPackageParam) {
@@ -199,7 +205,7 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
         hookAllConstructors(batteryStatusChipClass, batteryStatusChipColorHook)
         hookAllMethods(batteryStatusChipClass, "onConfigurationChanged", batteryStatusChipColorHook)
 
-        unlockedScrimState = scrimStateEnum.getEnumConstants()?.let {
+        unlockedScrimState = scrimStateEnum.enumConstants?.let {
             Arrays.stream(it)
                 .filter { c: Any -> c.toString() == "UNLOCKED" }
                 .findFirst().get()
@@ -279,7 +285,7 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
 
             hookAllMethods(mobileIconBinderClass, "bind", object : XC_MethodHook() {
                 override fun afterHookedMethod(param: MethodHookParam) {
-                    if (param.args[1].javaClass.getName()
+                    if (param.args[1].javaClass.name
                             .contains("ShadeCarrierGroupMobileIconViewModel")
                     ) {
                         modernShadeCarrierGroupMobileViews.add(param.result)
@@ -326,7 +332,7 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
                             "id",
                             mContext.packageName
                         )
-                    ).setImageTintList(ColorStateList.valueOf(Color.BLACK))
+                    ).imageTintList = ColorStateList.valueOf(Color.BLACK)
 
                     // Power menu button
                     try {
@@ -347,7 +353,7 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
                         )
                     }?.apply {
                         if (this is ImageView) {
-                            setImageTintList(ColorStateList.valueOf(Color.WHITE))
+                            imageTintList = ColorStateList.valueOf(Color.WHITE)
                         } else if (this is ViewGroup) {
                             (getChildAt(0) as ImageView).setColorFilter(
                                 Color.WHITE,
@@ -379,8 +385,8 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
             override fun afterHookedMethod(param: MethodHookParam) {
                 if (isDark || !lightQSHeaderEnabled) return
 
-                (getObjectField(param.thisObject, "mMobileSignal") as ImageView)
-                    .setImageTintList(ColorStateList.valueOf(Color.BLACK))
+                (getObjectField(param.thisObject, "mMobileSignal") as ImageView).imageTintList =
+                    ColorStateList.valueOf(Color.BLACK)
             }
         })
 
@@ -453,8 +459,8 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
                 if (isDark || !lightQSHeaderEnabled) return
 
                 try {
-                    (getObjectField(param.thisObject, "mIcon") as ImageView)
-                        .setImageTintList(ColorStateList.valueOf(Color.BLACK))
+                    (getObjectField(param.thisObject, "mIcon") as ImageView).imageTintList =
+                        ColorStateList.valueOf(Color.BLACK)
                 } catch (throwable: Throwable) {
                     log(TAG + throwable)
                 }
@@ -467,12 +473,15 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
                     if (isDark || !lightQSHeaderEnabled) return
 
                     try {
-                        (getObjectField(param.thisObject, "mIcon") as ImageView)
-                            .setImageTintList(ColorStateList.valueOf(Color.BLACK))
+                        (getObjectField(param.thisObject, "mIcon") as ImageView).imageTintList =
+                            ColorStateList.valueOf(Color.BLACK)
                     } catch (throwable: Throwable) {
                         try {
-                            (getObjectField(param.thisObject, "mIconView") as ImageView)
-                                .setImageTintList(ColorStateList.valueOf(Color.BLACK))
+                            (getObjectField(
+                                param.thisObject,
+                                "mIconView"
+                            ) as ImageView).imageTintList =
+                                ColorStateList.valueOf(Color.BLACK)
                         } catch (ignored: Throwable) {
                         }
                     }
@@ -492,7 +501,7 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
                     }
                     val mIcon = getObjectField(param.thisObject, "mIcon") as ImageView
 
-                    mIcon.setImageTintList(ColorStateList.valueOf(iconColor))
+                    mIcon.imageTintList = ColorStateList.valueOf(iconColor)
                 } catch (throwable: Throwable) {
                     log(TAG + throwable)
                 }
@@ -505,8 +514,8 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
                     getIntField(param.args[1], "state") == Tile.STATE_ACTIVE
                 ) {
                     try {
-                        (param.args[0] as ImageView)
-                            .setImageTintList(ColorStateList.valueOf(colorInactive!!))
+                        (param.args[0] as ImageView).imageTintList =
+                            ColorStateList.valueOf(colorInactive!!)
                     } catch (throwable: Throwable) {
                         log(TAG + throwable)
                     }
@@ -603,7 +612,7 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
                             mContext.packageName
                         )
                     )
-                    customDrawable.setImageTintList(ColorStateList.valueOf(Color.WHITE))
+                    customDrawable.imageTintList = ColorStateList.valueOf(Color.WHITE)
 
                     val chevron = sideView.findViewById<ImageView>(
                         mContext.resources.getIdentifier(
@@ -612,7 +621,7 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
                             mContext.packageName
                         )
                     )
-                    chevron.setImageTintList(ColorStateList.valueOf(Color.WHITE))
+                    chevron.imageTintList = ColorStateList.valueOf(Color.WHITE)
                 } catch (throwable: Throwable) {
                     log(TAG + throwable)
                 }
@@ -650,9 +659,9 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
                             param.result = -0x80000000
                         } else {
                             if (isActiveState && !qsTextAlwaysWhite && !qsTextFollowAccent) {
-                                mIcon.setImageTintList(ColorStateList.valueOf(Color.WHITE))
+                                mIcon.imageTintList = ColorStateList.valueOf(Color.WHITE)
                             } else if (!isActiveState) {
-                                mIcon.setImageTintList(ColorStateList.valueOf(Color.BLACK))
+                                mIcon.imageTintList = ColorStateList.valueOf(Color.BLACK)
                             }
                         }
                     }
@@ -699,7 +708,7 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
                                 )
                             )
 
-                            pmButton.setImageTintList(ColorStateList.valueOf(Color.WHITE))
+                            pmButton.imageTintList = ColorStateList.valueOf(Color.WHITE)
                         }
                     } catch (ignored: Throwable) {
                     }
@@ -895,7 +904,7 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
         })
 
         try {
-            val constants: Array<out Any>? = scrimStateEnum.getEnumConstants()
+            val constants: Array<out Any>? = scrimStateEnum.enumConstants
             if (constants != null) {
                 for (constant in constants) {
                     when (constant.toString()) {
@@ -1066,22 +1075,23 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
     }
 
     private fun applyOverlays(force: Boolean) {
-        val isCurrentlyDark: Boolean = SystemUtil.isDarkMode
+        val isCurrentlyDark: Boolean = SystemUtils.isDarkMode
         if (isCurrentlyDark == isDark && !force) return
 
         isDark = isCurrentlyDark
 
         calculateColors()
-        disableOverlays(qsLightThemeOverlay, qsDualToneOverlay)
+
+        Utils.disableOverlays(qsLightThemeOverlay, qsDualToneOverlay)
 
         try {
             Thread.sleep(50)
         } catch (ignored: Throwable) {
         }
 
-        if (lightQSHeaderEnabled) {
-            if (!isCurrentlyDark) enableOverlay(qsLightThemeOverlay)
-            if (dualToneQSEnabled) enableOverlay(qsDualToneOverlay)
+        if (lightQSHeaderEnabled && !isCurrentlyDark) {
+            Utils.enableOverlay(qsLightThemeOverlay)
+            if (dualToneQSEnabled) Utils.enableOverlay(qsDualToneOverlay)
         }
     }
 
@@ -1188,7 +1198,7 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
                                 mContext.packageName
                             )
                         ), "mMobileSignal"
-                    ) as ImageView).setImageTintList(ColorStateList.valueOf(textColorPrimary))
+                    ) as ImageView).imageTintList = ColorStateList.valueOf(textColorPrimary)
 
                     (getObjectField(
                         mView.findViewById(
@@ -1198,7 +1208,7 @@ class QSLightThemeA14(context: Context?) : ModPack(context!!) {
                                 mContext.packageName
                             )
                         ), "mMobileRoaming"
-                    ) as ImageView).setImageTintList(ColorStateList.valueOf(textColorPrimary))
+                    ) as ImageView).imageTintList = ColorStateList.valueOf(textColorPrimary)
                 } catch (ignored: Throwable) {
                 }
             }

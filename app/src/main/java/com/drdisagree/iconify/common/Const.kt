@@ -25,6 +25,9 @@ object Const {
     // Telegram group
     const val TELEGRAM_GROUP = "https://t.me/IconifyDiscussion"
 
+    // Crowdin
+    const val ICONIFY_CROWDIN = "https://crowdin.com/project/iconify"
+
     // Parse new update
     const val LATEST_VERSION_URL =
         "https://raw.githubusercontent.com/tqmane/Iconify-Japanese/stable/latestVersion.json"
@@ -45,6 +48,7 @@ object Const {
     const val ACTION_HOOK_CHECK_REQUEST = "${BuildConfig.APPLICATION_ID}.ACTION_HOOK_CHECK_REQUEST"
     const val ACTION_HOOK_CHECK_RESULT = "${BuildConfig.APPLICATION_ID}.ACTION_HOOK_CHECK_RESULT"
     const val ACTION_BOOT_COMPLETED = "${BuildConfig.APPLICATION_ID}.ACTION_BOOT_COMPLETED"
+    const val ACTION_WEATHER_INFLATED = "${BuildConfig.APPLICATION_ID}.ACTION_WEATHER_INFLATED"
 
     // Module script
     val MAGISK_UPDATE_BINARY = """
