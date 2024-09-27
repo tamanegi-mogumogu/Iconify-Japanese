@@ -1,6 +1,7 @@
 package com.drdisagree.iconify.xposed.modules
 
 import android.annotation.SuppressLint
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
@@ -14,16 +15,16 @@ import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Shader
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.Icon
 import android.graphics.drawable.TransitionDrawable
 import android.media.MediaMetadata
 import android.media.session.MediaController
-import android.media.session.MediaController.PlaybackInfo
 import android.media.session.MediaSessionManager
 import android.media.session.PlaybackState
 import android.net.ConnectivityManager
@@ -32,11 +33,10 @@ import android.net.NetworkCapabilities
 import android.net.wifi.WifiManager
 import android.os.Handler
 import android.os.Looper
-import android.os.SystemClock
 import android.provider.Settings
+import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
 import android.view.Gravity
-import android.view.KeyEvent
 import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup
@@ -45,29 +45,41 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.palette.graphics.Palette
 import com.drdisagree.iconify.BuildConfig
 import com.drdisagree.iconify.common.Const.FRAMEWORK_PACKAGE
 import com.drdisagree.iconify.common.Const.SYSTEMUI_PACKAGE
 import com.drdisagree.iconify.common.Preferences.ICONIFY_QS_HEADER_CONTAINER_SHADE_TAG
+import com.drdisagree.iconify.common.Preferences.ICONIFY_QS_HEADER_CONTAINER_TAG
 import com.drdisagree.iconify.common.Preferences.OP_QS_HEADER_BLUR_LEVEL
 import com.drdisagree.iconify.common.Preferences.OP_QS_HEADER_EXPANSION_Y
-import com.drdisagree.iconify.common.Preferences.OP_QS_HEADER_FADE_LEVEL
+import com.drdisagree.iconify.common.Preferences.OP_QS_HEADER_GAP_EXPANDED
+import com.drdisagree.iconify.common.Preferences.OP_QS_HEADER_HIDE_STOCK_MEDIA
 import com.drdisagree.iconify.common.Preferences.OP_QS_HEADER_SWITCH
 import com.drdisagree.iconify.common.Preferences.OP_QS_HEADER_TOP_MARGIN
 import com.drdisagree.iconify.common.Preferences.OP_QS_HEADER_VIBRATE
+import com.drdisagree.iconify.common.Preferences.QS_TEXT_ALWAYS_WHITE
+import com.drdisagree.iconify.common.Preferences.QS_TEXT_FOLLOW_ACCENT
 import com.drdisagree.iconify.utils.color.monet.quantize.QuantizerCelebi
 import com.drdisagree.iconify.utils.color.monet.score.Score
 import com.drdisagree.iconify.xposed.ModPack
+import com.drdisagree.iconify.xposed.modules.utils.ActivityLauncherUtils
 import com.drdisagree.iconify.xposed.modules.utils.Helpers.findClassInArray
 import com.drdisagree.iconify.xposed.modules.utils.Helpers.isMethodAvailable
+import com.drdisagree.iconify.xposed.modules.utils.Helpers.isQsTileOverlayEnabled
 import com.drdisagree.iconify.xposed.modules.utils.SettingsLibUtils.Companion.getColorAttr
 import com.drdisagree.iconify.xposed.modules.utils.TouchAnimator
 import com.drdisagree.iconify.xposed.modules.utils.VibrationUtils
 import com.drdisagree.iconify.xposed.modules.utils.ViewHelper.applyBlur
 import com.drdisagree.iconify.xposed.modules.utils.ViewHelper.toPx
-import com.drdisagree.iconify.xposed.modules.views.QsOpHeaderView
+import com.drdisagree.iconify.xposed.modules.views.MediaPlayerPagerAdapter
+import com.drdisagree.iconify.xposed.modules.views.OpQsHeaderView
+import com.drdisagree.iconify.xposed.modules.views.OpQsMediaPlayerView
+import com.drdisagree.iconify.xposed.modules.views.OpQsMediaPlayerView.Companion.opMediaDefaultBackground
 import com.drdisagree.iconify.xposed.utils.XPrefs.Xprefs
 import com.drdisagree.iconify.xposed.utils.XPrefs.XprefsIsInitialized
 import de.robv.android.xposed.XC_MethodHook
@@ -81,6 +93,7 @@ import de.robv.android.xposed.XposedHelpers.findAndHookMethod
 import de.robv.android.xposed.XposedHelpers.findClass
 import de.robv.android.xposed.XposedHelpers.findClassIfExists
 import de.robv.android.xposed.XposedHelpers.getObjectField
+import de.robv.android.xposed.XposedHelpers.setObjectField
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -90,20 +103,29 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import java.lang.reflect.Method
 import java.nio.ByteBuffer
 import kotlin.coroutines.resume
+import kotlin.math.pow
+import kotlin.math.sqrt
 import kotlin.properties.Delegates
+import kotlin.random.Random
 
 @Suppress("DiscouragedApi")
 class OpQsHeader(context: Context?) : ModPack(context!!) {
 
+    // Preferences
     private var showOpQsHeaderView = false
     private var vibrateOnClick = false
+    private var hideStockMediaPlayer = false
     private var mediaBlurLevel = 10f
-    private var mediaFadeLevel = 0
     private var topMarginValue = 0
     private var expansionAmount = 0
+    private var qsTextAlwaysWhite = false
+    private var qsTextFollowAccent = false
+    private var expandedQsGap = 0
 
+    // Views
     private var mQsHeaderContainer: LinearLayout = LinearLayout(mContext)
     private var mQsHeaderContainerShade: LinearLayout = LinearLayout(mContext).apply {
         tag = ICONIFY_QS_HEADER_CONTAINER_SHADE_TAG
@@ -111,9 +133,10 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
     private var mQsPanelView: ViewGroup? = null
     private var mQuickStatusBarHeader: FrameLayout? = null
     private var mQQSContainerAnimator: TouchAnimator? = null
-    private var mQsOpHeaderView: QsOpHeaderView? = null
     private lateinit var mHeaderQsPanel: LinearLayout
+    private var mOpQsHeaderView: OpQsHeaderView? = null
 
+    // Colors
     private var colorActive: Int? = null
     private var colorInactive: Int? = null
     private var colorLabelActive: Int? = null
@@ -121,46 +144,47 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
     private var colorAccent by Delegates.notNull<Int>()
     private var colorPrimary by Delegates.notNull<Int>()
 
-    private var mMediaTitle: String? = null
-    private var mMediaArtist: String? = null
-    private var mMediaArtwork: Bitmap? = null
-    private var mPreviousMediaArtwork: Bitmap? = null
-    private var mPreviousMediaProcessedArtwork: Bitmap? = null
-    private var mMediaIsPlaying = false
+    // Media data
+    private val mActiveMediaControllers = mutableListOf<Pair<String, MediaController>>()
+    private val mPrevMediaPlayingState = mutableMapOf<String, Boolean>()
+    private val mMediaControllerMetadataMap = mutableMapOf<String, MediaMetadata?>()
+    private val mPrevMediaControllerMetadataMap = mutableMapOf<String, MediaMetadata?>()
+    private val mPrevMediaArtworkMap = mutableMapOf<String, Bitmap?>()
+    private val mPrevMediaProcessedArtworkMap = mutableMapOf<String, Bitmap?>()
+    private val mMediaPlayerViews = mutableListOf<Pair<String?, OpQsMediaPlayerView>>().also {
+        it.add(null to OpQsMediaPlayerView(mContext))
+    }
+    private var mMediaPlayerAdapter: MediaPlayerPagerAdapter? = null
 
+    // Tile and media state
+    private var mInternetEnabled = false
+    private var mBluetoothEnabled = false
+
+    // Misc
     private lateinit var appContext: Context
     private var mHandler: Handler = Handler(Looper.getMainLooper())
-    private val artworkExtractorScope = CoroutineScope(Dispatchers.Main + Job())
+    private val artworkExtractorScope = CoroutineScope(Dispatchers.IO + Job())
     private var mMediaUpdater = CoroutineScope(Dispatchers.Main)
     private var mMediaUpdaterJob: Job? = null
-    private var mMediaController: MediaController? = null
-    private var mMediaMetadata: MediaMetadata? = null
     private var mActivityStarter: Any? = null
     private var mMediaOutputDialogFactory: Any? = null
     private var mNotificationMediaManager: Any? = null
     private var mBluetoothController: Any? = null
-    private var mBluetoothTileDialogViewModel: Any? = null
-    private var mInternetDialogManager: Any? = null
-    private var mInternetDialogFactory: Any? = null
-    private var mAccessPointController: Any? = null
     private var qsTileViewImplInstance: Any? = null
     private lateinit var mConnectivityManager: ConnectivityManager
     private lateinit var mTelephonyManager: TelephonyManager
     private lateinit var mWifiManager: WifiManager
     private lateinit var mBluetoothManager: BluetoothManager
+    private lateinit var mMediaSessionManager: MediaSessionManager
+    private lateinit var mSubscriptionManager: SubscriptionManager
+    private lateinit var mActivityLauncherUtils: ActivityLauncherUtils
 
+    // Resources
+    private var qqsTileHeight by Delegates.notNull<Int>()
+    private var qsTileMarginVertical by Delegates.notNull<Int>()
     private var qsTileCornerRadius by Delegates.notNull<Float>()
-    private lateinit var opMediaBackgroundDrawable: GradientDrawable
-    private lateinit var mediaSessionLegacyHelperClass: Class<*>
-
-    private var deferredInternetActiveColorAction: (() -> Unit)? = null
-    private var deferredInternetInactiveColorAction: (() -> Unit)? = null
-    private var deferredBluetoothActiveColorAction: (() -> Unit)? = null
-    private var deferredBluetoothInactiveColorAction: (() -> Unit)? = null
-    private var deferredMediaPlayerInactiveColorAction: (() -> Unit)? = null
-
-    private var lastUpdateTime = 0L
-    private var cooldownTime = 50 // milliseconds
+    private lateinit var opMediaBackgroundDrawable: Drawable
+    private var previousBlurLevel = 10f
 
     override fun updatePrefs(vararg key: String) {
         if (!XprefsIsInitialized) return
@@ -168,24 +192,30 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
         Xprefs.apply {
             showOpQsHeaderView = getBoolean(OP_QS_HEADER_SWITCH, false)
             vibrateOnClick = getBoolean(OP_QS_HEADER_VIBRATE, false)
+            hideStockMediaPlayer = getBoolean(OP_QS_HEADER_HIDE_STOCK_MEDIA, false)
             mediaBlurLevel = getSliderInt(OP_QS_HEADER_BLUR_LEVEL, 10).toFloat()
-            mediaFadeLevel = getSliderInt(OP_QS_HEADER_FADE_LEVEL, 0)
             topMarginValue = getSliderInt(OP_QS_HEADER_TOP_MARGIN, 0)
             expansionAmount = getSliderInt(OP_QS_HEADER_EXPANSION_Y, 0)
+            expandedQsGap = getInt(OP_QS_HEADER_GAP_EXPANDED, 0)
+            qsTextAlwaysWhite = getBoolean(QS_TEXT_ALWAYS_WHITE, false)
+            qsTextFollowAccent = getBoolean(QS_TEXT_FOLLOW_ACCENT, false)
         }
 
         if (key.isNotEmpty() &&
             (key[0] == OP_QS_HEADER_VIBRATE ||
-                    key[0] == OP_QS_HEADER_BLUR_LEVEL ||
-                    key[0] == OP_QS_HEADER_FADE_LEVEL)
+                    key[0] == OP_QS_HEADER_BLUR_LEVEL)
         ) {
-            updateMediaPlayer(force = true)
+            updateMediaPlayers(force = true)
         }
     }
 
     override fun handleLoadPackage(loadPackageParam: LoadPackageParam) {
         val qsPanelClass = findClass(
             "$SYSTEMUI_PACKAGE.qs.QSPanel",
+            loadPackageParam.classLoader
+        )
+        val quickQsPanelClass = findClass(
+            "$SYSTEMUI_PACKAGE.qs.QuickQSPanel",
             loadPackageParam.classLoader
         )
         val qsImplClass = findClassInArray(
@@ -201,12 +231,13 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
             "$SYSTEMUI_PACKAGE.qs.tileimpl.QSTileViewImpl",
             loadPackageParam.classLoader
         )
-        val qsPanelControllerBase = findClassIfExists(
-            "$SYSTEMUI_PACKAGE.qs.QSPanelControllerBase",
-            loadPackageParam.classLoader
+        val tileLayoutClass = findClassInArray(
+            loadPackageParam.classLoader,
+            "$SYSTEMUI_PACKAGE.qs.TileLayout",
+            "$SYSTEMUI_PACKAGE.qs.PagedTileLayout"
         )
-        val qsPanelControllerClass = findClass(
-            "$SYSTEMUI_PACKAGE.qs.QSPanelController",
+        val qsPanelControllerBaseClass = findClassIfExists(
+            "$SYSTEMUI_PACKAGE.qs.QSPanelControllerBase",
             loadPackageParam.classLoader
         )
         val qsSecurityFooterUtilsClass = findClassIfExists(
@@ -217,9 +248,10 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
             "$SYSTEMUI_PACKAGE.qs.QuickStatusBarHeader",
             loadPackageParam.classLoader
         )
-        val scrimControllerClass = findClass(
-            "$SYSTEMUI_PACKAGE.statusbar.phone.ScrimController",
-            loadPackageParam.classLoader
+        val shadeHeaderControllerClass = findClassInArray(
+            loadPackageParam.classLoader,
+            "$SYSTEMUI_PACKAGE.shade.ShadeHeaderController",
+            "$SYSTEMUI_PACKAGE.shade.LargeScreenShadeHeaderController",
         )
         val dependencyClass = findClass(
             "$SYSTEMUI_PACKAGE.Dependency",
@@ -242,18 +274,6 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
             "$SYSTEMUI_PACKAGE.media.controls.ui.controller.MediaControlPanel",
             "$SYSTEMUI_PACKAGE.media.controls.ui.MediaControlPanel"
         )
-        val networkControllerImplClass = findClass(
-            "$SYSTEMUI_PACKAGE.statusbar.connectivity.NetworkControllerImpl",
-            loadPackageParam.classLoader
-        )
-        val bluetoothTileClass = findClass(
-            "$SYSTEMUI_PACKAGE.qs.tiles.BluetoothTile",
-            loadPackageParam.classLoader
-        )
-        mediaSessionLegacyHelperClass = findClass(
-            "$FRAMEWORK_PACKAGE.media.session.MediaSessionLegacyHelper",
-            loadPackageParam.classLoader
-        )
         launchableImageView = findClassIfExists(
             "$SYSTEMUI_PACKAGE.animation.view.LaunchableImageView",
             loadPackageParam.classLoader
@@ -273,6 +293,7 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
                         "get",
                         activityStarterClass
                     )
+                    mActivityLauncherUtils = ActivityLauncherUtils(mContext, mActivityStarter)
                 }
             })
         } else {
@@ -282,6 +303,7 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
                         param.thisObject,
                         "mActivityStarter"
                     )
+                    mActivityLauncherUtils = ActivityLauncherUtils(mContext, mActivityStarter)
                 }
             })
         }
@@ -305,43 +327,55 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
             }
         })
 
-        hookAllConstructors(networkControllerImplClass, object : XC_MethodHook() {
-            override fun afterHookedMethod(param: MethodHookParam) {
-                mAccessPointController = getObjectField(param.thisObject, "mAccessPoints")
-                try {
-                    mInternetDialogManager =
-                        getObjectField(param.thisObject, "mInternetDialogManager")
-                } catch (ignored: Throwable) {
-                }
-                try {
-                    mInternetDialogFactory =
-                        getObjectField(param.thisObject, "mInternetDialogFactory")
-                } catch (ignored: Throwable) {
-                }
-            }
-        })
-
-        hookAllConstructors(bluetoothTileClass, object : XC_MethodHook() {
-            override fun afterHookedMethod(param: MethodHookParam) {
-                mBluetoothTileDialogViewModel = getObjectField(param.thisObject, "mDialogViewModel")
-            }
-        })
-
         hookAllMethods(qsTileViewImplClass, "init", object : XC_MethodHook() {
             override fun beforeHookedMethod(param: MethodHookParam) {
                 qsTileViewImplInstance = param.thisObject
             }
         })
 
-        hookAllConstructors(qsPanelControllerClass, object : XC_MethodHook() {
+        hookAllConstructors(tileLayoutClass, object : XC_MethodHook() {
             override fun afterHookedMethod(param: MethodHookParam) {
-                onColorsInitialized()
+                if (!showOpQsHeaderView) return
+
+                updateOpHeaderView()
             }
         })
 
-        hookAllMethods(scrimControllerClass, "updateThemeColors", object : XC_MethodHook() {
+        // Update colors when device theme changes
+        hookAllMethods(shadeHeaderControllerClass, "onInit", object : XC_MethodHook() {
             override fun afterHookedMethod(param: MethodHookParam) {
-                onColorsInitialized()
+                if (!showOpQsHeaderView) return
+
+                val configurationControllerListener = getObjectField(
+                    param.thisObject,
+                    "configurationControllerListener"
+                )
+
+                val updateColors = object : XC_MethodHook() {
+                    override fun afterHookedMethod(param: MethodHookParam) {
+                        if (!showOpQsHeaderView || qsTileViewImplInstance == null) return
+
+                        updateOpHeaderView()
+                    }
+                }
+
+                val methods = listOf(
+                    "onConfigChanged",
+                    "onDensityOrFontScaleChanged",
+                    "onUiModeChanged",
+                    "onThemeChanged"
+                )
+
+                for (method in methods) {
+                    try {
+                        hookAllMethods(
+                            configurationControllerListener.javaClass,
+                            method,
+                            updateColors
+                        )
+                    } catch (ignored: Throwable) {
+                    }
+                }
             }
         })
 
@@ -376,7 +410,17 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
                 }
 
                 (mQsHeaderContainer.parent as? ViewGroup)?.removeView(mQsHeaderContainer)
-                mQuickStatusBarHeader!!.addView(mQsHeaderContainer, -1)
+                val headerImageAvailable = mQuickStatusBarHeader!!.findViewWithTag<ViewGroup?>(
+                    ICONIFY_QS_HEADER_CONTAINER_TAG
+                )
+                mQuickStatusBarHeader!!.addView(
+                    mQsHeaderContainer,
+                    if (headerImageAvailable == null) {
+                        -1
+                    } else {
+                        mQuickStatusBarHeader!!.indexOfChild(headerImageAvailable) + 1
+                    }
+                )
 
                 val relativeLayout = RelativeLayout(mContext).apply {
                     layoutParams = RelativeLayout.LayoutParams(
@@ -388,7 +432,8 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
                     clipChildren = false
                     clipToPadding = false
 
-                    mQsOpHeaderView = QsOpHeaderView(mContext).apply {
+                    (mOpQsHeaderView?.parent as? ViewGroup)?.removeView(mOpQsHeaderView)
+                    mOpQsHeaderView = OpQsHeaderView(mContext).apply {
                         setOnAttachListener {
                             ControllersProvider.getInstance().apply {
                                 registerWifiCallback(mWifiCallback)
@@ -407,8 +452,11 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
                             onClickListener = mOnClickListener,
                             onLongClickListener = mOnLongClickListener
                         )
+                        mMediaPlayerAdapter = MediaPlayerPagerAdapter(mMediaPlayerViews)
+                        mediaPlayerContainer.adapter = mMediaPlayerAdapter
                     }
-                    mQsHeaderContainer.addView(mQsOpHeaderView)
+
+                    mQsHeaderContainer.addView(mOpQsHeaderView)
                     updateOpHeaderView()
 
                     (mQsHeaderContainer.parent as? ViewGroup)?.removeView(mQsHeaderContainer)
@@ -418,7 +466,7 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
                     addView(mHeaderQsPanel)
 
                     (mHeaderQsPanel.layoutParams as RelativeLayout.LayoutParams).apply {
-                        addRule(RelativeLayout.BELOW, mQsOpHeaderView!!.id)
+                        addRule(RelativeLayout.BELOW, mOpQsHeaderView!!.id)
                     }
                 }
 
@@ -431,6 +479,7 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
             }
         })
 
+        // Move view to different parent when rotation changes
         hookAllMethods(quickStatusBarHeaderClass, "updateResources", object : XC_MethodHook() {
             override fun afterHookedMethod(param: MethodHookParam) {
                 mQuickStatusBarHeader = param.thisObject as FrameLayout
@@ -443,6 +492,8 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
                     )
                 )
 
+                if (!showOpQsHeaderView) return
+
                 buildHeaderViewExpansion()
 
                 if (isLandscape) {
@@ -453,13 +504,22 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
                     mQsHeaderContainerShade.visibility = View.VISIBLE
                 } else {
                     if (mQsHeaderContainer.parent != mQuickStatusBarHeader) {
+                        val headerImageAvailable =
+                            mQuickStatusBarHeader!!.findViewWithTag<ViewGroup?>(
+                                ICONIFY_QS_HEADER_CONTAINER_TAG
+                            )
                         (mQsHeaderContainer.parent as? ViewGroup)?.removeView(mQsHeaderContainer)
-                        mQuickStatusBarHeader?.addView(mQsHeaderContainer, -1)
+                        mQuickStatusBarHeader?.addView(
+                            mQsHeaderContainer,
+                            if (headerImageAvailable == null) {
+                                0
+                            } else {
+                                mQuickStatusBarHeader!!.indexOfChild(headerImageAvailable) + 1
+                            }
+                        )
                     }
                     mQsHeaderContainerShade.visibility = View.GONE
                 }
-
-                updateOpHeaderView()
             }
         })
 
@@ -480,19 +540,206 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
                 } as LinearLayout
 
                 (mQsPanel.layoutParams as MarginLayoutParams).topMargin =
-                    if (isLandscape) 0 else mContext.toPx(136 + topMarginValue + expansionAmount)
+                    if (isLandscape) {
+                        0
+                    } else {
+                        (qqsTileHeight * 2) + (qsTileMarginVertical * 2) +
+                                mContext.toPx(topMarginValue + expansionAmount + expandedQsGap)
+                    }
             }
         }
 
+        // Update qs top margin
         hookAllMethods(qsContainerImplClass, "onFinishInflate", updateQsTopMargin)
         hookAllMethods(qsContainerImplClass, "updateResources", updateQsTopMargin)
 
-        hookAllMethods(qsPanelClass, "reAttachMediaHost", object : XC_MethodReplacement() {
-            override fun replaceHookedMethod(param: MethodHookParam): Any? {
-                if (!showOpQsHeaderView) return param.result
-                return null
-            }
-        })
+        // Hide stock media player
+        val reAttachMediaHostAvailable = qsPanelClass.declaredMethods.any {
+            it.name == "reAttachMediaHost"
+        }
+
+        if (showOpQsHeaderView && hideStockMediaPlayer && reAttachMediaHostAvailable) {
+            hookAllMethods(qsPanelClass, "reAttachMediaHost", object : XC_MethodReplacement() {
+                override fun replaceHookedMethod(param: MethodHookParam): Any? {
+                    return null
+                }
+            })
+
+            // Ensure stock media player is hidden
+            hookAllMethods(qsImplClass, "onComponentCreated", object : XC_MethodHook() {
+                override fun afterHookedMethod(param: MethodHookParam) {
+                    if (!showOpQsHeaderView) return
+
+                    try {
+                        val mQSPanelController =
+                            getObjectField(param.thisObject, "mQSPanelController")
+
+                        val listener = Runnable {
+                            val mediaHost = callMethod(mQSPanelController, "getMediaHost")
+                            val hostView = callMethod(mediaHost, "getHostView")
+
+                            callMethod(hostView, "setAlpha", 0.0f)
+
+                            try {
+                                callMethod(mQSPanelController, "requestAnimatorUpdate")
+                            } catch (ignored: Throwable) {
+                                val mQSAnimator = getObjectField(param.thisObject, "mQSAnimator")
+                                callMethod(mQSAnimator, "requestAnimatorUpdate")
+                            }
+                        }
+
+                        callMethod(
+                            mQSPanelController,
+                            "setUsingHorizontalLayoutChangeListener",
+                            listener
+                        )
+                    } catch (ignored: Throwable) {
+                    }
+                }
+            })
+        } else if (hideStockMediaPlayer) { // If reAttachMediaHost is not available, we need to hook switchTileLayout()
+            hookAllMethods(
+                qsPanelControllerBaseClass,
+                "switchTileLayout",
+                object : XC_MethodHook() {
+                    override fun beforeHookedMethod(param: MethodHookParam) {
+                        if (!showOpQsHeaderView) return
+
+                        val force = param.args[0] as Boolean
+                        val horizontal = callMethod(
+                            param.thisObject,
+                            "shouldUseHorizontalLayout"
+                        ) as Boolean
+                        val mUsingHorizontalLayout = getObjectField(
+                            param.thisObject,
+                            "mUsingHorizontalLayout"
+                        ) as Boolean
+
+                        if (horizontal != mUsingHorizontalLayout || force) {
+                            val mQSLogger = getObjectField(param.thisObject, "mQSLogger")
+                            val qsPanel = getObjectField(param.thisObject, "mView")
+                            val qsPanelTag = callMethod(qsPanel, "getDumpableTag")
+
+                            callMethod(
+                                mQSLogger,
+                                "logSwitchTileLayout",
+                                horizontal,
+                                mUsingHorizontalLayout,
+                                force,
+                                qsPanelTag
+                            )
+
+                            setObjectField(
+                                param.thisObject,
+                                "mUsingHorizontalLayout",
+                                horizontal
+                            )
+
+                            val mUsingHorizontalLayout2 = getObjectField(
+                                qsPanel,
+                                "mUsingHorizontalLayout"
+                            ) as Boolean
+
+                            if (horizontal != mUsingHorizontalLayout2 || force) {
+                                setObjectField(
+                                    qsPanel,
+                                    "mUsingHorizontalLayout",
+                                    horizontal
+                                )
+
+                                val mHorizontalContentContainer = getObjectField(
+                                    qsPanel,
+                                    "mHorizontalContentContainer"
+                                ) as LinearLayout
+
+                                val newParent: ViewGroup = if (horizontal) {
+                                    mHorizontalContentContainer
+                                } else {
+                                    qsPanel as ViewGroup
+                                }
+                                val mTileLayout = getObjectField(qsPanel, "mTileLayout")
+                                val index = if (!horizontal) {
+                                    getObjectField(qsPanel, "mMovableContentStartIndex")
+                                } else {
+                                    0
+                                } as Int
+
+                                callStaticMethod(
+                                    qsPanelClass,
+                                    "switchToParent",
+                                    mTileLayout,
+                                    newParent,
+                                    index,
+                                    qsPanelTag
+                                )
+
+                                val mFooter = getObjectField(qsPanel, "mFooter") as? View
+
+                                if (mFooter != null) {
+                                    callStaticMethod(
+                                        qsPanelClass,
+                                        "switchToParent",
+                                        mFooter,
+                                        newParent,
+                                        index + 1,
+                                        qsPanelTag
+                                    )
+                                }
+
+                                callMethod(
+                                    mTileLayout,
+                                    "setMinRows",
+                                    if (horizontal) 2 else 1
+                                )
+                                callMethod(
+                                    mTileLayout,
+                                    "setMaxColumns",
+                                    if (horizontal) 2 else 4
+                                )
+
+                                val mHorizontalLinearLayout = getObjectField(
+                                    qsPanel,
+                                    "mHorizontalLinearLayout"
+                                ) as? LinearLayout
+
+                                if (mHorizontalLinearLayout != null &&
+                                    quickQsPanelClass.isInstance(qsPanel)
+                                ) {
+                                    val mMediaTotalBottomMargin = getObjectField(
+                                        qsPanel,
+                                        "mMediaTotalBottomMargin"
+                                    ) as Int
+                                    val mQsPanelBottomPadding =
+                                        (qsPanel as LinearLayout).paddingBottom
+
+                                    val layoutParams =
+                                        mHorizontalLinearLayout.layoutParams as LinearLayout.LayoutParams
+                                    layoutParams.bottomMargin =
+                                        (mMediaTotalBottomMargin - mQsPanelBottomPadding)
+                                            .coerceAtLeast(0)
+                                    mHorizontalLinearLayout.layoutParams = layoutParams
+                                }
+
+                                callMethod(qsPanel, "updatePadding")
+
+                                mHorizontalLinearLayout?.visibility = if (!horizontal) {
+                                    View.GONE
+                                } else {
+                                    View.VISIBLE
+                                }
+                            }
+
+                            (getObjectField(
+                                param.thisObject,
+                                "mUsingHorizontalLayoutChangedListener"
+                            ) as? Runnable)?.run()
+                        }
+
+                        param.result = true
+                    }
+                }
+            )
+        }
 
         val hasSwitchAllContentToParent = qsPanelClass.declaredMethods.any {
             it.name == "switchAllContentToParent"
@@ -548,26 +795,34 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
                     View::class.java,
                     ViewGroup::class.java,
                     Int::class.java,
+                    String::class.java,
                     object : XC_MethodReplacement() {
                         override fun replaceHookedMethod(param: MethodHookParam): Any? {
                             val view = param.args[0] as View
-                            val parent = param.args[1] as ViewGroup
+                            val newParent = param.args[1] as? ViewGroup
                             val tempIndex = param.args[2] as Int
+
+                            if (newParent == null) {
+                                return null
+                            }
+
                             val index = if (view.tag == ICONIFY_QS_HEADER_CONTAINER_SHADE_TAG) {
                                 tempIndex
                             } else {
                                 tempIndex + 1
                             }
-                            val tag = callMethod(param.thisObject, "getDumpableTag")
 
-                            callMethod(
-                                param.thisObject,
-                                "switchToParent",
-                                view,
-                                parent,
-                                index.coerceAtMost(parent.childCount),
-                                tag
-                            )
+                            val currentParent = view.parent as? ViewGroup
+
+                            if (currentParent != newParent) {
+                                currentParent?.removeView(view)
+                                newParent.addView(view, index.coerceAtMost(newParent.childCount))
+                            } else if (newParent.indexOfChild(view) == index) {
+                                return null
+                            } else {
+                                newParent.removeView(view)
+                                newParent.addView(view, index.coerceAtMost(newParent.childCount))
+                            }
 
                             return null
                         }
@@ -576,7 +831,7 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
             }
         } else { // Some ROMs don't have this method switchAllContentToParent()
             hookAllMethods(
-                qsPanelControllerBase,
+                qsPanelControllerBaseClass,
                 "onInit",
                 object : XC_MethodHook() {
                     override fun beforeHookedMethod(param: MethodHookParam) {
@@ -724,18 +979,18 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
     }
 
     private fun updateOpHeaderView() {
-        if (mQsOpHeaderView == null) return
+        if (mOpQsHeaderView == null) return
 
-        onColorsInitialized()
-        updateMediaController()
+        initResources()
         startMediaUpdater()
         updateInternetState()
         updateBluetoothState()
+        updateMediaPlayers(force = true)
     }
 
     private fun buildHeaderViewExpansion() {
         if (!showOpQsHeaderView ||
-            mQsOpHeaderView == null ||
+            mOpQsHeaderView == null ||
             !::mHeaderQsPanel.isInitialized
         ) return
 
@@ -764,8 +1019,8 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
         params.topMargin = topMargin + mContext.toPx(derivedTopMargin)
         mQsHeaderContainer.layoutParams = params
 
-        (mHeaderQsPanel.layoutParams as MarginLayoutParams).topMargin =
-            topMargin + mContext.toPx(136 + derivedTopMargin)
+        (mHeaderQsPanel.layoutParams as MarginLayoutParams).topMargin = topMargin +
+                (qqsTileHeight * 2) + (qsTileMarginVertical * 2) + mContext.toPx(derivedTopMargin)
 
         val qsHeaderHeight = resources.getDimensionPixelOffset(
             resources.getIdentifier(
@@ -831,13 +1086,12 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
     private val mMediaCallback: MediaController.Callback = object : MediaController.Callback() {
         override fun onPlaybackStateChanged(state: PlaybackState?) {
             super.onPlaybackStateChanged(state)
-            updateMediaController()
+            updateMediaControllers()
         }
 
         override fun onMetadataChanged(metadata: MediaMetadata?) {
             super.onMetadataChanged(metadata)
-            mMediaMetadata = metadata
-            updateMediaController()
+            updateMediaControllers()
         }
     }
 
@@ -846,7 +1100,7 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
 
         mMediaUpdaterJob = mMediaUpdater.launch {
             while (isActive) {
-                updateMediaController()
+                updateMediaControllers()
                 delay(1000)
             }
         }
@@ -858,57 +1112,8 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
 
     private fun toggleInternetState(v: View) {
         mHandler.post {
-            if (mAccessPointController != null) {
-                if (isMethodAvailable(
-                        mInternetDialogManager,
-                        "create",
-                        Boolean::class.java,
-                        Boolean::class.java,
-                        Boolean::class.java,
-                        View::class.java
-                    )
-                ) {
-                    callMethod(
-                        mInternetDialogManager,
-                        "create",
-                        true,
-                        callMethod(mAccessPointController, "canConfigMobileData"),
-                        callMethod(mAccessPointController, "canConfigWifi"),
-                        v
-                    )
-                } else if (isMethodAvailable(
-                        mInternetDialogManager,
-                        "create",
-                        View::class.java,
-                        Boolean::class.java,
-                        Boolean::class.java
-                    )
-                ) {
-                    callMethod(
-                        mInternetDialogManager,
-                        "create",
-                        v,
-                        callMethod(mAccessPointController, "canConfigMobileData"),
-                        callMethod(mAccessPointController, "canConfigWifi")
-                    )
-                } else if (isMethodAvailable(
-                        mInternetDialogFactory,
-                        "create",
-                        Boolean::class.java,
-                        Boolean::class.java,
-                        View::class.java
-                    )
-                ) {
-                    callMethod(
-                        mInternetDialogFactory,
-                        "create",
-                        callMethod(mAccessPointController, "canConfigMobileData"),
-                        callMethod(mAccessPointController, "canConfigWifi"),
-                        v
-                    )
-                } else {
-                    log(TAG + "No internet dialog available")
-                }
+            if (!ControllersProvider.showInternetDialog(v)) {
+                mActivityLauncherUtils.launchApp(Intent(Settings.ACTION_WIFI_SETTINGS), true)
             }
         }
 
@@ -920,6 +1125,7 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
     private fun updateInternetState() {
         val isWiFiConnected = isWiFiConnected
         val isMobileDataConnected = isMobileDataConnected
+        mInternetEnabled = isWiFiConnected || isMobileDataConnected
 
         val internetLabel: CharSequence = mContext.getString(
             mContext.resources.getIdentifier(
@@ -928,63 +1134,71 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
                 SYSTEMUI_PACKAGE
             )
         )
-        val noInternetIconResId = mContext.resources.getIdentifier(
-            "ic_qs_no_internet_available",
-            "drawable",
-            SYSTEMUI_PACKAGE
-        )
+        val noInternetIconDrawable = ContextCompat.getDrawable(
+            mContext,
+            mContext.resources.getIdentifier(
+                "ic_qs_no_internet_available",
+                "drawable",
+                SYSTEMUI_PACKAGE
+            )
+        )!!
+        colorLabelInactive?.let { DrawableCompat.setTint(noInternetIconDrawable, it) }
 
-        if (isWiFiConnected || isMobileDataConnected) {
+        if (mInternetEnabled) {
             if (isWiFiConnected) {
-                val signalLevel = getWiFiSignalStrengthLevel()
-                val wifiIconResId = when (signalLevel) {
+                val wifiInfo = getWiFiInfo()
+                val wifiIconResId = when (wifiInfo.signalStrengthLevel) {
                     4 -> "ic_wifi_signal_4"
                     3 -> "ic_wifi_signal_3"
                     2 -> "ic_wifi_signal_2"
                     1 -> "ic_wifi_signal_1"
                     else -> "ic_wifi_signal_0"
                 }
-
-                mQsOpHeaderView?.setInternetText(getWiFiSSID())
-                mQsOpHeaderView?.setInternetIcon(
+                val wifiIconDrawable = ContextCompat.getDrawable(
+                    mContext,
                     mContext.resources.getIdentifier(
                         wifiIconResId,
                         "drawable",
                         FRAMEWORK_PACKAGE
                     )
-                )
+                )!!
+                colorLabelActive?.let { DrawableCompat.setTint(wifiIconDrawable, it) }
+
+                mOpQsHeaderView?.setInternetText(wifiInfo.ssid)
+                mOpQsHeaderView?.setInternetIcon(wifiIconDrawable)
             } else {
-                val signalLevel = getMobileDataSignalStrengthLevel()
+                val carrierInfo = getConnectedCarrierInfo()
                 val maxBars = 4
 
-                val mobileDataIconResId = mContext.resources.getIdentifier(
-                    "ic_signal_cellular_${signalLevel}_${maxBars}_bar",
-                    "drawable",
-                    FRAMEWORK_PACKAGE
-                )
+                val mobileDataIconDrawable = ContextCompat.getDrawable(
+                    mContext,
+                    mContext.resources.getIdentifier(
+                        "ic_signal_cellular_${carrierInfo.signalStrengthLevel}_${maxBars}_bar",
+                        "drawable",
+                        FRAMEWORK_PACKAGE
+                    )
+                )!!
+                colorLabelActive?.let { DrawableCompat.setTint(mobileDataIconDrawable, it) }
 
-                val networkType = getNetworkType()
-                if (networkType == null) {
-                    mQsOpHeaderView?.setInternetText(getCarrierName())
+                if (carrierInfo.networkType == null) {
+                    mOpQsHeaderView?.setInternetText(carrierInfo.name)
                 } else {
-                    mQsOpHeaderView?.setInternetText(
+                    mOpQsHeaderView?.setInternetText(
                         String.format(
                             "%s, %s",
-                            getCarrierName(),
-                            networkType
+                            carrierInfo.name,
+                            carrierInfo.networkType
                         )
                     )
                 }
-                mQsOpHeaderView?.setInternetIcon(mobileDataIconResId)
+                mOpQsHeaderView?.setInternetIcon(mobileDataIconDrawable)
             }
-
-            updateInternetActiveColors()
         } else {
-            mQsOpHeaderView?.setInternetText(internetLabel)
-            mQsOpHeaderView?.setInternetIcon(noInternetIconResId)
-
-            updateInternetInactiveColors()
+            mOpQsHeaderView?.setInternetText(internetLabel)
+            mOpQsHeaderView?.setInternetIcon(noInternetIconDrawable)
         }
+
+        updateInternetTileColors()
     }
 
     private val isWiFiConnected: Boolean
@@ -998,90 +1212,112 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
             }
         }
 
-    @Suppress("deprecation")
-    private fun getWiFiSignalStrengthLevel(): Int {
-        val wifiInfo = mWifiManager.connectionInfo ?: return 0
-        val level = WifiManager.calculateSignalLevel(wifiInfo.rssi, 5)
-        return level.coerceIn(0, 4)
-    }
+    data class WiFiInfo(
+        val ssid: String,
+        val signalStrengthLevel: Int
+    )
 
     @Suppress("deprecation")
-    private fun getWiFiSSID(): String {
-        val result: CharSequence = mContext.getString(
+    private fun getWiFiInfo(): WiFiInfo {
+        val internetLabel = mContext.getString(
             mContext.resources.getIdentifier(
                 "quick_settings_internet_label",
                 "string",
                 SYSTEMUI_PACKAGE
             )
         )
-        val wifiInfo = mWifiManager.connectionInfo
-        return if (wifiInfo?.hiddenSSID == true || wifiInfo?.ssid === WifiManager.UNKNOWN_SSID) {
-            result.toString()
+        val defaultInfo = WiFiInfo(internetLabel, 0)
+
+        val wifiInfo = mWifiManager.connectionInfo ?: return defaultInfo
+
+        val ssid = if (wifiInfo.hiddenSSID || wifiInfo.ssid == WifiManager.UNKNOWN_SSID) {
+            internetLabel
         } else {
-            wifiInfo?.ssid?.replace("\"", "") ?: result.toString()
+            wifiInfo.ssid?.replace("\"", "") ?: internetLabel
         }
+        val signalStrengthLevel = WifiManager.calculateSignalLevel(wifiInfo.rssi, 5).coerceIn(0, 4)
+
+        return WiFiInfo(ssid, signalStrengthLevel)
     }
 
     private val isMobileDataConnected: Boolean
         get() {
             val network: Network? = mConnectivityManager.activeNetwork
-            return if (network != null) {
+            if (network != null) {
                 val capabilities = mConnectivityManager.getNetworkCapabilities(network)
-                capabilities != null && capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
-            } else {
-                false
+                return capabilities != null &&
+                        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) &&
+                        capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
             }
+            return false
         }
 
-    private fun getMobileDataSignalStrengthLevel(): Int {
-        val signalStrength = mTelephonyManager.signalStrength
-        return signalStrength?.level?.coerceIn(0, 4) ?: 0
-    }
+    data class CarrierInfo(
+        val name: String,
+        val signalStrengthLevel: Int?,
+        val networkType: String?
+    )
 
-    private fun getCarrierName(): String {
-        val internetLabel: CharSequence = mContext.getString(
+    @Suppress("deprecation")
+    @SuppressLint("MissingPermission")
+    fun getConnectedCarrierInfo(): CarrierInfo {
+        val internetLabel = mContext.getString(
             mContext.resources.getIdentifier(
                 "quick_settings_internet_label",
                 "string",
                 SYSTEMUI_PACKAGE
             )
         )
+        val defaultInfo = CarrierInfo(internetLabel, null, null)
 
-        val activeNetwork = mConnectivityManager.activeNetwork
-        val networkCapabilities = mConnectivityManager.getNetworkCapabilities(activeNetwork)
-
-        if (networkCapabilities?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) == true) {
-            return mTelephonyManager.networkOperatorName.ifEmpty { internetLabel.toString() }
+        val activeSubscriptionInfoList = mSubscriptionManager.activeSubscriptionInfoList
+        if (activeSubscriptionInfoList.isNullOrEmpty()) {
+            return defaultInfo
         }
 
-        return internetLabel.toString()
-    }
+        val network: Network = mConnectivityManager.activeNetwork ?: return defaultInfo
+        val networkCapabilities =
+            mConnectivityManager.getNetworkCapabilities(network) ?: return defaultInfo
 
-    @SuppressLint("MissingPermission")
-    @Suppress("deprecation")
-    private fun getNetworkType(): String? {
-        return when (mTelephonyManager.networkType) {
-            TelephonyManager.NETWORK_TYPE_NR -> "5G"
+        if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+            for (subscriptionInfo in activeSubscriptionInfoList) {
+                val subId = subscriptionInfo.subscriptionId
+                val subTelephonyManager = mTelephonyManager.createForSubscriptionId(subId)
 
-            TelephonyManager.NETWORK_TYPE_LTE -> "LTE"
+                if (subTelephonyManager.simState == TelephonyManager.SIM_STATE_READY &&
+                    networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+                ) {
+                    val carrierName = subscriptionInfo.carrierName.toString()
+                    val signalStrength = subTelephonyManager.signalStrength
+                    val signalStrengthLevel = signalStrength?.level?.coerceIn(0, 4) ?: 0
 
-            TelephonyManager.NETWORK_TYPE_HSDPA,
-            TelephonyManager.NETWORK_TYPE_HSPA,
-            TelephonyManager.NETWORK_TYPE_HSUPA,
-            TelephonyManager.NETWORK_TYPE_UMTS -> "3G"
+                    val networkType = when (subTelephonyManager.networkType) {
+                        TelephonyManager.NETWORK_TYPE_NR -> "5G"
+                        TelephonyManager.NETWORK_TYPE_LTE -> "LTE"
+                        TelephonyManager.NETWORK_TYPE_HSDPA,
+                        TelephonyManager.NETWORK_TYPE_HSPA,
+                        TelephonyManager.NETWORK_TYPE_HSUPA,
+                        TelephonyManager.NETWORK_TYPE_UMTS -> "3G"
 
-            TelephonyManager.NETWORK_TYPE_EDGE,
-            TelephonyManager.NETWORK_TYPE_GPRS -> "2G"
+                        TelephonyManager.NETWORK_TYPE_EDGE,
+                        TelephonyManager.NETWORK_TYPE_GPRS -> "2G"
 
-            TelephonyManager.NETWORK_TYPE_CDMA,
-            TelephonyManager.NETWORK_TYPE_EVDO_0,
-            TelephonyManager.NETWORK_TYPE_EVDO_A,
-            TelephonyManager.NETWORK_TYPE_EVDO_B,
-            TelephonyManager.NETWORK_TYPE_1xRTT -> "CDMA"
+                        TelephonyManager.NETWORK_TYPE_CDMA,
+                        TelephonyManager.NETWORK_TYPE_EVDO_0,
+                        TelephonyManager.NETWORK_TYPE_EVDO_A,
+                        TelephonyManager.NETWORK_TYPE_EVDO_B,
+                        TelephonyManager.NETWORK_TYPE_1xRTT -> "CDMA"
 
-            TelephonyManager.NETWORK_TYPE_GSM -> "GSM"
-            else -> null
+                        TelephonyManager.NETWORK_TYPE_GSM -> "GSM"
+                        else -> null
+                    }
+
+                    return CarrierInfo(carrierName, signalStrengthLevel, networkType)
+                }
+            }
         }
+
+        return defaultInfo
     }
 
     private val isBluetoothEnabled: Boolean
@@ -1091,46 +1327,41 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
 
     @SuppressLint("MissingPermission")
     private fun getBluetoothConnectedDevice(): String {
-        return if (isBluetoothEnabled && mBluetoothController != null) {
-            callMethod(mBluetoothController, "getConnectedDeviceName") as String? ?: ""
-        } else {
-            ""
-        }.ifEmpty {
-            mContext.resources.getString(
-                mContext.resources.getIdentifier(
-                    "quick_settings_bluetooth_label",
-                    "string",
-                    SYSTEMUI_PACKAGE
-                )
+        val bluetoothLabel = mContext.resources.getString(
+            mContext.resources.getIdentifier(
+                "quick_settings_bluetooth_label",
+                "string",
+                SYSTEMUI_PACKAGE
             )
+        )
+
+        val bluetoothAdapter = mBluetoothManager.adapter
+
+        if (bluetoothAdapter != null) {
+            val bondedDevices = bluetoothAdapter.bondedDevices
+
+            for (device in bondedDevices) {
+                if (isBluetoothDeviceConnected(device)) {
+                    return device.name.ifEmpty { bluetoothLabel }
+                }
+            }
+        }
+
+        return bluetoothLabel
+    }
+
+    private fun isBluetoothDeviceConnected(device: BluetoothDevice): Boolean {
+        return try {
+            val m: Method = device.javaClass.getMethod("isConnected")
+            m.invoke(device) as Boolean
+        } catch (e: Exception) {
+            throw IllegalStateException(e)
         }
     }
 
     private fun toggleBluetoothState(v: View) {
         mHandler.post {
-            if (mBluetoothTileDialogViewModel != null) {
-                try {
-                    callMethod(
-                        mBluetoothTileDialogViewModel,
-                        "showDialog",
-                        mContext,
-                        v
-                    )
-                } catch (ignored: Throwable) {
-                    val isAutoOn = Settings.System.getInt(
-                        mContext.contentResolver,
-                        "qs_bt_auto_on", 0
-                    ) == 1
-
-                    callMethod(
-                        mBluetoothTileDialogViewModel,
-                        "showDialog",
-                        mContext,
-                        v,
-                        isAutoOn
-                    )
-                }
-            } else if (mBluetoothController != null) {
+            if (!ControllersProvider.showBluetoothDialog(mContext, v)) {
                 callMethod(mBluetoothController, "setBluetoothEnabled", !isBluetoothEnabled)
             }
         }
@@ -1141,91 +1372,71 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
     }
 
     private fun updateBluetoothState(enabled: Boolean = isBluetoothEnabled) {
-        if (enabled) {
-            mQsOpHeaderView?.setBlueToothText(getBluetoothConnectedDevice())
+        mBluetoothEnabled = enabled
 
-            updateBluetoothActiveColors()
+        val connectedIconResId = mContext.resources.getIdentifier(
+            "ic_bluetooth_connected",
+            "drawable",
+            SYSTEMUI_PACKAGE
+        )
+        val connectedIcon = if (connectedIconResId != 0) {
+            ContextCompat.getDrawable(mContext, connectedIconResId)
         } else {
-            mQsOpHeaderView?.setBlueToothText(
+            ContextCompat.getDrawable(
+                appContext,
+                appContext.resources.getIdentifier(
+                    "ic_bluetooth_connected",
+                    "drawable",
+                    appContext.packageName
+                )
+            )
+        }!!
+        colorLabelActive?.let { DrawableCompat.setTint(connectedIcon, it) }
+
+        val disconnectedIconResId = mContext.resources.getIdentifier(
+            "ic_qs_bluetooth",
+            "drawable",
+            FRAMEWORK_PACKAGE
+        )
+        val disconnectedIcon = if (disconnectedIconResId != 0) {
+            ContextCompat.getDrawable(mContext, disconnectedIconResId)
+        } else {
+            ContextCompat.getDrawable(
+                appContext,
+                appContext.resources.getIdentifier(
+                    "ic_bluetooth_disconnected",
+                    "drawable",
+                    appContext.packageName
+                )
+            )
+        }!!
+        colorLabelInactive?.let { DrawableCompat.setTint(disconnectedIcon, it) }
+
+        if (enabled) {
+            val defaultLabel = mContext.resources.getString(
                 mContext.resources.getIdentifier(
                     "quick_settings_bluetooth_label",
                     "string",
                     SYSTEMUI_PACKAGE
                 )
             )
+            val bluetoothLabel = getBluetoothConnectedDevice()
+            val deviceConnected = bluetoothLabel != defaultLabel
 
-            updateBluetoothInactiveColors()
-        }
-    }
-
-    private val isMediaControllerAvailable: Boolean
-        get() {
-            val mediaController = activeLocalMediaController
-            return mediaController != null && !mediaController.packageName.isNullOrEmpty()
-        }
-
-    private val activeLocalMediaController: MediaController?
-        get() {
-            val mediaSessionManager = mContext.getSystemService(MediaSessionManager::class.java)
-            var localController: MediaController? = null
-            val remoteMediaSessionLists: MutableList<String> = ArrayList()
-
-            for (controller: MediaController in mediaSessionManager.getActiveSessions(null)) {
-                val pi = controller.playbackInfo ?: continue
-                val playbackState = controller.playbackState ?: continue
-                if (playbackState.state != PlaybackState.STATE_PLAYING) continue
-
-                if (pi.playbackType == PlaybackInfo.PLAYBACK_TYPE_REMOTE) {
-                    if (localController != null
-                        && localController.packageName!!.contentEquals(controller.packageName)
-                    ) {
-                        localController = null
-                    }
-
-                    if (!remoteMediaSessionLists.contains(controller.packageName)) {
-                        remoteMediaSessionLists.add(controller.packageName)
-                    }
-
-                    continue
-                }
-                if (pi.playbackType == PlaybackInfo.PLAYBACK_TYPE_LOCAL) {
-                    if (localController == null
-                        && !remoteMediaSessionLists.contains(controller.packageName)
-                    ) {
-                        localController = controller
-                    }
-                }
-            }
-
-            return localController
+            mOpQsHeaderView?.setBlueToothText(bluetoothLabel)
+            mOpQsHeaderView?.setBlueToothIcon(if (deviceConnected) connectedIcon else disconnectedIcon)
+        } else {
+            mOpQsHeaderView?.setBlueToothText(
+                mContext.resources.getIdentifier(
+                    "quick_settings_bluetooth_label",
+                    "string",
+                    SYSTEMUI_PACKAGE
+                )
+            )
+            mOpQsHeaderView?.setBlueToothIcon(disconnectedIcon)
         }
 
-    private fun updateMediaController() {
-        val localController = activeLocalMediaController
-
-        if (localController != null && !sameSessions(mMediaController, localController)) {
-            if (mMediaController != null) {
-                mMediaController!!.unregisterCallback(mMediaCallback)
-                mMediaController = null
-            }
-
-            mMediaController = localController
-            mMediaController!!.registerCallback(mMediaCallback)
-        }
-
-        mMediaMetadata = if (isMediaControllerAvailable) mMediaController!!.metadata else null
-
-        updateMediaPlayerView()
-    }
-
-    private fun sameSessions(a: MediaController?, b: MediaController): Boolean {
-        if (a == b) {
-            return true
-        }
-        if (a == null) {
-            return false
-        }
-        return false
+        updateBluetoothTileColors()
     }
 
     private enum class MediaAction {
@@ -1234,322 +1445,371 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
         PLAY_NEXT
     }
 
-    private fun performMediaAction(action: MediaAction) {
+    private fun performMediaAction(packageName: String, action: MediaAction) {
+        val controller = mActiveMediaControllers.find { it.first == packageName }?.second ?: return
+
         when (action) {
-            MediaAction.TOGGLE_PLAYBACK -> toggleMediaPlaybackState()
-            MediaAction.PLAY_PREVIOUS -> dispatchMediaKeyWithWakeLockToMediaSession(KeyEvent.KEYCODE_MEDIA_PREVIOUS)
-            MediaAction.PLAY_NEXT -> dispatchMediaKeyWithWakeLockToMediaSession(KeyEvent.KEYCODE_MEDIA_NEXT)
-        }
-        updateMediaController()
-    }
+            MediaAction.TOGGLE_PLAYBACK -> {
+                if (controller.playbackState?.state == PlaybackState.STATE_PLAYING) {
+                    controller.transportControls.pause()
+                } else {
+                    controller.transportControls.play()
+                }
+            }
 
-    private fun toggleMediaPlaybackState() {
-        if (mMediaIsPlaying) {
-            stopMediaUpdater()
-            dispatchMediaKeyWithWakeLockToMediaSession(KeyEvent.KEYCODE_MEDIA_PAUSE)
-        } else {
-            startMediaUpdater()
-            dispatchMediaKeyWithWakeLockToMediaSession(KeyEvent.KEYCODE_MEDIA_PLAY)
-        }
+            MediaAction.PLAY_PREVIOUS -> {
+                controller.transportControls.skipToPrevious()
+            }
 
-        mQsOpHeaderView?.setMediaPlayingIcon(mMediaIsPlaying)
-    }
-
-    private fun dispatchMediaKeyWithWakeLockToMediaSession(keycode: Int) {
-        val helper = callStaticMethod(
-            mediaSessionLegacyHelperClass,
-            "getHelper",
-            mContext
-        ) ?: return
-
-        var event: KeyEvent? = KeyEvent(
-            SystemClock.uptimeMillis(),
-            SystemClock.uptimeMillis(), KeyEvent.ACTION_DOWN, keycode, 0
-        )
-        callMethod(helper, "sendMediaButtonEvent", event, true)
-        event = KeyEvent.changeAction(event, KeyEvent.ACTION_UP)
-        callMethod(helper, "sendMediaButtonEvent", event, true)
-    }
-
-    private val isMediaPlaying: Boolean
-        get() {
-            return (isMediaControllerAvailable && PlaybackState.STATE_PLAYING == callMethod(
-                mNotificationMediaManager,
-                "getMediaControllerPlaybackState",
-                mMediaController
-            ))
+            MediaAction.PLAY_NEXT -> {
+                controller.transportControls.skipToNext()
+            }
         }
 
-    private fun updateMediaPlayerView() {
-        val currentTime = System.currentTimeMillis()
-        if (currentTime - lastUpdateTime < cooldownTime) return
-        lastUpdateTime = currentTime
-
-        mMediaMetadata?.apply {
-            mMediaTitle = getText(MediaMetadata.METADATA_KEY_TITLE)?.toString()
-            mMediaArtist = getText(MediaMetadata.METADATA_KEY_ARTIST)?.toString()
-            mMediaArtwork = getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART)
-                ?: getBitmap(MediaMetadata.METADATA_KEY_ART)
-        } ?: run {
-            mMediaTitle = null
-            mMediaArtist = null
-            mMediaArtwork = null
-        }
-
-        mMediaIsPlaying = isMediaPlaying
-
-        updateMediaPlayer()
+        updateMediaPlayers()
     }
 
-    private fun updateMediaPlayer(force: Boolean = false) {
-        if (mQsOpHeaderView == null) return
+    private fun updateMediaControllers() {
+        val currentControllers = mMediaSessionManager.getActiveSessions(null)
+            .map { controller -> controller.packageName to controller }
+            .toMutableList()
+
+        val currentPackageNames = currentControllers.map { it.first }.toSet()
+
+        mActiveMediaControllers.removeAll { (packageName, controller) ->
+            if (!currentPackageNames.contains(packageName)) {
+                controller.unregisterCallback(mMediaCallback)
+
+                mMediaControllerMetadataMap.remove(packageName)
+                mPrevMediaControllerMetadataMap.remove(packageName)
+                mPrevMediaPlayingState.remove(packageName)
+                mPrevMediaArtworkMap.remove(packageName)
+                mPrevMediaProcessedArtworkMap.remove(packageName)
+                removeMediaPlayerView(packageName)
+
+                true
+            } else {
+                false
+            }
+        }
+
+        currentControllers.forEach { (packageName, controller) ->
+            val existingController = mActiveMediaControllers.find { it.first == packageName }
+
+            if (existingController == null) {
+                controller.registerCallback(mMediaCallback)
+                mMediaControllerMetadataMap[packageName] = controller.metadata
+                mActiveMediaControllers.add(packageName to controller)
+            } else if (existingController.second != controller) {
+                val oldController = existingController.second
+
+                oldController.unregisterCallback(mMediaCallback)
+                controller.registerCallback(mMediaCallback)
+                mMediaControllerMetadataMap[packageName] = controller.metadata
+
+                mActiveMediaControllers.remove(existingController)
+                mActiveMediaControllers.add(packageName to controller)
+            }
+        }
+
+        updateMediaPlayers()
+    }
+
+    private fun updateMediaPlayers(force: Boolean = false) {
+        updateMediaPlayer(null, null, force)
+
+        mActiveMediaControllers.forEach { (packageName, controller) ->
+            updateMediaPlayer(packageName, controller, force)
+        }
+    }
+
+    private fun updateMediaPlayer(
+        packageName: String?,
+        controller: MediaController?,
+        force: Boolean = false
+    ) {
+        if (mOpQsHeaderView == null || !::opMediaBackgroundDrawable.isInitialized) return
+
+        val mMediaPlayer = getOrCreateMediaPlayer(packageName) ?: return
+        val mInactiveBackground = opMediaBackgroundDrawable.constantState?.newDrawable()?.mutate()
+            ?.apply {
+                if (isQsTileOverlayEnabled) {
+                    setTint(Color.TRANSPARENT)
+                } else {
+                    colorInactive?.let { setTint(it) }
+                }
+            }
+
+        mMediaPlayer.apply {
+            if (packageName == null ||
+                mediaPlayerBackground.drawable == null ||
+                mediaPlayerBackground.drawable == opMediaDefaultBackground
+            ) {
+                setMediaPlayerBackground(mInactiveBackground)
+                colorLabelActive?.let {
+                    setMediaAppIconColor(
+                        backgroundColor = colorAccent,
+                        iconColor = it
+                    )
+                }
+                colorLabelInactive?.let { setMediaPlayerItemsColor(it) }
+            }
+        }
+
+        if (packageName == null || controller == null) return
 
         artworkExtractorScope.launch {
-            val mMediaPlayerBackground = mQsOpHeaderView!!.mediaPlayerBackground
-            val requireUpdate = !areBitmapsEqual(mPreviousMediaArtwork, mMediaArtwork) ||
-                    mMediaPlayerBackground.drawable == null
+            val mMediaMetadata = controller.metadata
+            val mPreviousMediaMetadata = mPrevMediaControllerMetadataMap[packageName]
 
-            var artworkDrawable: Drawable? = null
-            var processedArtwork: Bitmap? = null
-            var filteredArtwork: Bitmap? = null
-            var dominantColor: Int? = null
+            val (areBitmapsEqual, areMetadataEqual) = areDataEqual(
+                mPreviousMediaMetadata,
+                mMediaMetadata
+            )
+            val isSamePlayingState =
+                controller.playbackState?.state == PlaybackState.STATE_PLAYING ==
+                        mPrevMediaPlayingState[packageName]
 
-            if (requireUpdate || force) {
-                if (!::opMediaBackgroundDrawable.isInitialized) {
-                    initResources()
+            val requireUpdate = !areBitmapsEqual || !areMetadataEqual || !isSamePlayingState
+
+            if (!requireUpdate && !force) return@launch
+
+            val mMediaArtwork = mMediaMetadata?.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART)
+                ?: mMediaMetadata?.getBitmap(MediaMetadata.METADATA_KEY_ART)
+            val processedArtwork = processArtwork(mMediaArtwork, mMediaPlayer.mediaPlayerBackground)
+            val dominantColor: Int? = extractDominantColor(processedArtwork)
+            val filteredArtwork: Bitmap? = processedArtwork?.let {
+                applyColorFilterToBitmap(it, dominantColor)
+                it.applyBlur(mContext, mediaBlurLevel)
+            }
+            val newArtworkDrawable = when {
+                filteredArtwork != null -> BitmapDrawable(mContext.resources, filteredArtwork)
+                else -> mInactiveBackground
+            }
+
+            val finalArtworkDrawable: Drawable? = when {
+                mPrevMediaArtworkMap[packageName] == null && filteredArtwork != null -> {
+                    TransitionDrawable(
+                        arrayOf(
+                            mInactiveBackground,
+                            newArtworkDrawable
+                        )
+                    )
                 }
 
-                processedArtwork = processArtwork(mMediaArtwork, mMediaPlayerBackground)
-                dominantColor = extractDominantColor(processedArtwork)
-                filteredArtwork = processedArtwork?.let {
-                    applyColorFilterToBitmap(it, dominantColor)
+                mPrevMediaArtworkMap[packageName] != null && filteredArtwork != null -> {
+                    TransitionDrawable(
+                        arrayOf(
+                            BitmapDrawable(
+                                mContext.resources,
+                                mPrevMediaProcessedArtworkMap[packageName]
+                            ),
+                            newArtworkDrawable
+                        )
+                    )
                 }
-                val newArtworkDrawable = when {
-                    filteredArtwork != null -> BitmapDrawable(mContext.resources, filteredArtwork)
-                    else -> opMediaBackgroundDrawable
+
+                mPrevMediaArtworkMap[packageName] != null && filteredArtwork == null -> {
+                    TransitionDrawable(
+                        arrayOf(
+                            BitmapDrawable(
+                                mContext.resources,
+                                mPrevMediaProcessedArtworkMap[packageName]
+                            ),
+                            newArtworkDrawable
+                        )
+                    )
                 }
-                val transitionDuration = 500
 
-                when {
-                    mPreviousMediaArtwork == null && filteredArtwork != null -> {
-                        artworkDrawable = TransitionDrawable(
-                            arrayOf(
-                                opMediaBackgroundDrawable,
-                                newArtworkDrawable
-                            )
-                        ).apply {
-                            isCrossFadeEnabled = true
-                            startTransition(transitionDuration)
-                        }
-                    }
+                else -> {
+                    mInactiveBackground
+                }
+            }
 
-                    mPreviousMediaArtwork != null && filteredArtwork != null -> {
-                        artworkDrawable = TransitionDrawable(
-                            arrayOf(
-                                BitmapDrawable(mContext.resources, mPreviousMediaProcessedArtwork),
-                                newArtworkDrawable
-                            )
-                        ).apply {
-                            isCrossFadeEnabled = true
-                            startTransition(transitionDuration)
-                        }
-                    }
+            val mMediaTitle = mMediaMetadata?.getString(MediaMetadata.METADATA_KEY_TITLE)
+            val mMediaArtist = mMediaMetadata?.getString(MediaMetadata.METADATA_KEY_ARTIST)
+            val mIsMediaPlaying = controller.playbackState?.state == PlaybackState.STATE_PLAYING
 
-                    mPreviousMediaArtwork != null && filteredArtwork == null -> {
-                        artworkDrawable = TransitionDrawable(
-                            arrayOf(
-                                BitmapDrawable(mContext.resources, mPreviousMediaProcessedArtwork),
-                                newArtworkDrawable
+            val appIconDrawable = runCatching {
+                controller.packageName?.let { packageName ->
+                    mContext.packageManager.getApplicationIcon(packageName)
+                }?.toCircularDrawable()
+            }.getOrNull()
+
+            withContext(Dispatchers.Main) {
+                mMediaPlayer.apply {
+                    setMediaTitle(
+                        mMediaTitle
+                            ?: appContext.getString(
+                                appContext.resources.getIdentifier(
+                                    "media_player_not_playing",
+                                    "string",
+                                    appContext.packageName
+                                )
                             )
-                        ).apply {
-                            isCrossFadeEnabled = true
-                            startTransition(transitionDuration)
-                        }
+                    )
+                    setMediaArtist(mMediaArtist)
+                    setMediaPlayingIcon(mIsMediaPlaying)
+                }
+
+                val requireIconTint = when {
+                    appIconDrawable != null && mMediaTitle != null -> {
+                        mMediaPlayer.setMediaAppIconDrawable(appIconDrawable)
+                        false
                     }
 
                     else -> {
-                        artworkDrawable = opMediaBackgroundDrawable
+                        mMediaPlayer.resetMediaAppIcon()
+                        true
                     }
                 }
-            }
 
-            mQsOpHeaderView?.setMediaTitle(
-                mMediaTitle ?: appContext.getString(
-                    appContext.resources.getIdentifier(
-                        "media_player_not_playing",
-                        "string",
-                        appContext.packageName
+                withContext(Dispatchers.IO) {
+                    previousBlurLevel = mediaBlurLevel
+                    mPrevMediaPlayingState[packageName] = mIsMediaPlaying
+                    mPrevMediaControllerMetadataMap[packageName] = mMediaMetadata
+                    mPrevMediaArtworkMap[packageName] = mMediaArtwork
+                    mPrevMediaProcessedArtworkMap[packageName] = filteredArtwork
+                }
+
+                val onDominantColor: Int?
+
+                withContext(Dispatchers.IO) {
+                    val bitmap = filteredArtwork ?: mMediaArtwork
+                    val scaledBitmap = bitmap?.let { scaleBitmap(it, 0.1f) }
+                    val mostUsedColor = scaledBitmap?.let { getMostUsedColor(it) } ?: dominantColor
+                    onDominantColor = getContrastingTextColor(mostUsedColor)
+                }
+
+                if (requireIconTint) {
+                    mMediaPlayer.setMediaAppIconColor(
+                        backgroundColor = dominantColor ?: colorActive ?: colorAccent,
+                        iconColor = onDominantColor ?: colorLabelActive ?: colorPrimary
                     )
-                )
-            )
-            mQsOpHeaderView?.setMediaArtist(mMediaArtist)
-
-            mQsOpHeaderView?.setMediaPlayingIcon(mMediaIsPlaying)
-
-            withContext(Dispatchers.Main) {
-                val appIcon = mNotificationMediaManager?.let {
-                    try {
-                        callMethod(it, "getMediaIcon") as Icon?
-                    } catch (ignored: Throwable) {
-                        try {
-                            mMediaController?.packageName?.let { packageName ->
-                                val drawable =
-                                    mContext.packageManager.getApplicationIcon(packageName)
-                                Icon.createWithBitmap((drawable as BitmapDrawable).bitmap)
-                            }
-                        } catch (ignored: Throwable) {
-                            null
-                        }
-                    }
-                }
-                if (appIcon != null && mMediaTitle != null) {
-                    mQsOpHeaderView?.setMediaAppIcon(appIcon)
                 } else {
-                    mQsOpHeaderView?.resetMediaAppIcon()
+                    mMediaPlayer.resetMediaAppIconColor(
+                        backgroundColor = dominantColor ?: colorActive ?: colorAccent
+                    )
                 }
 
-                if (requireUpdate || force) {
-                    mMediaPlayerBackground.apply {
-                        setImageDrawable(artworkDrawable)
-                        scaleType = ImageView.ScaleType.CENTER_CROP
-                        clipToOutline = true
-                        applyBlur(if (processedArtwork != null) mediaBlurLevel else 0f)
-                    }
+                if (processedArtwork == null || onDominantColor == null) {
+                    mMediaPlayer.setMediaPlayerItemsColor(colorLabelInactive)
+                } else {
+                    mMediaPlayer.setMediaPlayerItemsColor(onDominantColor)
+                }
 
-                    mPreviousMediaArtwork = mMediaArtwork
-                    mPreviousMediaProcessedArtwork = filteredArtwork
-
-                    val onDominantColor = getContrastingTextColor(dominantColor)
-
-                    mQsOpHeaderView?.setMediaAppIconColor(
-                        backgroundColor = dominantColor ?: colorAccent,
-                        iconColor = onDominantColor ?: colorPrimary
-                    )
-
-                    if (processedArtwork == null || onDominantColor == null) {
-                        updateMediaPlayerInactiveColors()
-                    } else {
-                        val derivedOnDominantColor = if (mediaFadeLevel > 20) {
-                            colorLabelInactive ?: onDominantColor
-                        } else {
-                            onDominantColor
-                        }
-
-                        mQsOpHeaderView?.setMediaPlayerItemsColor(derivedOnDominantColor)
-
-                        if (mediaFadeLevel != 0) {
-                            val fadeFilter = ColorUtils.blendARGB(
-                                Color.TRANSPARENT,
-                                Color.BLACK,
-                                mediaFadeLevel / 100f
-                            )
-                            mMediaPlayerBackground.setColorFilter(
-                                fadeFilter,
-                                PorterDuff.Mode.SRC_ATOP
-                            )
-                        } else {
-                            mMediaPlayerBackground.colorFilter = null
-                        }
+                mMediaPlayer.post {
+                    mMediaPlayer.setMediaPlayerBackground(finalArtworkDrawable)
+                    if (finalArtworkDrawable is TransitionDrawable) {
+                        finalArtworkDrawable.isCrossFadeEnabled = true
+                        finalArtworkDrawable.startTransition(250)
                     }
                 }
             }
         }
     }
 
-    private fun onColorsInitialized() {
-        initResources()
+    private fun getOrCreateMediaPlayer(packageName: String?): OpQsMediaPlayerView? {
+        if (!mMediaPlayerViews.any { it.first == packageName }) {
+            val mediaPlayerView = OpQsMediaPlayerView(mContext)
 
-        if (mQsOpHeaderView == null) return
+            if (packageName != null) {
+                mediaPlayerView.setOnClickListeners { v ->
+                    when (v) {
+                        mediaPlayerView.mediaPlayerPrevBtn -> {
+                            performMediaAction(packageName, MediaAction.PLAY_PREVIOUS)
+                        }
 
-        deferredInternetActiveColorAction?.invoke()
-        deferredInternetInactiveColorAction?.invoke()
-        deferredBluetoothActiveColorAction?.invoke()
-        deferredBluetoothInactiveColorAction?.invoke()
-        deferredMediaPlayerInactiveColorAction?.invoke()
+                        mediaPlayerView.mediaPlayerPlayPauseBtn -> {
+                            performMediaAction(packageName, MediaAction.TOGGLE_PLAYBACK)
+                        }
 
-        updateInternetState()
-        updateBluetoothState()
-        updateMediaPlayer(force = true)
+                        mediaPlayerView.mediaPlayerNextBtn -> {
+                            performMediaAction(packageName, MediaAction.PLAY_NEXT)
+                        }
+
+                        mediaPlayerView.mediaPlayerBackground -> {
+                            launchMediaPlayer(packageName)
+                        }
+
+                        mediaPlayerView.mediaOutputSwitcher -> {
+                            launchMediaOutputSwitcher(packageName, v)
+                        }
+                    }
+                }
+            }
+
+            addMediaPlayerView(packageName, mediaPlayerView)
+        }
+
+        return mMediaPlayerViews.find { it.first == packageName }?.second
     }
 
-    private fun updateInternetActiveColors() {
-        if (colorActive != null && colorLabelActive != null) {
-            applyInternetActiveColors()
+    private fun addMediaPlayerView(packageName: String?, view: OpQsMediaPlayerView) {
+        if (packageName == null && mMediaPlayerViews.isNotEmpty()) return
+
+        val position = mMediaPlayerViews.indexOfFirst { it.first == packageName }
+        if (position != -1) return
+
+        mMediaPlayerViews.removeAll { it.first == null }
+        mMediaPlayerAdapter?.notifyDataSetChanged()
+
+        mMediaPlayerViews.add(0, packageName to view)
+        mMediaPlayerAdapter?.notifyDataSetChanged()
+
+        mOpQsHeaderView?.mediaPlayerContainer?.post {
+            mOpQsHeaderView?.mediaPlayerContainer?.setCurrentItem(0, false)
+        }
+
+        updateAdapter()
+    }
+
+    private fun removeMediaPlayerView(packageName: String) {
+        val position = mMediaPlayerViews.indexOfFirst { it.first == packageName }
+        if (position == -1) return
+
+        mMediaPlayerViews.removeAt(position)
+        mMediaPlayerAdapter?.notifyDataSetChanged()
+
+        if (mMediaPlayerViews.isEmpty()) {
+            mMediaPlayerViews.add(null to OpQsMediaPlayerView(mContext))
+            mMediaPlayerAdapter?.notifyDataSetChanged()
+        }
+
+        updateAdapter()
+    }
+
+    private fun updateAdapter() {
+        mMediaPlayerAdapter = MediaPlayerPagerAdapter(mMediaPlayerViews)
+        mOpQsHeaderView?.mediaPlayerContainer?.adapter = mMediaPlayerAdapter
+    }
+
+    private fun updateInternetTileColors() {
+        if (mInternetEnabled) {
+            mOpQsHeaderView?.setInternetTileColor(
+                tileColor = colorActive,
+                labelColor = colorLabelActive
+            )
         } else {
-            deferredInternetActiveColorAction = { applyInternetActiveColors() }
+            mOpQsHeaderView?.setInternetTileColor(
+                tileColor = colorInactive,
+                labelColor = colorLabelInactive
+            )
         }
     }
 
-    private fun applyInternetActiveColors() {
-        mQsOpHeaderView?.setInternetTileColor(
-            tileColor = colorActive,
-            labelColor = colorLabelActive
-        )
-        deferredInternetActiveColorAction = null
-    }
-
-    private fun updateInternetInactiveColors() {
-        if (colorInactive != null && colorLabelInactive != null) {
-            applyInternetInactiveColors()
+    private fun updateBluetoothTileColors() {
+        if (mBluetoothEnabled) {
+            mOpQsHeaderView?.setBluetoothTileColor(
+                tileColor = colorActive,
+                labelColor = colorLabelActive
+            )
         } else {
-            deferredInternetInactiveColorAction = { applyInternetInactiveColors() }
+            mOpQsHeaderView?.setBluetoothTileColor(
+                tileColor = colorInactive,
+                labelColor = colorLabelInactive
+            )
         }
-    }
-
-    private fun applyInternetInactiveColors() {
-        mQsOpHeaderView?.setInternetTileColor(
-            tileColor = colorInactive,
-            labelColor = colorLabelInactive
-        )
-        deferredInternetInactiveColorAction = null
-    }
-
-    private fun updateBluetoothActiveColors() {
-        if (colorActive != null && colorLabelActive != null) {
-            applyBluetoothActiveColors()
-        } else {
-            deferredBluetoothActiveColorAction = { applyBluetoothActiveColors() }
-        }
-    }
-
-    private fun applyBluetoothActiveColors() {
-        mQsOpHeaderView?.setBluetoothTileColor(
-            tileColor = colorActive,
-            labelColor = colorLabelActive
-        )
-        deferredBluetoothActiveColorAction = null
-    }
-
-    private fun updateBluetoothInactiveColors() {
-        if (colorInactive != null && colorLabelInactive != null) {
-            applyBluetoothInactiveColors()
-        } else {
-            deferredBluetoothInactiveColorAction = { applyBluetoothInactiveColors() }
-        }
-    }
-
-    private fun applyBluetoothInactiveColors() {
-        mQsOpHeaderView?.setBluetoothTileColor(
-            tileColor = colorInactive,
-            labelColor = colorLabelInactive
-        )
-        deferredBluetoothInactiveColorAction = null
-    }
-
-    private fun updateMediaPlayerInactiveColors() {
-        if (colorLabelInactive != null) {
-            applyInactiveMediaPlayerColors()
-        } else {
-            deferredMediaPlayerInactiveColorAction = { applyInactiveMediaPlayerColors() }
-        }
-    }
-
-    private fun applyInactiveMediaPlayerColors() {
-        mQsOpHeaderView?.setMediaPlayerItemsColor(colorLabelInactive)
-        colorInactive?.let {
-            mQsOpHeaderView?.mediaPlayerBackground?.setColorFilter(it)
-        }
-        deferredMediaPlayerInactiveColorAction = null
     }
 
     private suspend fun processArtwork(
@@ -1585,12 +1845,17 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
         val xOffset = (scaledWidth - width) / 2
         val yOffset = (scaledHeight - height) / 2
 
+        val validWidth =
+            if (xOffset + width > scaledBitmap.width) scaledBitmap.width - xOffset else width
+        val validHeight =
+            if (yOffset + height > scaledBitmap.height) scaledBitmap.height - yOffset else height
+
         val croppedBitmap = Bitmap.createBitmap(
             scaledBitmap,
             xOffset,
             yOffset,
-            width,
-            height
+            validWidth,
+            validHeight
         )
 
         val output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
@@ -1608,50 +1873,30 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
     }
 
     private fun applyColorFilterToBitmap(bitmap: Bitmap, color: Int?): Bitmap {
-        val output = Bitmap.createBitmap(bitmap.width, bitmap.height, bitmap.config)
-        val canvas = Canvas(output)
+        val colorFilteredBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, bitmap.config)
 
         val paint = Paint().apply {
             isAntiAlias = true
             shader = LinearGradient(
                 0f, 0f, bitmap.width.toFloat(), 0f, // Horizontal gradient
                 intArrayOf(
-                    ColorUtils.blendARGB(
-                        color ?: Color.BLACK,
-                        Color.TRANSPARENT,
-                        0.4f
-                    ), // Start color (left)
-                    ColorUtils.blendARGB(
-                        color ?: Color.BLACK,
-                        Color.TRANSPARENT,
-                        0.6f
-                    ), // Left to Middle color
-                    ColorUtils.blendARGB(
-                        color ?: Color.BLACK,
-                        Color.TRANSPARENT,
-                        0.8f
-                    ), // Middle color (less intensity)
-                    ColorUtils.blendARGB(
-                        color ?: Color.BLACK,
-                        Color.TRANSPARENT,
-                        0.6f
-                    ), // Right to Middle color
-                    ColorUtils.blendARGB(
-                        color ?: Color.BLACK,
-                        Color.TRANSPARENT,
-                        0.4f
-                    )  // End color (right)
+                    ColorUtils.blendARGB(color ?: Color.BLACK, Color.TRANSPARENT, 0.4f),
+                    ColorUtils.blendARGB(color ?: Color.BLACK, Color.TRANSPARENT, 0.6f),
+                    ColorUtils.blendARGB(color ?: Color.BLACK, Color.TRANSPARENT, 0.8f),
+                    ColorUtils.blendARGB(color ?: Color.BLACK, Color.TRANSPARENT, 0.6f),
+                    ColorUtils.blendARGB(color ?: Color.BLACK, Color.TRANSPARENT, 0.4f)
                 ),
                 floatArrayOf(0f, 0.2f, 0.5f, 0.8f, 1f), // Positions for the colors
                 Shader.TileMode.CLAMP
             )
         }
 
-        canvas.drawBitmap(bitmap, 0f, 0f, null)
+        Canvas(colorFilteredBitmap).apply {
+            drawBitmap(bitmap, 0f, 0f, null)
+            drawRect(0f, 0f, bitmap.width.toFloat(), bitmap.height.toFloat(), paint)
+        }
 
-        canvas.drawRect(0f, 0f, bitmap.width.toFloat(), bitmap.height.toFloat(), paint)
-
-        return output
+        return colorFilteredBitmap
     }
 
     private suspend fun extractDominantColor(bitmap: Bitmap?): Int? =
@@ -1664,11 +1909,114 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
             Palette.from(bitmap).generate { palette ->
                 val pixels = IntArray(bitmap.width * bitmap.height)
                 bitmap.getPixels(pixels, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
-                val fallbackColor = Score.score(QuantizerCelebi.quantize(pixels, 25)).firstOrNull()
+                val fallbackColor = Score.score(QuantizerCelebi.quantize(pixels, 128)).firstOrNull()
                 val dominantColor = palette?.getDominantColor(fallbackColor ?: Color.BLACK)
                 cont.resume(dominantColor)
             }
         }
+
+    private fun Bitmap.toCircularBitmap(): Bitmap {
+        val width = this.width
+        val height = this.height
+        val diameter = width.coerceAtMost(height)
+        val output = Bitmap.createBitmap(diameter, diameter, Bitmap.Config.ARGB_8888)
+
+        val paint = Paint()
+        paint.isAntiAlias = true
+
+        val canvas = Canvas(output)
+        val rect = Rect(0, 0, diameter, diameter)
+        val rectF = RectF(rect)
+
+        canvas.drawARGB(0, 0, 0, 0)
+        canvas.drawOval(rectF, paint)
+
+        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+        val left = (width - diameter) / 2
+        val top = (height - diameter) / 2
+        canvas.drawBitmap(this, Rect(left, top, left + diameter, top + diameter), rect, paint)
+
+        return output
+    }
+
+    private fun Drawable.toCircularDrawable(): Drawable {
+        val bitmap = this.toBitmap()
+        val circularBitmap = bitmap.toCircularBitmap()
+        return BitmapDrawable(mContext.resources, circularBitmap)
+    }
+
+    @Suppress("SameParameterValue")
+    private fun scaleBitmap(bitmap: Bitmap, scaleFactor: Float): Bitmap {
+        val width = (bitmap.width * scaleFactor).toInt()
+        val height = (bitmap.height * scaleFactor).toInt()
+        return Bitmap.createScaledBitmap(bitmap, width, height, true)
+    }
+
+    private data class ColorRGB(val r: Int, val g: Int, val b: Int) {
+        fun toInt() = (r shl 16) or (g shl 8) or b
+    }
+
+    private fun colorDistance(c1: ColorRGB, c2: ColorRGB): Double {
+        return sqrt(
+            ((c1.r - c2.r).toDouble().pow(2)) +
+                    ((c1.g - c2.g).toDouble().pow(2)) +
+                    ((c1.b - c2.b).toDouble().pow(2))
+        )
+    }
+
+    private fun getMostUsedColor(bitmap: Bitmap, k: Int = 5, iterations: Int = 10): Int {
+        val width = bitmap.width
+        val height = bitmap.height
+        val colors = mutableListOf<ColorRGB>()
+
+        for (x in 0 until width) {
+            for (y in 0 until height) {
+                val pixel = bitmap.getPixel(x, y)
+                val color = ColorRGB(
+                    r = (pixel shr 16) and 0xFF,
+                    g = (pixel shr 8) and 0xFF,
+                    b = pixel and 0xFF
+                )
+                colors.add(color)
+            }
+        }
+
+        val centroids = List(k) {
+            ColorRGB(
+                r = Random.nextInt(256),
+                g = Random.nextInt(256),
+                b = Random.nextInt(256)
+            )
+        }.toMutableList()
+
+        repeat(iterations) {
+            val clusters = Array(k) { mutableListOf<ColorRGB>() }
+
+            for (color in colors) {
+                val distances = centroids.map { centroid -> colorDistance(color, centroid) }
+                val closestCentroidIndex = distances.indexOf(distances.minOrNull())
+                clusters[closestCentroidIndex].add(color)
+            }
+
+            for (i in centroids.indices) {
+                val clusterColors = clusters[i]
+                if (clusterColors.isNotEmpty()) {
+                    val r = clusterColors.map { it.r }.average().toInt()
+                    val g = clusterColors.map { it.g }.average().toInt()
+                    val b = clusterColors.map { it.b }.average().toInt()
+                    centroids[i] = ColorRGB(r, g, b)
+                }
+            }
+        }
+
+        val dominantColor = centroids.maxByOrNull { centroid ->
+            colors.count { color ->
+                colorDistance(color, centroid) < 50
+            }
+        } ?: ColorRGB(0, 0, 0)
+
+        return dominantColor.toInt()
+    }
 
     private fun getContrastingTextColor(color: Int?): Int? {
         if (color == null) return null
@@ -1681,44 +2029,22 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
     }
 
     private val mOnClickListener = View.OnClickListener { v ->
-        if (v === mQsOpHeaderView?.internetTile) {
+        if (v === mOpQsHeaderView?.internetTile) {
             toggleInternetState(v)
             vibrate()
-        } else if (v === mQsOpHeaderView?.bluetoothTile) {
+        } else if (v === mOpQsHeaderView?.bluetoothTile) {
             toggleBluetoothState(v)
             vibrate()
-        } else if (v === mQsOpHeaderView?.mediaPlayerPrevBtn) {
-            performMediaAction(MediaAction.PLAY_PREVIOUS)
-        } else if (v === mQsOpHeaderView?.mediaPlayerPlayPauseBtn) {
-            performMediaAction(MediaAction.TOGGLE_PLAYBACK)
-        } else if (v === mQsOpHeaderView?.mediaPlayerNextBtn) {
-            performMediaAction(MediaAction.PLAY_NEXT)
-        } else if (v === mQsOpHeaderView?.mediaPlayerBackground) {
-            launchMediaPlayer()
-        } else if (v === mQsOpHeaderView?.mediaOutputSwitcher) {
-            launchMediaOutputSwitcher(v)
         }
     }
 
     private val mOnLongClickListener = OnLongClickListener { v ->
-        if (mActivityStarter == null) return@OnLongClickListener false
-
-        if (v === mQsOpHeaderView?.internetTile) {
-            callMethod(
-                mActivityStarter,
-                "postStartActivityDismissingKeyguard",
-                Intent(Settings.ACTION_WIFI_SETTINGS),
-                0
-            )
+        if (v === mOpQsHeaderView?.internetTile) {
+            mActivityLauncherUtils.launchApp(Intent(Settings.ACTION_WIFI_SETTINGS), true)
             vibrate()
             return@OnLongClickListener true
-        } else if (v === mQsOpHeaderView?.bluetoothTile) {
-            callMethod(
-                mActivityStarter,
-                "postStartActivityDismissingKeyguard",
-                Intent(Settings.ACTION_BLUETOOTH_SETTINGS),
-                0
-            )
+        } else if (v === mOpQsHeaderView?.bluetoothTile) {
+            mActivityLauncherUtils.launchApp(Intent(Settings.ACTION_BLUETOOTH_SETTINGS), true)
             vibrate()
             return@OnLongClickListener true
         } else {
@@ -1726,17 +2052,34 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
         }
     }
 
-    private fun launchMediaOutputSwitcher(v: View) {
-        val packageName: String? = mMediaController?.packageName
+    private fun launchMediaOutputSwitcher(packageName: String?, v: View) {
         if (packageName != null && mMediaOutputDialogFactory != null) {
-            callMethod(mMediaOutputDialogFactory, "create", packageName, true, v)
+            if (isMethodAvailable(
+                    mMediaOutputDialogFactory,
+                    "create",
+                    String::class.java,
+                    Boolean::class.java,
+                    View::class.java
+                )
+            ) {
+                callMethod(mMediaOutputDialogFactory, "create", packageName, true, v)
+            } else if (isMethodAvailable(
+                    mMediaOutputDialogFactory,
+                    "create",
+                    View::class.java,
+                    String::class.java,
+                    Boolean::class.java,
+                    Boolean::class.java
+                )
+            ) {
+                callMethod(mMediaOutputDialogFactory, "create", v, packageName, true, true)
+            } else {
+                log(TAG + "MediaOutputDialogFactory is not available")
+            }
         }
     }
 
-    private fun launchMediaPlayer() {
-        if (mActivityStarter == null) return
-
-        val packageName: String? = mMediaController?.packageName
+    private fun launchMediaPlayer(packageName: String?) {
         val appIntent = if (packageName != null) Intent(
             mContext.packageManager.getLaunchIntentForPackage(packageName)
         )
@@ -1745,9 +2088,26 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
         if (appIntent != null) {
             appIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             appIntent.setPackage(packageName)
-            callMethod(mActivityStarter, "startActivity", appIntent, true)
+            mActivityLauncherUtils.launchApp(appIntent, true)
+            vibrate()
             return
         }
+    }
+
+    private fun areDataEqual(
+        metadata1: MediaMetadata?,
+        metadata2: MediaMetadata?
+    ): Pair<Boolean, Boolean> {
+        val bitmap1 = metadata1?.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART)
+            ?: metadata1?.getBitmap(MediaMetadata.METADATA_KEY_ART)
+        val bitmap2 = metadata2?.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART)
+            ?: metadata2?.getBitmap(MediaMetadata.METADATA_KEY_ART)
+
+        return areBitmapsEqual(bitmap1, bitmap2) to
+                (metadata1?.getString(MediaMetadata.METADATA_KEY_TITLE) ==
+                        metadata2?.getString(MediaMetadata.METADATA_KEY_TITLE) &&
+                        metadata1?.getString(MediaMetadata.METADATA_KEY_ARTIST) ==
+                        metadata2?.getString(MediaMetadata.METADATA_KEY_ARTIST))
     }
 
     private fun areBitmapsEqual(bitmap1: Bitmap?, bitmap2: Bitmap?): Boolean {
@@ -1785,25 +2145,6 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
         } catch (ignored: PackageManager.NameNotFoundException) {
         }
 
-        qsTileViewImplInstance?.let { thisObject ->
-            colorActive = getObjectField(
-                thisObject,
-                "colorActive"
-            ) as Int
-            colorInactive = getObjectField(
-                thisObject,
-                "colorInactive"
-            ) as Int
-            colorLabelActive = getObjectField(
-                thisObject,
-                "colorLabelActive"
-            ) as Int
-            colorLabelInactive = getObjectField(
-                thisObject,
-                "colorLabelInactive"
-            ) as Int
-        }
-
         mContext.apply {
             colorAccent = getColorAttr(
                 this,
@@ -1829,21 +2170,77 @@ class OpQsHeader(context: Context?) : ModPack(context!!) {
                     SYSTEMUI_PACKAGE
                 )
             ).toFloat()
+            qqsTileHeight = resources.getDimensionPixelSize(
+                resources.getIdentifier(
+                    "qs_quick_tile_size",
+                    "dimen",
+                    SYSTEMUI_PACKAGE
+                )
+            )
+            qsTileMarginVertical = resources.getDimensionPixelSize(
+                resources.getIdentifier(
+                    "qs_tile_margin_vertical",
+                    "dimen",
+                    SYSTEMUI_PACKAGE
+                )
+            )
         }
 
-        opMediaBackgroundDrawable = GradientDrawable().apply {
-            shape = GradientDrawable.RECTANGLE
-            cornerRadius = qsTileCornerRadius
-            colorInactive?.let { colors = intArrayOf(it, it) }
+        qsTileViewImplInstance?.let { thisObject ->
+            val qsTileOverlayEnabled = isQsTileOverlayEnabled
+
+            colorActive = if (qsTileOverlayEnabled) Color.WHITE
+            else getObjectField(
+                thisObject,
+                "colorActive"
+            ) as Int
+            colorInactive = if (qsTileOverlayEnabled) Color.TRANSPARENT
+            else getObjectField(
+                thisObject,
+                "colorInactive"
+            ) as Int
+            colorLabelActive = if (qsTextAlwaysWhite) Color.WHITE
+            else if (qsTextFollowAccent) colorAccent
+            else getObjectField(
+                thisObject,
+                "colorLabelActive"
+            ) as Int
+            colorLabelInactive = getObjectField(
+                thisObject,
+                "colorLabelInactive"
+            ) as Int
+        }
+
+        opMediaBackgroundDrawable = if (colorInactive != null && colorInactive != 0) {
+            GradientDrawable().apply {
+                setColor(colorInactive!!)
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = qsTileCornerRadius
+            }
+        } else {
+            ContextCompat.getDrawable(
+                mContext,
+                mContext.resources.getIdentifier(
+                    "qs_tile_background_shape",
+                    "drawable",
+                    SYSTEMUI_PACKAGE
+                )
+            )!!
         }
 
         mContext.apply {
+            mWifiManager = getSystemService(WifiManager::class.java)
+            mTelephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            mBluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+            mMediaSessionManager = mContext.getSystemService(MediaSessionManager::class.java)
             mConnectivityManager =
                 getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            mTelephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            mWifiManager = getSystemService(WifiManager::class.java)
-            mBluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+            mSubscriptionManager =
+                getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
         }
+
+        mInternetEnabled = isWiFiConnected || isMobileDataConnected
+        mBluetoothEnabled = isBluetoothEnabled
     }
 
     private val isLandscape: Boolean

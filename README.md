@@ -1,7 +1,7 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/tqmane/Iconify-Japanese/beta/.github/resources/banner.png" width="100%" alt="Banner">
   
-  # v6.8.0 is out!
+  # v6.9.0 is out!
 </div>
 <p align="center">
   <a href="https://github.com/tqmane/Iconify-Japanese/releases"><img src="https://img.shields.io/github/downloads/tqmane/Iconify-Japanese/total?color=%233DDC84&logo=android&logoColor=%23fff&style=for-the-badge" alt="Downloads"></a>

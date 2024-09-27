@@ -64,8 +64,6 @@ import com.drdisagree.iconify.common.Preferences.DEPTH_WALLPAPER_FOREGROUND_MOVE
 import com.drdisagree.iconify.common.Preferences.DEPTH_WALLPAPER_ON_AOD
 import com.drdisagree.iconify.common.Preferences.DEPTH_WALLPAPER_PARALLAX_EFFECT
 import com.drdisagree.iconify.common.Preferences.DUALTONE_QSPANEL
-import com.drdisagree.iconify.common.Preferences.EASTER_EGG
-import com.drdisagree.iconify.common.Preferences.EXPERIMENTAL_FEATURES
 import com.drdisagree.iconify.common.Preferences.FIXED_STATUS_ICONS_SIDEMARGIN
 import com.drdisagree.iconify.common.Preferences.FIXED_STATUS_ICONS_SWITCH
 import com.drdisagree.iconify.common.Preferences.FIXED_STATUS_ICONS_TOPMARGIN
@@ -126,7 +124,6 @@ import com.drdisagree.iconify.common.Preferences.NEW_UPDATE_FOUND
 import com.drdisagree.iconify.common.Preferences.NOTIF_TRANSPARENCY_SWITCH
 import com.drdisagree.iconify.common.Preferences.OP_QS_HEADER_BLUR_LEVEL
 import com.drdisagree.iconify.common.Preferences.OP_QS_HEADER_EXPANSION_Y
-import com.drdisagree.iconify.common.Preferences.OP_QS_HEADER_FADE_LEVEL
 import com.drdisagree.iconify.common.Preferences.OP_QS_HEADER_TOP_MARGIN
 import com.drdisagree.iconify.common.Preferences.PREF_KEY_UPDATE_STATUS
 import com.drdisagree.iconify.common.Preferences.QQS_TOPMARGIN
@@ -170,8 +167,6 @@ object PrefsHelper {
     fun isVisible(key: String?): Boolean {
         return when (key) {
             UPDATE_OVER_WIFI -> getBoolean(AUTO_UPDATE, true)
-
-            EXPERIMENTAL_FEATURES -> getBoolean(EASTER_EGG)
 
             "iconifyHomeCard" -> getBoolean(SHOW_HOME_CARD, true)
 
@@ -534,8 +529,6 @@ object PrefsHelper {
             DEPTH_WALLPAPER_FOREGROUND_ALPHA -> "${getSliderInt(key, 80)}%"
 
             OP_QS_HEADER_BLUR_LEVEL -> "${getSliderInt(key, 10)}px"
-
-            OP_QS_HEADER_FADE_LEVEL -> "${getSliderInt(key, 0)}%"
 
             OP_QS_HEADER_TOP_MARGIN,
             OP_QS_HEADER_EXPANSION_Y -> "${getSliderInt(key, 0)}dp"
