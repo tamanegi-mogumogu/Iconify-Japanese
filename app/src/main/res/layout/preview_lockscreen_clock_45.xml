@@ -41,7 +41,7 @@
                 android:layout_marginStart="5dp"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="6dp"
                     android:layout_gravity="top"
@@ -63,7 +63,7 @@
                     android:textColor="@android:color/system_accent1_600"
                     android:textSize="30sp" />
 
-                <LinearLayout
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="6dp"
                     android:layout_gravity="bottom"

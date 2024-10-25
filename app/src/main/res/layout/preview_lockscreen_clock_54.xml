@@ -154,36 +154,20 @@
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
-            <LinearLayout
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="1dp"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:rotation="15">
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="15dp"
-                    android:background="@android:color/system_accent1_400"
-                    android:orientation="horizontal"
-                    android:tag="accent1" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="15dp"
-                    android:layout_marginStart="4dp"
-                    android:background="@android:color/system_accent1_400"
-                    android:orientation="horizontal"
-                    android:tag="accent1" />
-
-            </LinearLayout>
+                android:includeFontPadding="false"
+                android:tag="accent1"
+                android:text=" // "
+                android:textColor="@android:color/system_accent1_400"
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <TextClock
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
+                android:layout_gravity="bottom"
                 android:fontFamily="@font/lovelo"
                 android:format12Hour="MMMM"
                 android:format24Hour="MMMM"

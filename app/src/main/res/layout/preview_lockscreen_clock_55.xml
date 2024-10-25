@@ -153,24 +153,24 @@
             android:layout_gravity="top|center"
             android:layout_marginTop="8dp">
 
-            <FrameLayout
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
                 android:layout_gravity="center"
                 android:background="@drawable/lockscreen_clock_55_bg3" />
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="20dp"
-                android:background="@drawable/lockscreen_clock_55_bg4" />
-
-            <FrameLayout
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="40dp"
+                android:background="@drawable/lockscreen_clock_55_bg4" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="70dp"
                 android:background="@drawable/lockscreen_clock_55_bg3" />
 
         </FrameLayout>

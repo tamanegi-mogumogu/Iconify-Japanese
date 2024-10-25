@@ -38,8 +38,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="-2dp"
                 android:includeFontPadding="false"
-                android:tag="accent1|nolineheight"
-                android:text="Oni Chan!!"
+                android:tag="accent1|nolineheight|username"
+                android:text="Onii-Chan!!"
                 android:textColor="@android:color/system_accent1_300"
                 android:textSize="22sp" />
 
