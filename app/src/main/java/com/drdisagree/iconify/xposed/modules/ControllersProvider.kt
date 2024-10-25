@@ -579,40 +579,55 @@ class ControllersProvider(context: Context?) : ModPack(context!!) {
         }
 
         fun showBluetoothDialog(context: Context, view: View): Boolean {
-            if (instance?.mBluetoothTileDialogViewModel != null) {
-                try {
-                    callMethod(
-                        instance!!.mBluetoothTileDialogViewModel,
-                        "showDialog",
-                        context,
-                        view
-                    )
-                    return true
-                } catch (ignored: Throwable) {
-                    val isAutoOn = Settings.System.getInt(
-                        context.contentResolver,
-                        "qs_bt_auto_on", 0
-                    ) == 1
-                    callMethod(
-                        instance!!.mBluetoothTileDialogViewModel,
-                        "showDialog",
-                        context,
-                        view,
-                        isAutoOn
-                    )
-                    return true
-                }
-            } else if (instance?.mBluetoothTile != null) {
-                if (isMethodAvailable(instance!!.mBluetoothTile, "handleClick", View::class.java)) {
-                    callMethod(instance!!.mBluetoothTile, "handleClick", view)
-                    return true
-                } else {
-                    log(TAG + "No bluetooth dialog available")
-                }
+            val btTileAvailable = instance?.mBluetoothTile != null
+            val btTileDialogAvailable = instance?.mBluetoothTileDialogViewModel != null
+
+            if (btTileDialogAvailable && isMethodAvailable(
+                    instance!!.mBluetoothTileDialogViewModel,
+                    "showDialog",
+                    Context::class.java,
+                    View::class.java
+                )
+            ) {
+                callMethod(
+                    instance!!.mBluetoothTileDialogViewModel,
+                    "showDialog",
+                    context,
+                    view
+                )
+                return true
+            } else if (btTileDialogAvailable && isMethodAvailable(
+                    instance!!.mBluetoothTileDialogViewModel,
+                    "showDialog",
+                    Context::class.java,
+                    View::class.java,
+                    Boolean::class.java
+                )
+            ) {
+                val isAutoOn = Settings.System.getInt(
+                    context.contentResolver,
+                    "qs_bt_auto_on", 0
+                ) == 1
+                callMethod(
+                    instance!!.mBluetoothTileDialogViewModel,
+                    "showDialog",
+                    context,
+                    view,
+                    isAutoOn
+                )
+                return true
+            } else if (btTileAvailable && isMethodAvailable(
+                    instance!!.mBluetoothTile,
+                    "handleClick",
+                    View::class.java
+                )
+            ) {
+                callMethod(instance!!.mBluetoothTile, "handleClick", view)
+                return true
+            } else {
+                log(TAG + "No bluetooth dialog available")
             }
             return false
         }
-
     }
-
 }
