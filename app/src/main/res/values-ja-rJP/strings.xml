@@ -840,6 +840,7 @@
     <string name="info_tester_desc">アプリのテスト。</string>
     <string name="info_betterqs_desc">より良いクイック設定の使用許可。</string>
     <string name="info_binaries_desc">Android 実行可能バイナリ用です。</string>
+    <string name="info_buttercup_desc">For some lockscreen clock styles.</string>
     <string name="section_title_contributors">貢献者</string>
     <string name="info_contributor_desc">GitHub での貢献。</string>
     <string name="info_contributor_desc_2">Telegram での補助。</string>
@@ -1105,6 +1106,8 @@
     <string name="location_query_hint">Search for a location</string>
     <string name="weather_permission_dialog_title">Enable Location Permissions</string>
     <string name="weather_permission_dialog_message">Location permissions are required to fetch weather data. Click OK to open Settings.</string>
+    <string name="omnijaws_today">Today</string>
+    <string name="omnijaws_tomorrow">Tomorrow</string>
     <!-- Weather Conditions -->
     <string name="weather_condition_clouds">Cloudy</string>
     <string name="weather_condition_rain">Rainy</string>
@@ -1121,6 +1124,9 @@
     <string name="weather_api_key">OpenWeatherMap API Key</string>
     <string name="weather_provider_owm_key_title">OpenWeatherMap API Key required</string>
     <string name="weather_provider_owm_key_message">Please enter your OpenWeatherMap API key to fetch weather data.</string>
+    <string name="yandex_api_key">Yandex API Key</string>
+    <string name="weather_provider_yandex_key_title">Yandex API Key required</string>
+    <string name="weather_provider_yandex_key_message">Please enter your Yandex API key to fetch weather data.</string>
     <string name="weather_show_location">Show Location</string>
     <string name="weather_show_location_summary">Show Location before icon</string>
     <string name="weather_show_condition">Show Condition</string>
