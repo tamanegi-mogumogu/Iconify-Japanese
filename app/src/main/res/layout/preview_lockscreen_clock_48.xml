@@ -82,8 +82,8 @@
                 android:layout_marginBottom="18dp"
                 android:alpha="0.6"
                 android:fontFamily="@font/montserrat"
-                android:format12Hour="dd MMMM yyyy"
-                android:format24Hour="dd MMMM yyyy"
+                android:format12Hour="yyyy'年' MMMM dd'日'"
+                android:format24Hour="yyyy'年' MMMM dd'日'"
                 android:includeFontPadding="false"
                 android:tag="text1"
                 android:textColor="#FFFFFF" />

@@ -70,8 +70,8 @@
                     <TextClock
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:format12Hour="hh • mm, MMM dd"
-                        android:format24Hour="HH • mm, dd MMM"
+                        android:format12Hour="MMM dd'日', hh : mm"
+                        android:format24Hour="MMM dd'日', HH : mm"
                         android:includeFontPadding="false"
                         android:tag="text1|nolineheight"
                         android:textColor="#FFFFFF"
