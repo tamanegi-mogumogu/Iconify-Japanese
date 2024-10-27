@@ -264,6 +264,7 @@ object Preferences {
     const val BATTERY_STYLE_CIRCLE = 35
     const val BATTERY_STYLE_DOTTED_CIRCLE = 36
     const val BATTERY_STYLE_FILLED_CIRCLE = 37
+    const val BATTERY_STYLE_LANDSCAPE_KIM = 38
 
     // Xposed force reload overlay
     const val FORCE_RELOAD_PACKAGE_NAME = "com.android.internal.display.cutout.emulation.corner"
@@ -353,6 +354,7 @@ object Preferences {
     const val WEATHER_TEXT_COLOR_SWITCH: String = "weather_text_color_switch"
     const val WEATHER_TEXT_COLOR: String = "weather_text_color"
     const val WEATHER_OWM_KEY: String = "owm_key"
+    const val WEATHER_YANDEX_KEY: String = "yandex_key"
     const val WEATHER_UNITS: String = "weather_units"
     const val WEATHER_PROVIDER: String = "weather_provider"
     const val WEATHER_CUSTOM_LOCATION: String = "weather_custom_location_switch"

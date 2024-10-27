@@ -638,6 +638,7 @@
     <string name="battery_circle">Kör akkumulátor</string>
     <string name="battery_dotted_circle">Pontozott kör akkumulátor</string>
     <string name="battery_filled_circle">Kitöltött kör akkumulátor</string>
+    <string name="battery_landscape_kim">Fekvő Kim</string>
     <!-- Xposed Volume Panel -->
     <string name="volume_percentage_title">Százalékos hangerő</string>
     <string name="volume_percentage_desc">Megjeleníti a százalékértéket a hangerőcsúszka felett</string>
@@ -839,6 +840,7 @@
     <string name="info_tester_desc">Az alkalmazás teszteléséért.</string>
     <string name="info_betterqs_desc">A jobb Gyorsbeállítások engedélyezéséért.</string>
     <string name="info_binaries_desc">Androidon futtatható binárisokhoz.</string>
+    <string name="info_buttercup_desc">For some lockscreen clock styles.</string>
     <string name="section_title_contributors">Közreműködők</string>
     <string name="info_contributor_desc">A githubon való közreműködésért.</string>
     <string name="info_contributor_desc_2">A Telegramban való segítségért.</string>
@@ -1104,6 +1106,8 @@
     <string name="location_query_hint">Tartózkodási hely keresése</string>
     <string name="weather_permission_dialog_title">Helymeghatározási jogosultságok megadása</string>
     <string name="weather_permission_dialog_message">Az időjárási adatok lekéréséhez tartózkodási helymeghatározásra van szükség. Kattintson az OK gombra a Beállítások megnyitásához.</string>
+    <string name="omnijaws_today">Ma</string>
+    <string name="omnijaws_tomorrow">Holnap</string>
     <!-- Weather Conditions -->
     <string name="weather_condition_clouds">Felhős</string>
     <string name="weather_condition_rain">Esős</string>
@@ -1120,6 +1124,9 @@
     <string name="weather_api_key">OpenWeatherMap API-kulcs</string>
     <string name="weather_provider_owm_key_title">OpenWeatherMap API-kulcs szükséges</string>
     <string name="weather_provider_owm_key_message">Kérjük, adja meg az OpenWeatherMap API-kulcsot az időjárási adatok lekéréséhez.</string>
+    <string name="yandex_api_key">Yandex API-kulcs</string>
+    <string name="weather_provider_yandex_key_title">Yandex API-kulcs szükséges</string>
+    <string name="weather_provider_yandex_key_message">Kérjük, adja meg a Yandex API-kulcsot az időjárási adatok lekéréséhez.</string>
     <string name="weather_show_location">Tartózkodási hely kijelzése</string>
     <string name="weather_show_location_summary">Az ikon elé írja ki a tartózkodási helyet</string>
     <string name="weather_show_condition">Időjárási viszonyok kijelzése</string>

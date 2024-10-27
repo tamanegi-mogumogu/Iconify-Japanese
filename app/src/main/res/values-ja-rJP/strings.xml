@@ -638,6 +638,7 @@
     <string name="battery_circle">サークルバッテリー</string>
     <string name="battery_dotted_circle">ドットサークルバッテリー</string>
     <string name="battery_filled_circle">塗りつぶされたサークルバッテリー</string>
+    <string name="battery_landscape_kim">Landscape Kim</string>
     <!-- Xposed Volume Panel -->
     <string name="volume_percentage_title">音量のパーセンテージ</string>
     <string name="volume_percentage_desc">音量スライダーの上にパーセンテージを表示します</string>
@@ -839,6 +840,7 @@
     <string name="info_tester_desc">アプリのテスト。</string>
     <string name="info_betterqs_desc">より良いクイック設定の使用許可。</string>
     <string name="info_binaries_desc">Android 実行可能バイナリ用です。</string>
+    <string name="info_buttercup_desc">For some lockscreen clock styles.</string>
     <string name="section_title_contributors">貢献者</string>
     <string name="info_contributor_desc">GitHub での貢献。</string>
     <string name="info_contributor_desc_2">Telegram での補助。</string>
@@ -1056,32 +1058,32 @@
     <!-- Weather -->
     <!-- Omni Jaws Strings -->
     <string name="units_title">単位</string>
-    <string name="weather_progress_title">位置情報を確認中</string>
+    <string name="weather_progress_title">位置を確認中</string>
     <string name="weather_select_location">場所を選択</string>
     <string name="weather_custom_location_dialog_title">場所を入力</string>
     <string name="weather_custom_location_title">場所</string>
     <string name="weather_custom_location_missing">カスタム場所を設定</string>
-    <string name="weather_retrieve_location_dialog_title">位置情報を取得できません！</string>
-    <string name="weather_retrieve_location_dialog_message">ネットワーク位置情報が無効です。\n\nカスタム場所を設定するか、ネットワーク位置情報を有効にしてください。</string>
+    <string name="weather_retrieve_location_dialog_title">位置を取得できません！</string>
+    <string name="weather_retrieve_location_dialog_message">ネットワークの位置情報が無効です。\n\nカスタム場所を設定するか、ネットワーク位置情報を有効にしてください。</string>
     <string name="weather_retrieve_location_dialog_enable_button">有効にする</string>
     <string name="settings_title">設定</string>
     <string name="auto_update_title">自動更新</string>
-    <string name="auto_update_summary">定期的に新しいバージョンをチェック</string>
-    <string name="update_over_wifi_title">WiFi のみで更新をチェック</string>
-    <string name="update_over_wifi_summary">WiFi 接続時のみバックグラウンドで更新をチェック</string>
+    <string name="auto_update_summary">時々新しいバージョンを確認します</string>
+    <string name="update_over_wifi_title">WiFi のみで更新を確認</string>
+    <string name="update_over_wifi_summary">WiFi に接続しているときのみバックグラウンドで更新を確認します</string>
     <string name="unit_metric">メートル法 (\u00b0C)</string>
-    <string name="unit_imperial">ヤード・ポンド法 (\u00b0F)</string>
+    <string name="unit_imperial">インペリアル (\u00b0F)</string>
     <string name="update">更新</string>
-    <string name="enable_title">有効にする</string>
+    <string name="enable_title">有効化</string>
     <string name="update_interval_title">更新間隔</string>
-    <string name="interval_1_hour">1 時間</string>
-    <string name="interval_2_hour">2 時間</string>
-    <string name="interval_4_hour">4 時間</string>
-    <string name="interval_6_hour">6 時間</string>
-    <string name="interval_12_hour">12 時間</string>
+    <string name="interval_1_hour">1時間</string>
+    <string name="interval_2_hour">2時間</string>
+    <string name="interval_4_hour">4時間</string>
+    <string name="interval_6_hour">6時間</string>
+    <string name="interval_12_hour">12時間</string>
     <string name="weather_tile_title">天気</string>
-    <string name="weather_icon_pack_title">天気アイコンパック</string>
-    <string name="weather_icon_pack_playstore">他のアイコンパックを探す</string>
+    <string name="weather_icon_pack_title">状態アイコンパック</string>
+    <string name="weather_icon_pack_playstore">さらにアイコンパックを探す</string>
     <string name="service_disabled">無効</string>
     <string name="service_error">エラー</string>
     <string name="omnijaws_service_waiting">待機中 \u2026</string>
@@ -1097,13 +1099,15 @@
     <string name="omnijaws_service_error_long">天気データの読み込みエラー</string>
     <string name="omnijaws_label_default">天気</string>
     <string name="omnijaws_service_last_update">最終更新:</string>
-    <string name="omnijaws_service_error_location">位置情報がありません</string>
+    <string name="omnijaws_service_error_location">利用可能な場所がありません</string>
     <string name="omnijaws_service_error_network">ネットワークが見つかりません</string>
     <string name="omnijaws_service_error_permissions">位置情報の許可が与えられていません</string>
     <string name="location_browse_activity_title">場所を選択</string>
     <string name="location_query_hint">場所を検索</string>
     <string name="weather_permission_dialog_title">位置情報の許可を有効にする</string>
-    <string name="weather_permission_dialog_message">天気データを取得するには位置情報の許可が必要です。OK をクリックして設定を開いてください。</string>
+    <string name="weather_permission_dialog_message">天気データを取得するには位置情報の許可が必要です。OKをクリックして設定を開いてください。</string>
+    <string name="omnijaws_today">今日</string>
+    <string name="omnijaws_tomorrow">明日</string>
     <!-- Weather Conditions -->
     <string name="weather_condition_clouds">曇り</string>
     <string name="weather_condition_rain">雨</string>
@@ -1119,7 +1123,10 @@
     <string name="weather_provider">天気プロバイダー</string>
     <string name="weather_api_key">OpenWeatherMap API キー</string>
     <string name="weather_provider_owm_key_title">OpenWeatherMap API キーが必要です</string>
-    <string name="weather_provider_owm_key_message">天気データを取得するために OpenWeatherMap API キーを入力してください。</string>
+    <string name="weather_provider_owm_key_message">天気データを取得するには、OpenWeatherMap API キーを入力してください。</string>
+    <string name="yandex_api_key">Yandex API キー</string>
+    <string name="weather_provider_yandex_key_title">Yandex API キーが必要です</string>
+    <string name="weather_provider_yandex_key_message">天気データを取得するには、Yandex API キーを入力してください。</string>
     <string name="weather_show_location">場所を表示</string>
     <string name="weather_show_location_summary">アイコンの前に場所を表示</string>
     <string name="weather_show_condition">状態を表示</string>
@@ -1139,7 +1146,7 @@
     <string name="weather_custom_margins">カスタムマージン</string>
     <string name="weather_custom_margins_summary">天気のカスタムマージンを設定</string>
     <string name="weather_margin_top">上部マージン</string>
-    <string name="weather_centered">中央配置</string>
+    <string name="weather_centered">中央レイアウト</string>
     <string name="weather_margin_side">横マージン</string>
     <string name="weather_margin_bottom">下部マージン</string>
     <string name="weather_center_view_title">天気ビューを中央に配置</string>

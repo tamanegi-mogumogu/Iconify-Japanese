@@ -638,6 +638,7 @@
     <string name="battery_circle">Bateria circular</string>
     <string name="battery_dotted_circle">Bateria circular pontilhada</string>
     <string name="battery_filled_circle">Bateria de círculo preenchido</string>
+    <string name="battery_landscape_kim">Paisagem Kim</string>
     <!-- Xposed Volume Panel -->
     <string name="volume_percentage_title">Porcentagem do volume</string>
     <string name="volume_percentage_desc">Mostrar porcentagem acima do controle deslizante de volume</string>
@@ -839,6 +840,7 @@
     <string name="info_tester_desc">Por testar o app.</string>
     <string name="info_betterqs_desc">Para permissão para usar o melhor QS.</string>
     <string name="info_binaries_desc">Para binários executáveis ​​​​do Android.</string>
+    <string name="info_buttercup_desc">Para alguns estilos de relógio da tela de bloqueio.</string>
     <string name="section_title_contributors">Contribuidores</string>
     <string name="info_contributor_desc">Por contribuir no GitHub.</string>
     <string name="info_contributor_desc_2">Por me ajudar no Telegram.</string>
@@ -1104,6 +1106,8 @@
     <string name="location_query_hint">Pesquisar por localização</string>
     <string name="weather_permission_dialog_title">Ativar permissões de localização</string>
     <string name="weather_permission_dialog_message">Permissões de localização são necessárias para obter dados meteorológicos. Clique em OK para abrir as Configurações.</string>
+    <string name="omnijaws_today">Hoje</string>
+    <string name="omnijaws_tomorrow">Amanhã</string>
     <!-- Weather Conditions -->
     <string name="weather_condition_clouds">Nublado</string>
     <string name="weather_condition_rain">Chuva</string>
@@ -1120,6 +1124,9 @@
     <string name="weather_api_key">Chave da API OpenWeatherMap</string>
     <string name="weather_provider_owm_key_title">Chave da API OpenWeatherMap necessária</string>
     <string name="weather_provider_owm_key_message">Por favor, insira sua chave da API OpenWeatherMap para obter dados meteorológicos.</string>
+    <string name="yandex_api_key">Chave da API Yandex</string>
+    <string name="weather_provider_yandex_key_title">Chave da API Yandex necessária</string>
+    <string name="weather_provider_yandex_key_message">Insira sua chave da API Yandex para obter dados meteorológicos.</string>
     <string name="weather_show_location">Mostrar localização</string>
     <string name="weather_show_location_summary">Mostre a localização antes do ícone</string>
     <string name="weather_show_condition">Mostrar condição</string>

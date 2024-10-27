@@ -638,6 +638,7 @@
     <string name="battery_circle">环形电池</string>
     <string name="battery_dotted_circle">虚线环形电池</string>
     <string name="battery_filled_circle">填充环形电池</string>
+    <string name="battery_landscape_kim">Landscape Kim</string>
     <!-- Xposed Volume Panel -->
     <string name="volume_percentage_title">音量百分比</string>
     <string name="volume_percentage_desc">在音量滑块之上显示百分比</string>
@@ -839,6 +840,7 @@
     <string name="info_tester_desc">测试本应用程序。</string>
     <string name="info_betterqs_desc">许可使用「更好的快速设置」。</string>
     <string name="info_binaries_desc">Android 可执行二进制文件。</string>
+    <string name="info_buttercup_desc">For some lockscreen clock styles.</string>
     <string name="section_title_contributors">贡献者</string>
     <string name="info_contributor_desc">在 Github 上的贡献。</string>
     <string name="info_contributor_desc_2">在 Telegram 上协助我。</string>
@@ -1104,6 +1106,8 @@
     <string name="location_query_hint">搜索位置</string>
     <string name="weather_permission_dialog_title">启用位置权限</string>
     <string name="weather_permission_dialog_message">获取天气数据需要位置权限。点击确定打开设置。</string>
+    <string name="omnijaws_today">今天</string>
+    <string name="omnijaws_tomorrow">明天</string>
     <!-- Weather Conditions -->
     <string name="weather_condition_clouds">多云</string>
     <string name="weather_condition_rain">雨</string>
@@ -1120,6 +1124,9 @@
     <string name="weather_api_key">OpenWeatherMap API 密钥</string>
     <string name="weather_provider_owm_key_title">需要 OpenWeatherMap API 密钥</string>
     <string name="weather_provider_owm_key_message">请输入您的 OpenWeatherMap API密钥以获取天气数据。</string>
+    <string name="yandex_api_key">Yandex API密钥</string>
+    <string name="weather_provider_yandex_key_title">需要 Yandex API 密钥</string>
+    <string name="weather_provider_yandex_key_message">请输入您的 Yandex API 密钥以获取天气数据。</string>
     <string name="weather_show_location">显示位置</string>
     <string name="weather_show_location_summary">在图标前显示位置</string>
     <string name="weather_show_condition">显示条件</string>

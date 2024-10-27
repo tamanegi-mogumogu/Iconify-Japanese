@@ -125,8 +125,8 @@
     <string name="settings_restart_systemui_after_boot_desc">Certaines options, comme l\'intensité du flou, ne prennent effet qu\'au redémarrage du système</string>
     <string name="settings_show_home_page_card_title">Afficher l\'image de la page d\'accueil</string>
     <string name="settings_show_home_page_card_desc">Montrez une belle carte sur la page d\'accueil.</string>
-    <string name="settings_vibrate_ui_card_title">Haptic Feedback</string>
-    <string name="settings_vibrate_ui_page_card_desc">Enhance touch feedback with interactive haptics.</string>
+    <string name="settings_vibrate_ui_card_title">Vibration</string>
+    <string name="settings_vibrate_ui_page_card_desc">Améliore les interactions à l\'écran avec des vibrations.</string>
     <string name="settings_clear_app_cache_title">Vider le cache de l\'application</string>
     <string name="settings_clear_app_cache_desc">Effacez le cache généré en raison de l\'utilisation de polices, d\'images ou de gifs personnalisés.</string>
     <string name="activity_title_experimental">Expérimental</string>
@@ -247,8 +247,8 @@
     <string name="section_title_misc">Divers.</string>
     <string name="minimal_qspanel">Panneau QS minimal</string>
     <string name="remove_top_shade_of_qspanel">Retirer le store supérieur du panneau QS</string>
-    <string name="system_monet_title">System Monet</string>
-    <string name="system_monet_desc">Disable to retain custom colors\nSystemUI restart required</string>
+    <string name="system_monet_title">Système Monet</string>
+    <string name="system_monet_desc">Désactiver pour garder les couleurs personnalisées\nRequiert un redémarrage de l\'Interface Utilisateur</string>
     <!-- Basic Colors -->
     <string name="primary_color">Couleur primaire</string>
     <string name="primary_color_desc">Choisissez la couleur d’accent principale</string>
@@ -421,8 +421,8 @@
     <string name="activity_desc_quick_settings">Ajustements liés au panneau QS</string>
     <string name="activity_title_battery_style">Style de la batterie</string>
     <string name="activity_desc_battery_style">Personnaliser la vue de l\'icône de la batterie</string>
-    <string name="activity_title_op_qs_header">Oneplus QS Header</string>
-    <string name="activity_desc_op_qs_header">OOS style quick settings header</string>
+    <string name="activity_title_op_qs_header">En-tête OnePlus des Paramètres Rapides</string>
+    <string name="activity_desc_op_qs_header">Style OxygenOS de l\'en-tête des Paramètres Rapides</string>
     <string name="activity_title_header_image">Image d\'en-tête</string>
     <string name="activity_desc_header_image">Ajouter une image personnalisée sur le panneau QS</string>
     <string name="activity_title_header_clock">Horloge d\'en-tête</string>
@@ -442,8 +442,8 @@
     <string name="activity_desc_xposed_others">Autres modifications et personnalisation xposed</string>
     <string name="activity_title_xposed_weather_settings">Paramètres de la météo</string>
     <!-- Oneplus QS Header -->
-    <string name="oneplus_qs_header_title">Oneplus QS Header</string>
-    <string name="oneplus_qs_header_desc">Enable OOS style media player and tiles in QS</string>
+    <string name="oneplus_qs_header_title">En-tête OnePlus des Paramètres Rapides</string>
+    <string name="oneplus_qs_header_desc">Active le style du lecteur de musique de OxygenOS</string>
     <string name="oneplus_qs_header_vibrate_title">Haptic Feedback</string>
     <string name="oneplus_qs_header_vibrate_desc">Add haptic feedback on tiles</string>
     <string name="oneplus_qs_header_hide_stock_media_player_title">Hide Stock Media Player</string>
@@ -638,6 +638,7 @@
     <string name="battery_circle">Batterie circulaire</string>
     <string name="battery_dotted_circle">Batterie circulaire en pointillés</string>
     <string name="battery_filled_circle">Batterie circulaire remplie</string>
+    <string name="battery_landscape_kim">Landscape Kim</string>
     <!-- Xposed Volume Panel -->
     <string name="volume_percentage_title">Pourcentage du volume</string>
     <string name="volume_percentage_desc">Afficher le pourcentage au-dessus du curseur de volume</string>
@@ -839,6 +840,7 @@
     <string name="info_tester_desc">Pour avoir testé l\'application.</string>
     <string name="info_betterqs_desc">Pour la permission d\'utiliser \"Better QS\".</string>
     <string name="info_binaries_desc">For android executable binaries.</string>
+    <string name="info_buttercup_desc">For some lockscreen clock styles.</string>
     <string name="section_title_contributors">Contributeurs</string>
     <string name="info_contributor_desc">Pour avoir contribué sur Github.</string>
     <string name="info_contributor_desc_2">Pour m\'assister sur Telegram.</string>
@@ -1104,6 +1106,8 @@
     <string name="location_query_hint">Search for a location</string>
     <string name="weather_permission_dialog_title">Enable Location Permissions</string>
     <string name="weather_permission_dialog_message">Location permissions are required to fetch weather data. Click OK to open Settings.</string>
+    <string name="omnijaws_today">Today</string>
+    <string name="omnijaws_tomorrow">Tomorrow</string>
     <!-- Weather Conditions -->
     <string name="weather_condition_clouds">Cloudy</string>
     <string name="weather_condition_rain">Rainy</string>
@@ -1120,6 +1124,9 @@
     <string name="weather_api_key">OpenWeatherMap API Key</string>
     <string name="weather_provider_owm_key_title">OpenWeatherMap API Key required</string>
     <string name="weather_provider_owm_key_message">Please enter your OpenWeatherMap API key to fetch weather data.</string>
+    <string name="yandex_api_key">Yandex API Key</string>
+    <string name="weather_provider_yandex_key_title">Yandex API Key required</string>
+    <string name="weather_provider_yandex_key_message">Please enter your Yandex API key to fetch weather data.</string>
     <string name="weather_show_location">Show Location</string>
     <string name="weather_show_location_summary">Show Location before icon</string>
     <string name="weather_show_condition">Show Condition</string>

@@ -14,55 +14,61 @@
         android:orientation="vertical">
 
         <TextClock
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:format12Hour="EEEE"
             android:format24Hour="EEEE"
+            android:includeFontPadding="false"
             android:singleLine="true"
             android:tag="text1|nolineheight"
-            android:includeFontPadding="false"
             android:textAlignment="viewStart"
             android:textColor="@android:color/white"
             android:textSize="36dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start">
+            android:includeFontPadding="false"
+            android:singleLine="true"
+            android:tag="text1"
+            android:text="𝗡𝗘𝗩𝗘𝗥 𝘚𝘌𝘛𝘛𝘓𝘌"
+            android:textAlignment="viewStart"
+            android:textColor="@android:color/white"
+            android:textSize="30sp" />
 
-            <FrameLayout
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layoutDirection="ltr">
+
+            <TextClock
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layoutDirection="ltr">
+                android:format12Hour="hh:mm"
+                android:format24Hour="HH:mm"
+                android:includeFontPadding="false"
+                android:singleLine="true"
+                android:tag="text1"
+                android:textColor="@android:color/white"
+                android:textSize="40dp" />
 
-                <TextClock
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:format12Hour="hh:mm"
-                    android:format24Hour="HH:mm"
-                    android:includeFontPadding="false"
-                    android:singleLine="true"
-                    android:tag="text1"
-                    android:textColor="@android:color/white"
-                    android:textSize="40dp" />
+            <TextClock
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:format12Hour="hh:mm"
+                android:format24Hour="HH:mm"
+                android:includeFontPadding="false"
+                android:maxLength="1"
+                android:singleLine="true"
+                android:tag="accent1"
+                android:textColor="@android:color/system_accent1_300"
+                android:textSize="40dp" />
 
-                <TextClock
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:format12Hour="hh:mm"
-                    android:format24Hour="HH:mm"
-                    android:includeFontPadding="false"
-                    android:maxLength="1"
-                    android:singleLine="true"
-                    android:tag="accent1"
-                    android:textColor="@android:color/system_accent1_300"
-                    android:textSize="40dp" />
-            </FrameLayout>
-        </LinearLayout>
+        </FrameLayout>
 
         <TextClock
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:format12Hour="MMMM d'日' "
             android:format24Hour="MMMM d'日' "
@@ -72,5 +78,6 @@
             android:textAlignment="viewStart"
             android:textColor="@android:color/white"
             android:textSize="20dp" />
+
     </LinearLayout>
 </LinearLayout>

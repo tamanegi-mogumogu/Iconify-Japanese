@@ -46,6 +46,7 @@ import com.drdisagree.iconify.common.Preferences.BATTERY_STYLE_LANDSCAPE_BATTERY
 import com.drdisagree.iconify.common.Preferences.BATTERY_STYLE_LANDSCAPE_COLOROS
 import com.drdisagree.iconify.common.Preferences.BATTERY_STYLE_LANDSCAPE_IOS_15
 import com.drdisagree.iconify.common.Preferences.BATTERY_STYLE_LANDSCAPE_IOS_16
+import com.drdisagree.iconify.common.Preferences.BATTERY_STYLE_LANDSCAPE_KIM
 import com.drdisagree.iconify.common.Preferences.BATTERY_STYLE_LANDSCAPE_MIUI_PILL
 import com.drdisagree.iconify.common.Preferences.BATTERY_STYLE_LANDSCAPE_SMILEY
 import com.drdisagree.iconify.common.Preferences.BATTERY_STYLE_LANDSCAPE_STYLE_A
@@ -105,6 +106,7 @@ import com.drdisagree.iconify.xposed.modules.batterystyles.LandscapeBatteryH
 import com.drdisagree.iconify.xposed.modules.batterystyles.LandscapeBatteryI
 import com.drdisagree.iconify.xposed.modules.batterystyles.LandscapeBatteryJ
 import com.drdisagree.iconify.xposed.modules.batterystyles.LandscapeBatteryK
+import com.drdisagree.iconify.xposed.modules.batterystyles.LandscapeBatteryKim
 import com.drdisagree.iconify.xposed.modules.batterystyles.LandscapeBatteryL
 import com.drdisagree.iconify.xposed.modules.batterystyles.LandscapeBatteryM
 import com.drdisagree.iconify.xposed.modules.batterystyles.LandscapeBatteryMIUIPill
@@ -124,6 +126,7 @@ import com.drdisagree.iconify.xposed.modules.batterystyles.RLandscapeBattery
 import com.drdisagree.iconify.xposed.modules.batterystyles.RLandscapeBatteryColorOS
 import com.drdisagree.iconify.xposed.modules.batterystyles.RLandscapeBatteryStyleA
 import com.drdisagree.iconify.xposed.modules.batterystyles.RLandscapeBatteryStyleB
+import com.drdisagree.iconify.xposed.modules.utils.Helpers.hookAllMethodsMatchPattern
 import com.drdisagree.iconify.xposed.modules.utils.SettingsLibUtils
 import com.drdisagree.iconify.xposed.modules.utils.ViewHelper.toPx
 import com.drdisagree.iconify.xposed.utils.XPrefs.Xprefs
@@ -380,15 +383,21 @@ class BatteryStyleManager(context: Context?) : ModPack(context!!) {
                 }
             }
 
-            hookAllMethods(
+            hookAllMethodsMatchPattern(
                 batteryControllerImplClass,
-                "fireBatteryLevelChanged",
+                ".*fireBatteryLevelChanged.*",
+                batteryDataRefreshHook
+            )
+
+            hookAllMethodsMatchPattern(
+                batteryControllerImplClass,
+                ".*firePowerSaveChanged.*",
                 batteryDataRefreshHook
             )
 
             hookAllMethods(
                 batteryControllerImplClass,
-                "firePowerSaveChanged",
+                "onReceive",
                 batteryDataRefreshHook
             )
         } catch (throwable: Throwable) {
@@ -919,6 +928,7 @@ class BatteryStyleManager(context: Context?) : ModPack(context!!) {
             BATTERY_STYLE_LANDSCAPE_BATTERYO -> LandscapeBatteryO(context, frameColor)
             BATTERY_STYLE_CIRCLE, BATTERY_STYLE_DOTTED_CIRCLE -> CircleBattery(context, frameColor)
             BATTERY_STYLE_FILLED_CIRCLE -> CircleFilledBattery(context, frameColor)
+            BATTERY_STYLE_LANDSCAPE_KIM -> LandscapeBatteryKim(context, frameColor)
             else -> null
         }
 

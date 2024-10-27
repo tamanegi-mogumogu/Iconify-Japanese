@@ -26,6 +26,7 @@ import com.drdisagree.iconify.common.Preferences.BATTERY_STYLE_LANDSCAPE_BATTERY
 import com.drdisagree.iconify.common.Preferences.BATTERY_STYLE_LANDSCAPE_BATTERYM
 import com.drdisagree.iconify.common.Preferences.BATTERY_STYLE_LANDSCAPE_BATTERYO
 import com.drdisagree.iconify.common.Preferences.BATTERY_STYLE_LANDSCAPE_IOS_16
+import com.drdisagree.iconify.common.Preferences.BATTERY_STYLE_LANDSCAPE_KIM
 import com.drdisagree.iconify.common.Preferences.BLUR_RADIUS_VALUE
 import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_SWITCH
 import com.drdisagree.iconify.common.Preferences.CUSTOM_BATTERY_BLEND_COLOR
@@ -116,8 +117,10 @@ import com.drdisagree.iconify.common.Preferences.LSCLOCK_COLOR_CODE_TEXT2
 import com.drdisagree.iconify.common.Preferences.LSCLOCK_COLOR_SWITCH
 import com.drdisagree.iconify.common.Preferences.LSCLOCK_DEVICENAME
 import com.drdisagree.iconify.common.Preferences.LSCLOCK_FONT_LINEHEIGHT
+import com.drdisagree.iconify.common.Preferences.LSCLOCK_FONT_SWITCH
 import com.drdisagree.iconify.common.Preferences.LSCLOCK_FONT_TEXT_SCALING
 import com.drdisagree.iconify.common.Preferences.LSCLOCK_STYLE
+import com.drdisagree.iconify.common.Preferences.LSCLOCK_SWITCH
 import com.drdisagree.iconify.common.Preferences.LSCLOCK_TOPMARGIN
 import com.drdisagree.iconify.common.Preferences.LSCLOCK_USERNAME
 import com.drdisagree.iconify.common.Preferences.NEW_UPDATE_FOUND
@@ -151,6 +154,7 @@ import com.drdisagree.iconify.common.Preferences.WEATHER_TEXT_COLOR_SWITCH
 import com.drdisagree.iconify.common.Preferences.WEATHER_TEXT_SIZE
 import com.drdisagree.iconify.common.Preferences.WEATHER_UNITS
 import com.drdisagree.iconify.common.Preferences.WEATHER_UPDATE_INTERVAL
+import com.drdisagree.iconify.common.Preferences.WEATHER_YANDEX_KEY
 import com.drdisagree.iconify.common.Preferences.XPOSED_HOOK_CHECK
 import com.drdisagree.iconify.common.Resources.shouldShowRebootDialog
 import com.drdisagree.iconify.config.RPrefs.getBoolean
@@ -165,6 +169,8 @@ import com.drdisagree.iconify.utils.weather.WeatherConfig
 object PrefsHelper {
 
     fun isVisible(key: String?): Boolean {
+        val lockscreenClockStyle = getInt(LSCLOCK_STYLE, 0)
+
         return when (key) {
             UPDATE_OVER_WIFI -> getBoolean(AUTO_UPDATE, true)
 
@@ -195,9 +201,9 @@ object PrefsHelper {
             LSCLOCK_COLOR_CODE_TEXT1,
             LSCLOCK_COLOR_CODE_TEXT2 -> getBoolean(LSCLOCK_COLOR_SWITCH)
 
-            LSCLOCK_DEVICENAME -> getInt(LSCLOCK_STYLE, 0) == 19
+            LSCLOCK_DEVICENAME -> lockscreenClockStyle in setOf(19, 32, 47)
 
-            LSCLOCK_USERNAME -> getInt(LSCLOCK_STYLE, 0) == 7
+            LSCLOCK_USERNAME -> lockscreenClockStyle in setOf(7, 32, 35, 36, 42, 48, 50, 53)
 
             // Weather Common
             WEATHER_OWM_KEY -> getString(WEATHER_PROVIDER, "0") == "1"
@@ -332,10 +338,10 @@ object PrefsHelper {
                 batteryStyle != BATTERY_STYLE_LANDSCAPE_BATTERYL &&
                 batteryStyle != BATTERY_STYLE_LANDSCAPE_BATTERYM
 
-        val showInsidePercentage = showPercentage && !getBoolean(
-            CUSTOM_BATTERY_HIDE_PERCENTAGE,
-            false
-        )
+        val kimBattery = batteryStyle == BATTERY_STYLE_LANDSCAPE_KIM
+
+        val showInsidePercentage = showPercentage && !kimBattery &&
+                !getBoolean(CUSTOM_BATTERY_HIDE_PERCENTAGE, false)
 
         val showChargingIconCustomization: Boolean =
             batteryStyle > BATTERY_STYLE_DEFAULT_LANDSCAPE &&
@@ -349,9 +355,10 @@ object PrefsHelper {
                 batteryStyle == BATTERY_STYLE_FILLED_CIRCLE
 
         return when (key) {
-            CUSTOM_BATTERY_LAYOUT_REVERSE,
             CUSTOM_BATTERY_PERIMETER_ALPHA,
             CUSTOM_BATTERY_FILL_ALPHA -> showAdvancedCustomizations
+
+            CUSTOM_BATTERY_LAYOUT_REVERSE -> showAdvancedCustomizations || kimBattery
 
             CUSTOM_BATTERY_BLEND_COLOR -> showAdvancedCustomizations || circleBattery
 
@@ -404,8 +411,27 @@ object PrefsHelper {
             WEATHER_OWM_KEY -> getString(WEATHER_PROVIDER, "0") == "1" &&
                     WeatherConfig.isEnabled(appContext)
 
+            WEATHER_YANDEX_KEY -> getString(WEATHER_PROVIDER, "0") == "2" &&
+                    WeatherConfig.isEnabled(appContext)
+
             CUSTOM_BATTERY_WIDTH,
             CUSTOM_BATTERY_HEIGHT -> getString(CUSTOM_BATTERY_STYLE, 0.toString())!!.toInt() != 0
+
+            LSCLOCK_FONT_SWITCH,
+            "xposed_lockscreenclockfontpicker",
+            LSCLOCK_STYLE,
+            LSCLOCK_TOPMARGIN,
+            LSCLOCK_BOTTOMMARGIN,
+            LSCLOCK_COLOR_SWITCH,
+            LSCLOCK_COLOR_CODE_ACCENT1,
+            LSCLOCK_COLOR_CODE_ACCENT2,
+            LSCLOCK_COLOR_CODE_ACCENT3,
+            LSCLOCK_COLOR_CODE_TEXT1,
+            LSCLOCK_COLOR_CODE_TEXT2,
+            LSCLOCK_FONT_LINEHEIGHT,
+            LSCLOCK_FONT_TEXT_SCALING,
+            LSCLOCK_USERNAME,
+            LSCLOCK_DEVICENAME -> getBoolean(LSCLOCK_SWITCH)
 
             else -> true
         }
@@ -414,7 +440,7 @@ object PrefsHelper {
     @SuppressLint("DefaultLocale")
     fun getSummary(fragmentCompat: Context, key: String): String? {
         if (key.endsWith("Slider")) {
-            return String.format("%.2f", RPrefs.getSliderFloat(key, 0f))
+            return String.format("%.2f", getSliderFloat(key, 0f))
         }
         if (key.endsWith("List")) {
             return getString(key, "")

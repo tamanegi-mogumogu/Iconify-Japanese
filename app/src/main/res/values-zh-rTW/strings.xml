@@ -638,6 +638,7 @@
     <string name="battery_circle">圓圈電池</string>
     <string name="battery_dotted_circle">點狀圓圈電池</string>
     <string name="battery_filled_circle">Filled Circle Battery</string>
+    <string name="battery_landscape_kim">Landscape Kim</string>
     <!-- Xposed Volume Panel -->
     <string name="volume_percentage_title">Volume Percentage</string>
     <string name="volume_percentage_desc">Show percentage above volume slider</string>
@@ -839,6 +840,7 @@
     <string name="info_tester_desc">測試這個應用程式。</string>
     <string name="info_betterqs_desc">許可使用「更好的快速設定」。</string>
     <string name="info_binaries_desc">For android executable binaries.</string>
+    <string name="info_buttercup_desc">For some lockscreen clock styles.</string>
     <string name="section_title_contributors">貢獻者</string>
     <string name="info_contributor_desc">在 Github 上的貢獻。</string>
     <string name="info_contributor_desc_2">在 Telegram 上協助我。</string>
@@ -1104,6 +1106,8 @@
     <string name="location_query_hint">Search for a location</string>
     <string name="weather_permission_dialog_title">Enable Location Permissions</string>
     <string name="weather_permission_dialog_message">Location permissions are required to fetch weather data. Click OK to open Settings.</string>
+    <string name="omnijaws_today">Today</string>
+    <string name="omnijaws_tomorrow">Tomorrow</string>
     <!-- Weather Conditions -->
     <string name="weather_condition_clouds">Cloudy</string>
     <string name="weather_condition_rain">Rainy</string>
@@ -1120,6 +1124,9 @@
     <string name="weather_api_key">OpenWeatherMap API Key</string>
     <string name="weather_provider_owm_key_title">OpenWeatherMap API Key required</string>
     <string name="weather_provider_owm_key_message">Please enter your OpenWeatherMap API key to fetch weather data.</string>
+    <string name="yandex_api_key">Yandex API Key</string>
+    <string name="weather_provider_yandex_key_title">Yandex API Key required</string>
+    <string name="weather_provider_yandex_key_message">Please enter your Yandex API key to fetch weather data.</string>
     <string name="weather_show_location">Show Location</string>
     <string name="weather_show_location_summary">Show Location before icon</string>
     <string name="weather_show_condition">Show Condition</string>

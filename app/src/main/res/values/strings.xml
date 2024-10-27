@@ -678,6 +678,7 @@
     <string name="battery_circle">Circle Battery</string>
     <string name="battery_dotted_circle">Dotted Circle Battery</string>
     <string name="battery_filled_circle">Filled Circle Battery</string>
+    <string name="battery_landscape_kim">Landscape Kim</string>
 
     <!-- Xposed Volume Panel -->
     <string name="volume_percentage_title">Volume Percentage</string>
@@ -891,6 +892,7 @@
     <string name="info_tester_desc">For testing the app.</string>
     <string name="info_betterqs_desc">For permission to use better QS.</string>
     <string name="info_binaries_desc">For android executable binaries.</string>
+    <string name="info_buttercup_desc">For some lockscreen clock styles.</string>
     <string name="section_title_contributors">Contributors</string>
     <string name="info_contributor_desc">For contributing on github.</string>
     <string name="info_contributor_desc_2">For assisting me on telegram.</string>
@@ -1171,6 +1173,8 @@
     <string name="location_query_hint">Search for a location</string>
     <string name="weather_permission_dialog_title">Enable Location Permissions</string>
     <string name="weather_permission_dialog_message">Location permissions are required to fetch weather data. Click OK to open Settings.</string>
+    <string name="omnijaws_today">Today</string>
+    <string name="omnijaws_tomorrow">Tomorrow</string>
 
     <!-- Weather Conditions -->
     <string name="weather_condition_clouds">Cloudy</string>
@@ -1188,9 +1192,14 @@
     <string name="weather_provider">Weather Provider</string>
     <string name="openmeteo" translatable="false">OpenMeteo</string>
     <string name="openweathermap" translatable="false">OpenWeatherMap</string>
+    <string name="yandex" translatable="false">Yandex</string>
+    <string name="metweather" translatable="false">MET Norway</string>
     <string name="weather_api_key">OpenWeatherMap API Key</string>
     <string name="weather_provider_owm_key_title">OpenWeatherMap API Key required</string>
     <string name="weather_provider_owm_key_message">Please enter your OpenWeatherMap API key to fetch weather data.</string>
+    <string name="yandex_api_key">Yandex API Key</string>
+    <string name="weather_provider_yandex_key_title">Yandex API Key required</string>
+    <string name="weather_provider_yandex_key_message">Please enter your Yandex API key to fetch weather data.</string>
     <string name="weather_show_location">Show Location</string>
     <string name="weather_show_location_summary">Show Location before icon</string>
     <string name="weather_show_condition">Show Condition</string>

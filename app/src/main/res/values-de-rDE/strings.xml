@@ -32,19 +32,19 @@
     <string name="installation_failed_desc">Logs wurden im Dokumente Ordner gespeichert.</string>
     <string name="logs">Logs</string>
     <!-- Search Preference -->
-    <string name="search_title">Search</string>
-    <string name="searchpreference_search">Search…</string>
-    <string name="searchpreference_clear">Clear</string>
-    <string name="searchpreference_history_entry">History entry</string>
-    <string name="searchpreference_more">More</string>
-    <string name="searchpreference_clear_history">Clear history</string>
-    <string name="searchpreference_no_result">No result</string>
+    <string name="search_title">Suchen</string>
+    <string name="searchpreference_search">Suchen…</string>
+    <string name="searchpreference_clear">Löschen</string>
+    <string name="searchpreference_history_entry">Verlaufs Eintrag</string>
+    <string name="searchpreference_more">Mehr</string>
+    <string name="searchpreference_clear_history">Verlauf löschen</string>
+    <string name="searchpreference_no_result">Kein Ergebnis</string>
     <!-- Home -->
     <string name="activity_title_home_page"></string>
     <string name="activity_title_icon_pack">Symbolpaket</string>
     <string name="activity_desc_icon_pack">System Icons verändern</string>
-    <string name="activity_title_cellular_icons">Cellular Icons</string>
-    <string name="activity_desc_cellular_icons">Change system cellular icons</string>
+    <string name="activity_title_cellular_icons">Mobile Daten Icons</string>
+    <string name="activity_desc_cellular_icons">Mobile Daten Icon ändern</string>
     <string name="activity_title_wifi_icons">WiFi Symbole</string>
     <string name="activity_desc_wifi_icons">Ändere System WiFi Symbole</string>
     <string name="activity_title_brightness_bar">Helligkeitsregler</string>
@@ -125,8 +125,8 @@
     <string name="settings_restart_systemui_after_boot_desc">Mache Einstellungen wie Blur-Intensität werden nicht übernommen bis SystemUI neu gestartet ist</string>
     <string name="settings_show_home_page_card_title">Zeige Home Page Karte</string>
     <string name="settings_show_home_page_card_desc">Zeige eine schöne Karte auf der Hauptseite.</string>
-    <string name="settings_vibrate_ui_card_title">Haptic Feedback</string>
-    <string name="settings_vibrate_ui_page_card_desc">Enhance touch feedback with interactive haptics.</string>
+    <string name="settings_vibrate_ui_card_title">Haptisches Feedback</string>
+    <string name="settings_vibrate_ui_page_card_desc">Touch Feedback mit interaktiver Haptik verbessern.</string>
     <string name="settings_clear_app_cache_title">Lösche App Cache</string>
     <string name="settings_clear_app_cache_desc">Leere Caches welche erstellt wurden aufgrund von eigenen Schriftarten, Bildern oder GIFs.</string>
     <string name="activity_title_experimental">Experimentell</string>
@@ -136,8 +136,8 @@
     <string name="settings_section_title_about">Über</string>
     <string name="settings_github_repository_title">Github Repository</string>
     <string name="settings_telegram_group_title">Telegram Gruppe</string>
-    <string name="settings_translate_title">Translate Iconify</string>
-    <string name="settings_translate_desc">Help translate Iconify to your language.</string>
+    <string name="settings_translate_title">Iconify übersetzen</string>
+    <string name="settings_translate_desc">Iconify übersetzen.</string>
     <string name="settings_credits_title">Credits</string>
     <string name="settings_credits_desc">Danke an alle, die dieses Projekt ermöglicht haben.</string>
     <!-- Icon Pack -->
@@ -248,7 +248,7 @@
     <string name="minimal_qspanel">Minimales QS-Panel</string>
     <string name="remove_top_shade_of_qspanel">Obere Schattierung des QS-Panels entfernen</string>
     <string name="system_monet_title">System Monet</string>
-    <string name="system_monet_desc">Disable to retain custom colors\nSystemUI restart required</string>
+    <string name="system_monet_desc">Behalten von benutzerdefinierten Farben deaktivieren\nSystemUI Neustart nötig</string>
     <!-- Basic Colors -->
     <string name="primary_color">Primärfarbe</string>
     <string name="primary_color_desc">Wähle primäre Akzentfarbe</string>
@@ -260,7 +260,7 @@
     <string name="monet_style_title">Monet Stil</string>
     <string name="monet_neutral">Neutral</string>
     <string name="monet_monochrome">Monochrom</string>
-    <string name="monet_tonalspot">Tonal Spot</string>
+    <string name="monet_tonalspot">Tonaler Fleck</string>
     <string name="monet_vibrant">Kräftig</string>
     <string name="monet_rainbow">Regenbogen</string>
     <string name="monet_expressive">Ausdrucksvoll</string>
@@ -639,6 +639,7 @@ transparent machen</string>
     <string name="battery_circle">Kreissymbol</string>
     <string name="battery_dotted_circle">Gepunktetes Kreissymbol</string>
     <string name="battery_filled_circle">Filled Circle Battery</string>
+    <string name="battery_landscape_kim">Landscape Kim</string>
     <!-- Xposed Volume Panel -->
     <string name="volume_percentage_title">Lautstärke Prozentsatz</string>
     <string name="volume_percentage_desc">Zeige Prozentsatz über dem Lautstärkeregler</string>
@@ -840,6 +841,7 @@ transparent machen</string>
     <string name="info_tester_desc">Für das Testen der App.</string>
     <string name="info_betterqs_desc">Für Erlaubnis \"Besseres QS\" zu integrieren</string>
     <string name="info_binaries_desc">Für Android Binaries</string>
+    <string name="info_buttercup_desc">For some lockscreen clock styles.</string>
     <string name="section_title_contributors">Mitwirkende</string>
     <string name="info_contributor_desc">Für das Helfen auf GitHub.</string>
     <string name="info_contributor_desc_2">Für das assistieren auf Telegram.</string>
@@ -1105,6 +1107,8 @@ transparent machen</string>
     <string name="location_query_hint">Search for a location</string>
     <string name="weather_permission_dialog_title">Enable Location Permissions</string>
     <string name="weather_permission_dialog_message">Location permissions are required to fetch weather data. Click OK to open Settings.</string>
+    <string name="omnijaws_today">Today</string>
+    <string name="omnijaws_tomorrow">Tomorrow</string>
     <!-- Weather Conditions -->
     <string name="weather_condition_clouds">Cloudy</string>
     <string name="weather_condition_rain">Rainy</string>
@@ -1121,6 +1125,9 @@ transparent machen</string>
     <string name="weather_api_key">OpenWeatherMap API Key</string>
     <string name="weather_provider_owm_key_title">OpenWeatherMap API Key required</string>
     <string name="weather_provider_owm_key_message">Please enter your OpenWeatherMap API key to fetch weather data.</string>
+    <string name="yandex_api_key">Yandex API Key</string>
+    <string name="weather_provider_yandex_key_title">Yandex API Key required</string>
+    <string name="weather_provider_yandex_key_message">Please enter your Yandex API key to fetch weather data.</string>
     <string name="weather_show_location">Show Location</string>
     <string name="weather_show_location_summary">Show Location before icon</string>
     <string name="weather_show_condition">Show Condition</string>
