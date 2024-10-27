@@ -449,7 +449,7 @@
     <string name="oneplus_qs_header_hide_stock_media_player_title">Hide Stock Media Player</string>
     <string name="oneplus_qs_header_hide_stock_media_player_desc">Remove stock media player from QS panel</string>
     <string name="oneplus_qs_header_blur_level">Nivel de desenfoque</string>
-    <string name="oneplus_qs_header_fade_level">Fade Level</string>
+    <string name="oneplus_qs_header_fade_level">Nivel de desvanecimiento</string>
     <string name="oneplus_qs_header_top_margin">Margen superior</string>
     <string name="oneplus_qs_header_expansion_y">Cantidad de expansión</string>
     <!-- Lockscreen Widgets -->
@@ -840,6 +840,7 @@
     <string name="info_tester_desc">Por probar la aplicación.</string>
     <string name="info_betterqs_desc">Por el permiso para usar un mejor QS.</string>
     <string name="info_binaries_desc">Por los ejecutables binarios de Android.</string>
+    <string name="info_buttercup_desc">For some lockscreen clock styles.</string>
     <string name="section_title_contributors">Colaboradores</string>
     <string name="info_contributor_desc">Por contribuir en GitHub.</string>
     <string name="info_contributor_desc_2">Por ayudarme en Telegram.</string>
@@ -1105,6 +1106,8 @@
     <string name="location_query_hint">Buscar una ubicación</string>
     <string name="weather_permission_dialog_title">Habilitar permisos de ubicación</string>
     <string name="weather_permission_dialog_message">Se requieren permisos de ubicación para obtener datos del clima. Haz clic en Ok para abrir Ajustes.</string>
+    <string name="omnijaws_today">Today</string>
+    <string name="omnijaws_tomorrow">Tomorrow</string>
     <!-- Weather Conditions -->
     <string name="weather_condition_clouds">Nublado</string>
     <string name="weather_condition_rain">Lluvioso</string>
@@ -1121,6 +1124,9 @@
     <string name="weather_api_key">Clave de la API OpenWeatherMap</string>
     <string name="weather_provider_owm_key_title">Clave API de OpenWeatherMap requerida</string>
     <string name="weather_provider_owm_key_message">Por favor, introduzca su clave de API de OpenWeatherMap para obtener los datos meteorológicos.</string>
+    <string name="yandex_api_key">Yandex API Key</string>
+    <string name="weather_provider_yandex_key_title">Yandex API Key required</string>
+    <string name="weather_provider_yandex_key_message">Please enter your Yandex API key to fetch weather data.</string>
     <string name="weather_show_location">Mostrar Ubicación</string>
     <string name="weather_show_location_summary">Mostrar ubicación antes del icono</string>
     <string name="weather_show_condition">Mostrar condiciones</string>

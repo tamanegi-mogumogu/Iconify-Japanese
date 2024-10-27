@@ -840,6 +840,7 @@
     <string name="info_tester_desc">За тестування застосунку.</string>
     <string name="info_betterqs_desc">Для дозволу на використання Better QS.</string>
     <string name="info_binaries_desc">Для виконуваних двійкових файлів для Android.</string>
+    <string name="info_buttercup_desc">For some lockscreen clock styles.</string>
     <string name="section_title_contributors">Учасники</string>
     <string name="info_contributor_desc">За свій внесок на GitHub.</string>
     <string name="info_contributor_desc_2">За допомогу в Telegram.</string>
@@ -1105,6 +1106,8 @@
     <string name="location_query_hint">Пошук розташування</string>
     <string name="weather_permission_dialog_title">Надати дозволи по розташуванню</string>
     <string name="weather_permission_dialog_message">Location permissions are required to fetch weather data. Click OK to open Settings.</string>
+    <string name="omnijaws_today">Today</string>
+    <string name="omnijaws_tomorrow">Tomorrow</string>
     <!-- Weather Conditions -->
     <string name="weather_condition_clouds">Cloudy</string>
     <string name="weather_condition_rain">Rainy</string>
@@ -1121,6 +1124,9 @@
     <string name="weather_api_key">OpenWeatherMap API Key</string>
     <string name="weather_provider_owm_key_title">OpenWeatherMap API Key required</string>
     <string name="weather_provider_owm_key_message">Введіть свій ключ API OpenWeatherMap, щоб отримати дані про погоду.</string>
+    <string name="yandex_api_key">Yandex API Key</string>
+    <string name="weather_provider_yandex_key_title">Yandex API Key required</string>
+    <string name="weather_provider_yandex_key_message">Please enter your Yandex API key to fetch weather data.</string>
     <string name="weather_show_location">Показувати розташування</string>
     <string name="weather_show_location_summary">Показувати розташування перед значком</string>
     <string name="weather_show_condition">Показувати стан</string>

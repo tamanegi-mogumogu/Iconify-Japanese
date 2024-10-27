@@ -840,6 +840,7 @@
     <string name="info_tester_desc">Uygulamayı test ettiğin için.</string>
     <string name="info_betterqs_desc">Better QS kullanım izni için.</string>
     <string name="info_binaries_desc">Android çalıştırılabilir ikili dosyaları için.</string>
+    <string name="info_buttercup_desc">For some lockscreen clock styles.</string>
     <string name="section_title_contributors">Katkıda Bulunanlar</string>
     <string name="info_contributor_desc">GitHub\'dan destek olmak için.</string>
     <string name="info_contributor_desc_2">Telegram\'da bana yardım etmek için.</string>
@@ -1105,6 +1106,8 @@
     <string name="location_query_hint">Konum arayın</string>
     <string name="weather_permission_dialog_title">Konum İzinlerini Etkinleştir</string>
     <string name="weather_permission_dialog_message">Hava durumu verilerini almak için konum izinleri gereklidir. Ayarları açmak için Tamam\'a tıklayın.</string>
+    <string name="omnijaws_today">Today</string>
+    <string name="omnijaws_tomorrow">Tomorrow</string>
     <!-- Weather Conditions -->
     <string name="weather_condition_clouds">Bulutlu</string>
     <string name="weather_condition_rain">Yağmurlu</string>
@@ -1121,6 +1124,9 @@
     <string name="weather_api_key">OpenWeatherMap API Anahtarı</string>
     <string name="weather_provider_owm_key_title">OpenWeatherMap API Anahtarı gereklidir</string>
     <string name="weather_provider_owm_key_message">Hava durumu verilerini almak için lütfen OpenWeatherMap API anahtarınızı girin.</string>
+    <string name="yandex_api_key">Yandex API Key</string>
+    <string name="weather_provider_yandex_key_title">Yandex API Key required</string>
+    <string name="weather_provider_yandex_key_message">Please enter your Yandex API key to fetch weather data.</string>
     <string name="weather_show_location">Konumu Göster</string>
     <string name="weather_show_location_summary">Simgeden önce konumu göster</string>
     <string name="weather_show_condition">Durumu Göster</string>
