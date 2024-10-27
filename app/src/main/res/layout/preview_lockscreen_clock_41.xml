@@ -34,8 +34,7 @@
             android:tag="text1"
             android:textColor="#FFFFFF"
             android:textSize="24sp"
-            android:textStyle="bold"
-            android:locale="en" />
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
